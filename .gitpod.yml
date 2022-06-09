@@ -3,9 +3,7 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
- - before: pip install pipreqs  
- - before: pipreqs 
- - before: pip install -r requirements.txt
+ - before: pip install pipreqs pipreqs pip install -r requirements.txt
    command: streamlit run app.py
     # command: 
 ports:
