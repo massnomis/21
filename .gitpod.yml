@@ -3,7 +3,14 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: pip install -r requirements.txt
-    command: python app.py
-
+ - before: pip freeze
+ - before: pip install -r requirements.txt
+ - before: pip install statsmodels
+ - before: pip install pandas
+ - before: pip install Pillow
+   command: streamlit run app.py
+    # command: 
+ports:
+  - port: 8501
+    onOpen: open-preview
 
