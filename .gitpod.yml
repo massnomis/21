@@ -3,7 +3,7 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
- - before: pip freeze
+ - before: pip freeze > requirements.txt
  - before: pip install -r requirements.txt
    command: streamlit run app.py
     # command: 
