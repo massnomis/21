@@ -5,9 +5,6 @@
 tasks:
  - before: pip freeze
  - before: pip install -r requirements.txt
- - before: pip install statsmodels
- - before: pip install pandas
- - before: pip install Pillow
    command: streamlit run app.py
     # command: 
 ports:
