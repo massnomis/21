@@ -1,4 +1,6 @@
 ports:
 - port: 8501
+  onOpen: open-browser
+
 tasks:
 - command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run app.py
