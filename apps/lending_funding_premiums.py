@@ -38,25 +38,25 @@ funding = pd.DataFrame(funding)
 # print(funding)
 st.write("funding rates")
 
-st.write(funding)
-funding_names = funding['name']
-# page.write(funding_names)
-st.write("Longs pay shorts if positive, shorts pay longs if negative. 1/24 times the average premium over the hour.")
-NAME = st.selectbox("Perp Name", funding_names)
-custom = requests.get(f"https://ftxpremiums.com/assets/data/funding_data/{NAME}.json").json()
+# st.write(funding)
+# funding_names = funding['name']
+# # page.write(funding_names)
+# st.write("Longs pay shorts if positive, shorts pay longs if negative. 1/24 times the average premium over the hour.")
+# NAME = st.selectbox("Perp Name", funding_names)
+# custom = requests.get(f"https://ftxpremiums.com/assets/data/funding_data/{NAME}.json").json()
 
-custom = pd.DataFrame(custom)
-custom['rate'] = custom['rate'].astype(float)
-custom['time'] =  pd.to_datetime(custom['time'], unit='s')
-custom = custom.sort_values(by="time")
+# custom = pd.DataFrame(custom)
+# custom['rate'] = custom['rate'].astype(float)
+# custom['time'] =  pd.to_datetime(custom['time'], unit='s')
+# custom = custom.sort_values(by="time")
 
-custom['rate'] = custom['rate'] * 1000
-custom['accumulated']  = (list(accumulate(custom['rate'])))
+# custom['rate'] = custom['rate'] * 1000
+# custom['accumulated']  = (list(accumulate(custom['rate'])))
 
-bbbbbb = px.scatter(custom,x='time',y='rate',render_mode="SVG")
-st.plotly_chart(bbbbbb)
-bbbbbbb = px.scatter(custom,x='time',y='accumulated',render_mode="SVG")
-st.plotly_chart(bbbbbbb)
+# bbbbbb = px.scatter(custom,x='time',y='rate',render_mode="SVG")
+# st.plotly_chart(bbbbbb)
+# bbbbbbb = px.scatter(custom,x='time',y='accumulated',render_mode="SVG")
+# st.plotly_chart(bbbbbbb)
 
 
 lending_names = lending['name']
