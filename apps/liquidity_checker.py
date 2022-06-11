@@ -40,7 +40,7 @@ st.dataframe(chain_list)
 
 
 chain_id = st.selectbox(
-    "chain_id", ["1", "10", "56", "100", "137", "42161", "43114", "250"],
+    "chain_id", ["1", "10", "56", "100", "137", "42161", "43114", "250"]
 )
 st.write("chain_id =" + chain_id)
 
