@@ -5,12 +5,12 @@ from itertools import chain
 import pandas as pd
 import plotly.express as px
 import requests
-import streamlit as page
+import streamlit as st
 import random
 
 
 
-page.write("Select Network & Chain ID")
+st.write("Select Network & Chain ID")
 chain_list = pd.DataFrame(
     {
         "chain_id": [1, 56, 137, 10, 42161, 100, 43114, 250],
@@ -36,28 +36,28 @@ chain_list = pd.DataFrame(
         "Fantom",
     ],
 )
-page.dataframe(chain_list)
+st.dataframe(chain_list)
 
 
-chain_id = page.selectbox(
-    "chain_id", ["1", "10", "56", "100", "137", "42161", "43114", "250"], key = random.randint(1, 100)
+chain_id = st.selectbox(
+    "chain_id", ["1", "10", "56", "100", "137", "42161", "43114", "250"],
 )
-page.write("chain_id =" + chain_id)
+st.write("chain_id =" + chain_id)
 
 
 healthcheck = requests.get(f"https://api.1inch.io/v4.0/{chain_id}/healthcheck")
 healthcheck = json.loads(healthcheck.text)
 healthcheck = pd.DataFrame.from_dict(healthcheck, orient="index")
-page.write("HealthCheck RQ")
-page.dataframe(healthcheck)
+st.write("HealthCheck RQ")
+st.dataframe(healthcheck)
 
 tokens_list = requests.get(f"https://api.1inch.io/v4.0/{chain_id}/tokens")
 tokens_list = json.loads(tokens_list.text)
 tokens_list = [tokens_list["tokens"][x] for x in tokens_list["tokens"]]
 symbol_list = [elem["symbol"] for elem in tokens_list]
-page.write("Tokens List")
+st.write("Tokens List")
 
-page.dataframe(tokens_list)
+st.dataframe(tokens_list)
 
 
 
@@ -66,26 +66,26 @@ page.dataframe(tokens_list)
 tokens_list = pd.DataFrame(tokens_list)
 
 
-tokenIN = page.selectbox("tokenIN", tokens_list['symbol'], index=10,key = random.randint(1, 100))
+tokenIN = st.selectbox("tokenIN", tokens_list['symbol'], index=10)
 address_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["address"]
-page.write(address_of_said_tokenIN)
+st.write(address_of_said_tokenIN)
 
 decimal_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["decimals"]
-page.write(decimal_of_said_tokenIN)
+st.write(decimal_of_said_tokenIN)
 tokenOUT = "USDC"
 
-tokenOUT = page.selectbox("tokenOUT", tokens_list['symbol'], index=5, key = random.randint(1, 100))
+tokenOUT = st.selectbox("tokenOUT", tokens_list['symbol'], index=5)
 address_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["address"]
-page.write(address_of_said_tokenOUT)
+st.write(address_of_said_tokenOUT)
 
 decimal_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["decimals"]
-page.write(decimal_of_said_tokenOUT)
+st.write(decimal_of_said_tokenOUT)
 
 
 
 
-returned = page.number_input("starting amount in", min_value=None, max_value=None, value=0.01)
-page.write(returned)
+returned = st.number_input("starting amount in", min_value=None, max_value=None, value=0.01)
+st.write(returned)
 DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * returned)
 
 
@@ -120,11 +120,11 @@ i = 0
 
 start_range = returned
 
-end_range = page.number_input("end range of quote", min_value=None, max_value=None, value=100)
-page.write(end_range)
+end_range = st.number_input("end range of quote", min_value=None, max_value=None, value=100)
+st.write(end_range)
 
-i_max = page.number_input("how many quotes to check?", min_value=None, max_value=None, value=5)
-page.write(i_max)
+i_max = st.number_input("how many quotes to check?", min_value=None, max_value=None, value=5)
+st.write(i_max)
 
 ping_size = (end_range - start_range) / i_max
 DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * returned)
@@ -132,7 +132,7 @@ DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * returned)
 
 
 DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * returned)
-page.write("checking quote number...")
+st.write("checking quote number...")
 
 while i < i_max:
     DecimalFix1 = int(math.pow(10, decimal_of_said_tokenIN) * returned)
@@ -208,24 +208,24 @@ while i < i_max:
 
     Final_namez = {"name_y": "Liquidity_Source"}
     Final_Path = Final_Path.rename(columns=Final_namez)
-    page.write(i)
-page.write(Final_Path)
+    st.write(i)
+st.write(Final_Path)
 
 df2['in'] = df2['rate'] * df2['returned']
 df2 = df2[['i', 'in','returned','rate']]
 # df2 = df2[-1:] + df2[:-1]
-page.dataframe(df2)
+st.dataframe(df2)
 
 Final_Path = px.line(
     df2,  # this is the dataframe you are trying to plot
     x="returned",
     y="rate"
 )
-page.plotly_chart(Final_Path)
+st.plotly_chart(Final_Path)
 Final_Path = px.bar(
     df2,  # this is the dataframe you are trying to plot
     x="returned",
     y="rate"
 )
-page.plotly_chart(Final_Path)
+st.plotly_chart(Final_Path)
 
