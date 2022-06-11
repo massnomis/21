@@ -12,9 +12,11 @@ import random
 
 
 def app():
-    
+
     page = st.container()
     
+    page.write("On-Chain Pricing for USDT money market deposits")
+    page.write("https://compound.finance/markets/USDT")
 
 
     query_id = "e9b9351a-7cfc-41a6-b217-d8f0d477424e"
@@ -32,7 +34,7 @@ def app():
     fig.add_trace(go.Candlestick(x=df_y['DAYZ'],open=df_y['MEDIAN(RATE)'], high=df_y['MAX(RATE)'],low=df_y['MIN(RATE)'], close=df_y['AVG(RATE)'],name="OHLC"), row=1, col=1)
 
     # include a go.Bar trace for volumes
-    fig.add_trace(go.Bar(x=df_y['DAYZ'], y=df_y['SUM(USDT_IN)'],
+    fig.add_trace(go.Bar(x=df_y['DAYZ'], y=df_y['SUM(CTOKEN_OUT)'],
                 showlegend=False), row=2, col=1)
 
     fig.update(layout_xaxis_rangeslider_visible=False)
