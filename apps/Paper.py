@@ -12,7 +12,7 @@ def app():
     page.markdown('https://app.truefi.io/lend')
     llal = px.line(tftkn,x='DAYZ',y='PRICE', color = 'TFTOKEN',render_mode="SVG")
     page.plotly_chart(llal)
-    page.write("Accumulated Yeild on Selected Paper Pools")
+    page.write("Accumulated Yield on Selected Paper Pools")
     # page.write(tftkn)
     mmm = px.line(tftkn,x='DAYZ',y='APY', color = 'TFTOKEN',render_mode="SVG")
     page.plotly_chart(mmm)

@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 def app():
     page = st.container()
 
-    page.write("Convert CRV to cvxCRV. By staking cvxCRV, youâ€™re earning the usual rewards from veCRV (3crv governance fee distribution from Curve + any airdrop), plus a share of 10 percent of the Convex LPs' boosted CRV earnings, and CVX tokens on top of that.")
+    page.write("Convert CRV to cvxCRV. By staking cvxCRV, you're earning the usual rewards from veCRV (3crv governance fee distribution from Curve + any airdrop), plus a share of 10 percent of the Convex LPs' boosted CRV earnings, and CVX tokens on top of that.")
     df3 = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/267a1f10-c765-4c2e-bb28-0282629c75ed/data/latest')
     # st.write(df3)
     page.write('https://www.convexfinance.com/stake')
@@ -37,7 +37,7 @@ def app():
 
     aaa = px.line(df0,x='DAYZ_REWARDS_PAID',y='SUM_AMT_REWARDS_PAID', color='SYMBOL_REWARDS_PAID',render_mode="SVG")
     page.plotly_chart(aaa)
-    page.write("Annualized Yeild of rewards by token")
+    page.write("Annualized Yield of rewards by token")
 
 
     df5 = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/7ab92869-7ee2-4a30-ac3f-ccd3722381f1/data/latest')
@@ -45,7 +45,7 @@ def app():
     # st.write(df5)
     nnn = px.line(df5,x='DAYZ',y='APY',color='SYMBOL_REWARDS_PAID',render_mode="SVG")
     page.plotly_chart(nnn)
-    page.write("Yeild, in basis points per day")
+    page.write("Yield, in basis points per day")
 
     df5['Daily_Gains_bps'] = df5['APY'] / 3.6524
 
@@ -84,7 +84,7 @@ def app():
     df5 = df5.sort_values(by=['DAYZ'], ascending=True)
     # page.write(df5)
     # 'SYMBOL_REWARDS_PAID'
-    page.write("Accumulated Yeild, All tokens (basis points)")
+    page.write("Accumulated Yield, All tokens (basis points)")
 
     ppp = px.line(df5,x='DAYZ',y='accumulated',render_mode="SVG")
     page.plotly_chart(ppp)
@@ -108,7 +108,7 @@ def app():
 
     # page.write(df5)
     # 'SYMBOL_REWARDS_PAID'
-    page.write("Accumulated Yeild, CRV (basis points)")
+    page.write("Accumulated Yield, CRV (basis points)")
 
     ppp = px.line(CRV_only,x='DAYZ',y='Accumulated_CRV_daily_bps',render_mode="SVG")
 
@@ -152,7 +152,7 @@ def app():
 
     # page.write(df5)
     # 'SYMBOL_REWARDS_PAID'
-    page.write("Accumulated Yeild, CVX (basis points)")
+    page.write("Accumulated Yield, CVX (basis points)")
 
     ppp = px.line(CVX_only,x='DAYZ',y='Accumulated_CVX_daily_bps',render_mode="SVG")
     page.plotly_chart(ppp)
@@ -190,10 +190,10 @@ def app():
     tCRV_only['3CRV_REWARDS_CUM_NOW_USD'] = tCRV_only['TKN_PRICE_REWARDS_PAID']*tCRV_only['Accumulated_3CRV_REWARDS']
     tCRV_only['3CRV_CUM_Yield_bps'] = 1000 * tCRV_only['Accumulated_3CRV_REWARDS']/tCRV_only['AMOUNT_USD_CVXCRV_BAL']
 
-    # page.write(df5)mmmmmmmmmmmmmm
+    # page.write(df5)
 
     # 'SYMBOL_REWARDS_PAID'
-    page.write("Accumulated Yeild, 3CRV (basis points)")
+    page.write("Accumulated Yield, 3CRV (basis points)")
 
     ppp = px.line(tCRV_only,x='DAYZ',y='Accumulated_3CRV_daily_bps',render_mode="SVG")
     page.plotly_chart(ppp)

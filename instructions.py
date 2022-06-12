@@ -47,3 +47,5 @@ st.code('streamlit run funding_checker.py')
 st.write(' Even more fun App that shows SPOT Lending Rates on FTX')
 st.code('streamlit run lending_rates.py')
 
+st.write('Simmulator for the cvxCRV Curve pool')
+st.code('streamlit run Pricing_Sim.py')
