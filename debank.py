@@ -936,7 +936,7 @@ rewards = pd.DataFrame(rewards)
 rewards = rewards.drop(columns=['chain','display_symbol','decimals','id','is_core','is_verified','is_wallet','logo_url','name','protocol_id','time_at','symbol'])
 supply = pd.DataFrame(supply)
 supply = supply.drop(columns=['chain','display_symbol','decimals','id','is_core','is_verified','is_wallet','logo_url','name','protocol_id','time_at','symbol'])
-
+st.write("wallet = 0x8a8e9730646efd1e57453054f1a6366897d7cb1c")
 st.write("supply")
 st.write(supply)
 st.write("rewards")
