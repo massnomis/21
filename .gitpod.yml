@@ -2,9 +2,8 @@ tasks:
 
   - name: requirements
     init: >
-      pip install pipreqs && pipreqs &&  
-      gp sync-done bundle
-    command: pip install -r requirements.txt && streamlit run instructions.py
+      pip install pipreqs && pipreqs 
+    command: pip install -r requirements.txt && streamlit run instructions.py && gp sync-done bundle
 
   - name: app
     init: gp sync-await bundle # wait for the above 'init' to finish
