@@ -30,8 +30,11 @@ def app():
     # page.plotly_chart(aaa)
     FTX_USD_Spot_Margin1 = px.line(custom_lending0,x='time',y='rateAPY',render_mode="SVG")
     page.plotly_chart(FTX_USD_Spot_Margin1)
+    page.write("Market Size")
+
     FTX_USD_Spot_Margin2 = px.line(custom_lending0,x='time',y='size',render_mode="SVG")
     page.plotly_chart(FTX_USD_Spot_Margin2)
+    page.write("interest paid")
     FTX_USD_Spot_Margin3 = px.line(custom_lending0,x='time',y='interest',render_mode="SVG")
     page.plotly_chart(FTX_USD_Spot_Margin3)
 
@@ -53,8 +56,12 @@ def app():
     # page.plotly_chart(aaa)
     aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
     page.plotly_chart(aaa)
+    page.write("Market Size")
+
     aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
     page.plotly_chart(aa)
+    page.write("interest paid")
+
     a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
     page.plotly_chart(a)
     custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin=CUSDT&start_time=960368456&end_time=1854597556").json()
@@ -74,7 +81,11 @@ def app():
     # page.plotly_chart(aaa)
     aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
     page.plotly_chart(aaa)
+    page.write("Market Size")
+
     aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
     page.plotly_chart(aa)
+    page.write("interest paid")
+
     a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
     page.plotly_chart(a)

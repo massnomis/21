@@ -31,7 +31,6 @@ def app():
 
     fig.update(layout_xaxis_rangeslider_visible=False)
     page.plotly_chart(fig)
-    page.write('usdt perp')
 
     xyz2 = requests.get('https://ftxpremiums.com/assets/data/funding_data/USDT-PERP.json').json()
 
@@ -51,9 +50,29 @@ def app():
 
     bbbbbb = px.line(xyz2,x='time',y='rate',render_mode="SVG")
     page.plotly_chart(bbbbbb)
+    page.write('Accumulated Funding')
+
     bbbbbbb = px.line(xyz2,x='time',y='accumulated',render_mode="SVG")
     page.plotly_chart(bbbbbbb)
-    page.write('cusdt perp')
+    
+    page.write("https://ftx.com/api/markets/CUSDT-PERP/candles?resolution=14400")
+
+    df = requests.get('https://ftx.com/api/markets/CUSDT-PERP/candles?resolution=14400').json()
+    df = pd.DataFrame(df['result'])
+    # Create figure with secondary y-axis
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, 
+                vertical_spacing=0.03, subplot_titles=('OHLC', 'Volume'), 
+                row_width=[0.2, 0.7])
+
+    # include candlestick with rangeselector
+    fig.add_trace(go.Candlestick(x=df['startTime'],open=df['open'], high=df['high'],low=df['low'], close=df['close'],name="OHLC"), row=1, col=1)
+
+    # include a go.Bar trace for volumes
+    fig.add_trace(go.Bar(x=df['startTime'], y=df['volume'],
+                showlegend=False), row=2, col=1)
+
+    fig.update(layout_xaxis_rangeslider_visible=False)
+    page.plotly_chart(fig)
     xyz22 = requests.get('https://ftxpremiums.com/assets/data/funding_data/CUSDT-PERP.json').json()
 
     xyz22 = pd.DataFrame(xyz22)
@@ -71,6 +90,8 @@ def app():
 
     bbbbbb = px.line(xyz22,x='time',y='rate',render_mode="SVG")
     page.plotly_chart(bbbbbb)
+    page.write('Accumulated Funding')
+
     bbbbbbb = px.line(xyz22,x='time',y='accumulated',render_mode="SVG")
     page.plotly_chart(bbbbbbb)
 
@@ -78,77 +99,77 @@ def app():
 
 
     
-    custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin=USD&start_time=960368456&end_time=1854597556").json()
+    # custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin=USD&start_time=960368456&end_time=1854597556").json()
 
-    custom_lending = pd.DataFrame(custom_lending['result'])
-    custom_lending['rate'] = custom_lending['rate'].astype(float)
-    custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
-    custom_lending = custom_lending.sort_values(by="time", ascending=True)
+    # custom_lending = pd.DataFrame(custom_lending['result'])
+    # custom_lending['rate'] = custom_lending['rate'].astype(float)
+    # custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
+    # custom_lending = custom_lending.sort_values(by="time", ascending=True)
 
-    custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
+    # custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
 
-    custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
-    # page.write(custom_lending)
-    bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
-    page.plotly_chart(bbbbbb)
+    # custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
+    # # page.write(custom_lending)
+    # bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
+    # page.plotly_chart(bbbbbb)
 
-    bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-    page.plotly_chart(bbbbbbbb)
-    bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
-    page.plotly_chart(bbbbbbb)
+    # bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
+    # page.plotly_chart(bbbbbbbb)
+    # bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
+    # page.plotly_chart(bbbbbbb)
 
-    custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin=USDT&start_time=960368456&end_time=1854597556").json()
+    # custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin=USDT&start_time=960368456&end_time=1854597556").json()
 
-    custom_lending = pd.DataFrame(custom_lending['result'])
-    custom_lending['rate'] = custom_lending['rate'].astype(float)
-    custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
-    custom_lending = custom_lending.sort_values(by="time", ascending=True)
+    # custom_lending = pd.DataFrame(custom_lending['result'])
+    # custom_lending['rate'] = custom_lending['rate'].astype(float)
+    # custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
+    # custom_lending = custom_lending.sort_values(by="time", ascending=True)
 
-    custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
+    # custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
 
-    custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
-    # page.write(custom_lending)
-    bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
-    page.plotly_chart(bbbbbb)
+    # custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
+    # # page.write(custom_lending)
+    # bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
+    # page.plotly_chart(bbbbbb)
 
-    bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-    page.plotly_chart(bbbbbbbb)
-    bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
-    page.plotly_chart(bbbbbbb)
-    custom_lending = requests.get(f"https://ftx.us/api/spot_margin/history?coin=USD&start_time=960368456&end_time=1854597556").json()
+    # bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
+    # page.plotly_chart(bbbbbbbb)
+    # bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
+    # page.plotly_chart(bbbbbbb)
+    # custom_lending = requests.get(f"https://ftx.us/api/spot_margin/history?coin=USD&start_time=960368456&end_time=1854597556").json()
 
-    custom_lending = pd.DataFrame(custom_lending['result'])
-    custom_lending['rate'] = custom_lending['rate'].astype(float)
-    custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
-    custom_lending = custom_lending.sort_values(by="time", ascending=True)
+    # custom_lending = pd.DataFrame(custom_lending['result'])
+    # custom_lending['rate'] = custom_lending['rate'].astype(float)
+    # custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
+    # custom_lending = custom_lending.sort_values(by="time", ascending=True)
 
-    custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
+    # custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
 
-    custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
-    # page.write(custom_lending)
-    bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
-    page.plotly_chart(bbbbbb)
+    # custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
+    # # page.write(custom_lending)
+    # bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
+    # page.plotly_chart(bbbbbb)
 
-    bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-    page.plotly_chart(bbbbbbbb)
-    bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
-    page.plotly_chart(bbbbbbb)
+    # bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
+    # page.plotly_chart(bbbbbbbb)
+    # bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
+    # page.plotly_chart(bbbbbbb)
 
-    custom_lending = requests.get(f"https://ftx.us/api/spot_margin/history?coin=USDT&start_time=960368456&end_time=1854597556").json()
+    # custom_lending = requests.get(f"https://ftx.us/api/spot_margin/history?coin=USDT&start_time=960368456&end_time=1854597556").json()
 
-    custom_lending = pd.DataFrame(custom_lending['result'])
-    custom_lending['rate'] = custom_lending['rate'].astype(float)
-    custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
-    custom_lending = custom_lending.sort_values(by="time", ascending=True)
+    # custom_lending = pd.DataFrame(custom_lending['result'])
+    # custom_lending['rate'] = custom_lending['rate'].astype(float)
+    # custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
+    # custom_lending = custom_lending.sort_values(by="time", ascending=True)
 
-    custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
+    # custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
 
-    custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
-    # page.write(custom_lending)
-    bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
-    page.plotly_chart(bbbbbb)
+    # custom_lending['rate'] = custom_lending['rate'] * 24 * 36500
+    # # page.write(custom_lending)
+    # bbbbbb = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
+    # page.plotly_chart(bbbbbb)
 
-    bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-    page.plotly_chart(bbbbbbbb)
-    bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
-    page.plotly_chart(bbbbbbb)
+    # bbbbbbbb = px.line(custom_lending,x='time',y='size',render_mode="SVG")
+    # page.plotly_chart(bbbbbbbb)
+    # bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
+    # page.plotly_chart(bbbbbbb)
