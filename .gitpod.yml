@@ -1,7 +1,9 @@
 tasks:
 
   - name: requirements
-    command: pip install pipreqs && pipreqs && pip install -r requirements.txt 
+    init: >
+      pip install pipreqs && pipreqs && pip install -r requirements.txt && 
+      gp sync-done bundle
 
   - name: app
     init: gp sync-await bundle # wait for the above 'init' to finish
