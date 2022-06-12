@@ -1,5 +1,5 @@
 tasks:
-- init: pip install pipreqs && pipreqs && pip install -r requirements.txt 
+- before: pip install pipreqs && pipreqs && pip install -r requirements.txt 
 - command: streamlit run app.py 
 - command: steamlit run biderectional.py
 - command: steamlit run debank.py
