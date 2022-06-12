@@ -1,22 +1,41 @@
 tasks:
-- before: pip install pipreqs && pipreqs && pip install -r requirements.txt 
-- command: streamlit run app.py 
-- command: streamlit run bidirectional.py
-- command: streamlit run debank.py
-- command: streamlit run funding_checker.py
-- command: streamlit run lending_rates.py
+
+  - name: requirements
+    command: pip install pipreqs && pipreqs && pip install -r requirements.txt 
+
+  - name: app
+    init: gp sync-await bundle # wait for the above 'init' to finish
+    command: streamlit run app.py
+
+  - name: bidirectional
+    init: gp sync-await bundle
+    command: streamlit run bidirectional.py
+
+  - name: debank
+    init: gp sync-await bundle
+    command: streamlit run debank.py
+
+  - name: funding_checker
+    init: gp sync-await bundle
+    command: streamlit run funding_checker.py
+
+  - name: lending_rates
+    init: gp sync-await bundle
+    command: streamlit run lending_rates.py
 
 ports:
 - port: 8501
   onOpen: open-preview
+
 - port: 8502
   onOpen: open-preview
+
 - port: 8503
   onOpen: open-preview
+
 - port: 8504
   onOpen: open-preview
+  
 - port: 8505
   onOpen: open-preview
-
-
 
