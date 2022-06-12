@@ -3,7 +3,11 @@ tasks:
   - name: requirements
     init: >
       pip install pipreqs && pipreqs 
-    command: pip install -r requirements.txt && gp sync-done requirements
+    command: pip install -r requirements.txt && gp sync-done requirements  
+  
+  - name: instructions
+    init: gp sync-await requirements # wait for the above 'init' to finish
+    command: streamlit run instructions.py
 
   - name: app
     init: gp sync-await requirements # wait for the above 'init' to finish
@@ -27,7 +31,7 @@ tasks:
 
 ports:
 - port: 8501
-  onOpen: open-browser
+  onOpen: open-preview 
   visibility: public 
 
 - port: 8502
@@ -43,6 +47,9 @@ ports:
   visibility: public 
   
 - port: 8505
+  onOpen: open-browser
+  visibility: public 
+- port: 8506
   onOpen: open-browser
   visibility: public 
 
