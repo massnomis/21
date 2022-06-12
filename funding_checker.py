@@ -52,10 +52,10 @@ custom = custom.sort_values(by="time")
 
 custom['rate'] = custom['rate'] * 1000
 custom['accumulated']  = (list(accumulate(custom['rate'])))
-
-bbbbbb = px.scatter(custom,x='time',y='rate',render_mode="SVG")
+st.write('hourly funding rate in basis points')
+bbbbbb = px.line(custom,x='time',y='rate',render_mode="SVG")
 st.plotly_chart(bbbbbb)
-bbbbbbb = px.scatter(custom,x='time',y='accumulated',render_mode="SVG")
+bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
 st.plotly_chart(bbbbbbb)
 
 

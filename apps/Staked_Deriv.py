@@ -19,24 +19,30 @@ def app():
     page.write('https://www.convexfinance.com/stake')
     # st.write(df3.columns)
     # st.plotly_chart(ggg)
+    
+    page.write("Pooled Value within the staking pool, denominated in the native staked asset (cvxCRV)")
+
     hhh = px.line(df3,x='DAYZ_CVXCRV_BAL',y='BALANCE_CVXCRV_BAL',render_mode="SVG")
     page.plotly_chart(hhh)
-    page.write("Pooled Value within the staking pool, denominated in the native staked asset (cvxCRV)")
+    page.write("Balance Staked in USD terms")
 
     iii = px.line(df3,x='DAYZ_CVXCRV_BAL',y='AMOUNT_USD_CVXCRV_BAL',render_mode="SVG")
     page.plotly_chart(iii)
-    page.write("Balance Staked in USD terms")
 
 
 
     df0 = pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/f5586f7c-486d-43b5-942b-40d35cb93022/data/latest')
+    page.write("Daily USD value of rewards paid, sorted by rewards token")
 
     aaa = px.line(df0,x='DAYZ_REWARDS_PAID',y='SUM_AMT_USD_REWARDS_PAID', color='SYMBOL_REWARDS_PAID',render_mode="SVG")
     page.plotly_chart(aaa)
-    page.write("Daily USD value of rewards paid, sorted by rewards token")
+    page.write("Balance Claimed in Native Terms")
 
     aaa = px.line(df0,x='DAYZ_REWARDS_PAID',y='SUM_AMT_REWARDS_PAID', color='SYMBOL_REWARDS_PAID',render_mode="SVG")
     page.plotly_chart(aaa)
+
+
+
     page.write("Annualized Yield of rewards by token")
 
 
@@ -59,15 +65,17 @@ def app():
     ppp = px.line(df5,x='DAYZ',y='Daily_Gains_bps',color='SYMBOL_REWARDS_PAID',render_mode="SVG")
     page.plotly_chart(ppp)
 
-    df5['moving_average_apy'] = df5.groupby('SYMBOL_REWARDS_PAID')['APY'].transform(lambda x: x.rolling(10, 1).mean())
+    df5['moving_average_apy'] = df5.groupby('SYMBOL_REWARDS_PAID')['APY'].transform(lambda x: x.rolling(30, 1).mean())
     # page.write(df5)
-    df5['moving_daily_average_gains'] = df5.groupby('SYMBOL_REWARDS_PAID')['Daily_Gains_bps'].transform(lambda x: x.rolling(10, 1).mean())
-    # ppp = px.line(df5,x='DAYZ',y='moving_average_apy',color='SYMBOL_REWARDS_PAID',render_mode="SVG")
-    # page.plotly_chart(ppp)
-    # ppp = px.line(df5,x='DAYZ',y='moving_daily_average_gains',color='SYMBOL_REWARDS_PAID',render_mode="SVG")
-    # page.plotly_chart(ppp)
-    # ppp = px.bar(df5,x='DAYZ',y='moving_daily_average_gains',color='SYMBOL_REWARDS_PAID')
-    # page.plotly_chart(ppp)
+    df5['moving_daily_average_gains'] = df5.groupby('SYMBOL_REWARDS_PAID')['Daily_Gains_bps'].transform(lambda x: x.rolling(30, 1).mean())
+    ppp = px.line(df5,x='DAYZ',y='moving_average_apy',color='SYMBOL_REWARDS_PAID',render_mode="SVG")
+    page.plotly_chart(ppp)
+    ppp = px.bar(df5,x='DAYZ',y='moving_average_apy',color='SYMBOL_REWARDS_PAID')
+    page.plotly_chart(ppp)
+    ppp = px.line(df5,x='DAYZ',y='moving_daily_average_gains',color='SYMBOL_REWARDS_PAID',render_mode="SVG")
+    page.plotly_chart(ppp)
+    ppp = px.bar(df5,x='DAYZ',y='moving_daily_average_gains',color='SYMBOL_REWARDS_PAID')
+    page.plotly_chart(ppp)
     page.write("Underlying Prices of Rewards Tokens")
 
     ppp = px.line(df5,x='DAYZ',y='TKN_PRICE_REWARDS_PAID',color='SYMBOL_REWARDS_PAID',render_mode="SVG")
