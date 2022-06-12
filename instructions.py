@@ -20,10 +20,10 @@ st.markdown(
 MAC: CMD + SHIFT + '
 '''
 )
-
+st.title("Description")
 st.markdown(
 '''
-Description
+
 Command to paste into new terminal
 '''
 )
