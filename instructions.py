@@ -8,7 +8,15 @@ st.markdown("Move your cursor and press the '+' to open a new terminal")
 st.markdown(
 '''
 You can also use these shortcuts... to open a new terminal 
+''')
+
+st.markdown(
+'''
 PC: CTRL + SHIFT + '
+''')
+
+st.markdown(
+'''
 MAC: CMD + SHIFT + '
 '''
 )
