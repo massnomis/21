@@ -1,6 +1,21 @@
 tasks:
-- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run app.py
+- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run app.py 
+- command: steamlit run biderectional.py
+- command: steamlit run debank.py
+- command: steamlit run funding_checker.py
+- command: steamlit run lending_rates.py
+
 ports:
 - port: 8501
   onOpen: open-preview
+- port: 8502
+  onOpen: open-preview
+- port: 8503
+  onOpen: open-preview
+- port: 8504
+  onOpen: open-preview
+- port: 8505
+  onOpen: open-preview
+
+
 
