@@ -27,17 +27,22 @@ tasks:
 
 ports:
 - port: 8501
-  onOpen: open-preview
+  onOpen: open-browser
+  visibility: public 
 
 - port: 8502
-  onOpen: open-preview
+  onOpen: open-browser
+  visibility: public 
 
 - port: 8503
-  onOpen: open-preview
+  onOpen: open-browser
+  visibility: public 
 
 - port: 8504
-  onOpen: open-preview
+  onOpen: open-browser
+  visibility: public 
   
 - port: 8505
-  onOpen: open-preview
+  onOpen: open-browser
+  visibility: public 
 
