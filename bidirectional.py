@@ -11,7 +11,7 @@ import plotly.express as px
 # eth op bsc, gnosis poly arb avax
 
 
-
+st.write("ETH-USDC and Back")
 d = {'i':[], 'input':[],'eth': [], 'op': [],'gnosis':[],'poly':[],'arb':[],'avax':[],'bestoutput':[]}
 df = pd.DataFrame(d)
 i = 0
