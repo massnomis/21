@@ -1,5 +1,6 @@
 tasks:
-- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run app.py 
+- before: pip install pipreqs && pipreqs && pip install -r requirements.txt 
+- command: streamlit run app.py 
 - command: steamlit run biderectional.py
 - command: steamlit run debank.py
 - command: steamlit run funding_checker.py
