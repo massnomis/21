@@ -909,7 +909,7 @@ xlist, ylist = make_lists(range(1000,100000000 +1, 1000), lambda i: p.dydxfee(0,
 
 df = pd.DataFrame(list(zip(xlist, ylist)), columns = ['x','y'])
 
-aaa = px.scatter(
+aaa = px.line(
     df, #this is the dataframe you are trying to plot
     x = 'x',
     y = 'y'
@@ -925,7 +925,7 @@ xlist, ylist = make_lists(range(1000,100000000 +1, 1000), lambda i: p.dydxfee(1,
 
 df = pd.DataFrame(list(zip(xlist, ylist)), columns = ['x','y'])
 
-aaa = px.scatter(
+aaa = px.line(
 df, #this is the dataframe you are trying to plot
 x = 'x',
 y = 'y',render_mode="SVG"
