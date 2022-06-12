@@ -864,7 +864,7 @@ class pool:
 A = 50
 
 
-A = st.slider('A: Amplification Coefficient', min_value = 10, max_value = 100)
+A = st.slider('A: Amplification Coefficient', min_value = 10, max_value = 100, value=50)
 
 
 
