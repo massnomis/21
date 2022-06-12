@@ -10,6 +10,7 @@ import random
 
 
 
+
 st.write("Select Network & Chain ID")
 chain_list = pd.DataFrame(
     {
@@ -59,34 +60,60 @@ st.write("Tokens List")
 
 st.dataframe(tokens_list)
 
+# button here for manual input or not....
+agree = st.checkbox("Manual Address Input?")
+address_of_said_tokenIN = "null"
+address_of_said_tokenOUT = "null"
+decimal_of_said_tokenIN = 0
+decimal_of_said_tokenOUT = 0
+
+
+if agree:
+    st.write("noswag")
+    token_IN_test = st.text_input("manually addy in", address_of_said_tokenIN)
+    st.write(token_IN_test)
+    address_of_said_tokenIN = token_IN_test
+
+    token_OUT_test = st.text_input("manually addy out", address_of_said_tokenOUT)
+    st.write(token_OUT_test)
+    address_of_said_tokenOUT = token_OUT_test
+    decimal_of_said_tokenIN = st.number_input("decimal_of_said_tokenIN", value=18)
+    # st.write(config_p_key)
+    decimal_of_said_tokenOUT = st.number_input("decimal_of_said_tokenOUT", value=6)
+    # st.write(config_rpc)
+else:
+
+    st.write("Great!")
+    tokens_list = pd.DataFrame(tokens_list)
+
+    tokenIN = "MATIC"
+
+    tokenIN = st.selectbox("tokenIN", tokens_list['symbol'], index=5)
+    address_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["address"]
+    st.write(address_of_said_tokenIN)
+
+    decimal_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["decimals"]
+    st.write(decimal_of_said_tokenIN)
+    tokenOUT = "USDC"
+
+    tokenOUT = st.selectbox("tokenOUT", tokens_list['symbol'], index=10 )
+    address_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["address"]
+    st.write(address_of_said_tokenOUT)
+
+    decimal_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["decimals"]
+    st.write(decimal_of_said_tokenOUT)
 
 
 
 
-tokens_list = pd.DataFrame(tokens_list)
-
-
-tokenIN = st.selectbox("tokenIN", tokens_list['symbol'], index=10)
-address_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["address"]
-st.write(address_of_said_tokenIN)
-
-decimal_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["decimals"]
-st.write(decimal_of_said_tokenIN)
-tokenOUT = "USDC"
-
-tokenOUT = st.selectbox("tokenOUT", tokens_list['symbol'], index=5)
-address_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["address"]
-st.write(address_of_said_tokenOUT)
-
-decimal_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["decimals"]
-st.write(decimal_of_said_tokenOUT)
 
 
 
 
-returned = st.number_input("starting amount in", min_value=None, max_value=None, value=0.01)
-st.write(returned)
-DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * returned)
+
+number_unformat = st.number_input("amt_in", min_value=None, max_value=None, value=0.01)
+st.write(number_unformat)
+DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * number_unformat)
 
 
 url_swapToken_p1 = f"https://api.1inch.io/v4.0/{chain_id}/quote?fromTokenAddress="
@@ -100,42 +127,40 @@ token_return = requests.get(url_swapToken_p3)
 token_return = json.loads(token_return.text)
 
 amount_toToken = int(token_return["toTokenAmount"])
-amount_fromToken = int(token_return["fromTokenAmount"])
 
 amount_toToken_correct = (amount_toToken) / (10 ** decimal_of_said_tokenOUT)
-amount_fromToken_correct = (amount_toToken) / (10 ** decimal_of_said_tokenIN)
 
 
 
-rate1 = returned / amount_toToken_correct
-rate = amount_toToken_correct / returned
+rate1 = number_unformat / amount_toToken_correct
+rate2 = amount_toToken_correct / number_unformat
 
 
 
-qq = {"i": [], "returned": [], "rate": []}
+qq = {"i": [], "number_unformat": [], "rate2": []}
 df2 = pd.DataFrame(qq)
 
 
 i = 0
 
-start_range = returned
+start_range = number_unformat
 
-end_range = st.number_input("end range of quote", min_value=None, max_value=None, value=100)
+end_range = st.number_input("end range of quote", min_value=None, max_value=None, value=10000)
 st.write(end_range)
 
 i_max = st.number_input("how many quotes to check?", min_value=None, max_value=None, value=5)
 st.write(i_max)
 
 ping_size = (end_range - start_range) / i_max
-DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * returned)
+DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * number_unformat)
 
 
 
-DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * returned)
-st.write("checking quote number...")
+DecimalFix = int(math.pow(10, decimal_of_said_tokenIN) * number_unformat)
+
 
 while i < i_max:
-    DecimalFix1 = int(math.pow(10, decimal_of_said_tokenIN) * returned)
+    DecimalFix1 = int(math.pow(10, decimal_of_said_tokenIN) * number_unformat)
     url_swapToken_p1 = f"https://api.1inch.io/v4.0/{chain_id}/quote?fromTokenAddress="
     url_swapToken_p2 = "{}&toTokenAddress={}&amount={}".format(
         address_of_said_tokenIN, address_of_said_tokenOUT, DecimalFix1
@@ -146,12 +171,12 @@ while i < i_max:
     token_return = json.loads(token_return.text)
     amount_toToken = int(token_return["toTokenAmount"])
     amount_toToken_correct = (amount_toToken) / (10 ** decimal_of_said_tokenOUT)
-    rate = returned / amount_toToken_correct
-    rate = amount_toToken_correct / returned
+    rate1 = number_unformat / amount_toToken_correct
+    rate2 = amount_toToken_correct / number_unformat
     l1 = requests.get(url_swapToken_p3)
     l2 = json.loads(l1.text)
-    returned = returned + ping_size
-    df2.loc[i] = [i, returned, rate]
+    number_unformat = number_unformat + ping_size
+    df2.loc[i] = [i, number_unformat, rate2]
     i = i + 1
     l1 = requests.get(url_swapToken_p3)
     l2 = json.loads(l1.text)
@@ -208,24 +233,29 @@ while i < i_max:
 
     Final_namez = {"name_y": "Liquidity_Source"}
     Final_Path = Final_Path.rename(columns=Final_namez)
-    st.write(i)
+
 st.write(Final_Path)
 
-df2['in'] = df2['rate'] * df2['returned']
-df2 = df2[['i', 'in','returned','rate']]
-# df2 = df2[-1:] + df2[:-1]
-st.dataframe(df2)
+
+
+
+df2['Token_In_Amount'] = df2['number_unformat']
+df2['Rate'] = df2['rate2'] 
+df2['Token Out Amount'] = df2['Rate'] * df2['Token_In_Amount']
+df2 = df2.drop(columns=['rate2', 'number_unformat']) 
+
+st.write(df2)
 
 Final_Path = px.line(
     df2,  # this is the dataframe you are trying to plot
-    x="returned",
-    y="rate"
+    x="Token_In_Amount",
+    y="Rate"
 )
 st.plotly_chart(Final_Path)
 Final_Path = px.bar(
     df2,  # this is the dataframe you are trying to plot
-    x="returned",
-    y="rate"
+    x="Token_In_Amount",
+    y="Rate"
 )
 st.plotly_chart(Final_Path)
 
