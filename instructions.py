@@ -49,3 +49,6 @@ st.code('streamlit run lending_rates.py')
 
 st.write('Simmulator for the cvxCRV Curve pool')
 st.code('streamlit run Pricing_Sim.py')
+
+st.write('See how deep the on chain orderbooks are')
+st.code('streamlit run liquidity_checker.py')
