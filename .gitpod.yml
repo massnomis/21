@@ -1,7 +1,7 @@
 tasks:
 - before: pip install pipreqs && pipreqs && pip install -r requirements.txt 
 - command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run app.py 
-- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run biderectional.py
+- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run bidirectional.py
 - command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run debank.py
 - command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run funding_checker.py
 - command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run lending_rates.py
