@@ -1,10 +1,10 @@
 tasks:
-- before: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run app.py && streamlit run biderectional.py && streamlit run debank.py && streamlit run funding_checker.py && streamlit run lending_rates.py
-# - command: streamlit run app.py 
-# - command: streamlit run biderectional.py
-# - command: streamlit run debank.py
-# - command: streamlit run funding_checker.py
-# - command: streamlit run lending_rates.py
+- before: pip install pipreqs && pipreqs && pip install -r requirements.txt 
+- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run app.py 
+- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run biderectional.py
+- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run debank.py
+- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run funding_checker.py
+- command: pip install pipreqs && pipreqs && pip install -r requirements.txt && streamlit run lending_rates.py
 
 ports:
 - port: 8501
