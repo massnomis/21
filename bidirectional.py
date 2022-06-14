@@ -172,8 +172,8 @@ while qqq < 10:
     # page.write(qqq)
     time.sleep(1)
 
-page.write(df)
-page.write(df2)
+st.write(df)
+st.write(df2)
 chart = px.line(
     df, #this is the dataframe you are trying to plot
     x = "i",
@@ -184,7 +184,7 @@ chart = px.line(
     width = 1000,
     height = 600
 )
-page.plotly_chart(chart)
+st.plotly_chart(chart)
 chart2 = px.line(
     df2, #this is the dataframe you are trying to plot
     x = "i",
@@ -195,5 +195,5 @@ chart2 = px.line(
     width = 1000,
     height = 600
 )
-page.plotly_chart(chart2)
+st.plotly_chart(chart2)
 
