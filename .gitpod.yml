@@ -9,47 +9,59 @@ tasks:
     init: gp sync-await requirements # wait for the above 'init' to finish
     command: streamlit run instructions.py
 
-#   - name: app
-#     init: gp sync-await requirements # wait for the above 'init' to finish
-#     command: streamlit run app.py
+  - name: app
+    init: gp sync-await requirements # wait for the above 'init' to finish
+    command: streamlit run app.py
 
-#   - name: bidirectional
-#     init: gp sync-await requirements
-#     command: streamlit run bidirectional.py
+  - name: bidirectional
+    init: gp sync-await requirements
+    command: streamlit run bidirectional.py
 
-#   - name: debank
-#     init: gp sync-await requirements
-#     command: streamlit run debank.py
+  - name: debank
+    init: gp sync-await requirements
+    command: streamlit run debank.py
 
-#   - name: funding_checker
-#     init: gp sync-await requirements
-#     command: streamlit run funding_checker.py
+  - name: funding_checker
+    init: gp sync-await requirements
+    command: streamlit run funding_checker.py
 
-#   - name: lending_rates
-#     init: gp sync-await requirements
-#     command: streamlit run lending_rates.py
+  - name: lending_rates
+    init: gp sync-await requirements
+    command: streamlit run lending_rates.py
+  - name: Pricing_Sim
+    init: gp sync-await requirements
+    command: streamlit run Pricing_Sim.py.py
+  - name: liquidity_checker
+    init: gp sync-await requirements
+    command: streamlit run liquidity_checker.py
+
 
 ports:
 - port: 8501
   onOpen: open-preview 
   visibility: public 
 
-# - port: 8502
-#   onOpen: open-browser
-#   visibility: public 
+- port: 8502
+  onOpen: open-browser
+  visibility: public 
 
-# - port: 8503
-#   onOpen: open-browser
-#   visibility: public 
+- port: 8503
+  onOpen: open-browser
+  visibility: public 
 
-# - port: 8504
-#   onOpen: open-browser
-#   visibility: public 
+- port: 8504
+  onOpen: open-browser
+  visibility: public 
   
-# - port: 8505
-#   onOpen: open-browser
-#   visibility: public 
-# - port: 8506
-#   onOpen: open-browser
-#   visibility: public 
-
+- port: 8505
+  onOpen: open-browser
+  visibility: public 
+- port: 8506
+  onOpen: open-browser
+  visibility: public 
+- port: 8507
+  onOpen: open-browser
+  visibility: public 
+- port: 8508
+  onOpen: open-browser
+  visibility: public 
