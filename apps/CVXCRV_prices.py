@@ -143,51 +143,51 @@ def app():
     page.plotly_chart(bbbbbb)
     bbbbbbb = px.line(xyz,x='time',y='accumulated')
     page.plotly_chart(bbbbbbb)
-    page.write("https://ftx.com/api/markets/CVX-PERP/candles?resolution=14400")
+    # page.write("https://ftx.com/api/markets/CVX-PERP/candles?resolution=14400")
 
-    df = requests.get('https://ftx.com/api/markets/CVX-PERP/candles?resolution=14400').json()
-    df = pd.DataFrame(df['result'])
+    # df = requests.get('https://ftx.com/api/markets/CVX-PERP/candles?resolution=14400').json()
+    # df = pd.DataFrame(df['result'])
 
-    # st.write(df)
-    # Create figure with secondary y-axis
-    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, 
-                vertical_spacing=0.03, subplot_titles=('OHLC', 'Volume'), 
-                row_width=[0.2, 0.7])
+    # # st.write(df)
+    # # Create figure with secondary y-axis
+    # fig = make_subplots(rows=2, cols=1, shared_xaxes=True, 
+    #             vertical_spacing=0.03, subplot_titles=('OHLC', 'Volume'), 
+    #             row_width=[0.2, 0.7])
 
-    # include candlestick with rangeselector
-    fig.add_trace(go.Candlestick(x=df['startTime'],open=df['open'], high=df['high'],low=df['low'], close=df['close'],name="OHLC"), row=1, col=1)
+    # # include candlestick with rangeselector
+    # fig.add_trace(go.Candlestick(x=df['startTime'],open=df['open'], high=df['high'],low=df['low'], close=df['close'],name="OHLC"), row=1, col=1)
 
-    # include a go.Bar trace for volumes
-    fig.add_trace(go.Bar(x=df['startTime'], y=df['volume'],
-                showlegend=False), row=2, col=1)
+    # # include a go.Bar trace for volumes
+    # fig.add_trace(go.Bar(x=df['startTime'], y=df['volume'],
+    #             showlegend=False), row=2, col=1)
 
-    fig.update(layout_xaxis_rangeslider_visible=False)
-    page.plotly_chart(fig)
+    # fig.update(layout_xaxis_rangeslider_visible=False)
+    # page.plotly_chart(fig)
 
-    # page.markdown('https://llama.airforce/#/votium/overview')
+    # # page.markdown('https://llama.airforce/#/votium/overview')
 
-    xyz = requests.get('https://ftxpremiums.com/assets/data/funding_data/CVX-PERP.json').json()
+    # xyz = requests.get('https://ftxpremiums.com/assets/data/funding_data/CVX-PERP.json').json()
 
-    xyz = pd.DataFrame(xyz)
-    xyz['rate'] = xyz['rate'].astype(float)
-    xyz['time'] =  pd.to_datetime(xyz['time'], unit='s')
-    xyz = xyz.sort_values(by="time")
-
-
+    # xyz = pd.DataFrame(xyz)
+    # xyz['rate'] = xyz['rate'].astype(float)
+    # xyz['time'] =  pd.to_datetime(xyz['time'], unit='s')
+    # xyz = xyz.sort_values(by="time")
 
 
-    xyz = pd.DataFrame(xyz)
-    # print(xyz)
-    # print(xyz.columns)
-    xyz['rate'] = xyz['rate'] * 1000
-
-    xyz['accumulated'] = (list(accumulate(xyz['rate'])))
 
 
-    bbbbbb = px.line(xyz,x='time',y='rate')
-    page.plotly_chart(bbbbbb)
-    bbbbbbb = px.line(xyz,x='time',y='accumulated')
-    page.plotly_chart(bbbbbbb)
+    # xyz = pd.DataFrame(xyz)
+    # # print(xyz)
+    # # print(xyz.columns)
+    # xyz['rate'] = xyz['rate'] * 1000
+
+    # xyz['accumulated'] = (list(accumulate(xyz['rate'])))
+
+
+    # bbbbbb = px.line(xyz,x='time',y='rate')
+    # page.plotly_chart(bbbbbb)
+    # bbbbbbb = px.line(xyz,x='time',y='accumulated')
+    # page.plotly_chart(bbbbbbb)
 
 
 
