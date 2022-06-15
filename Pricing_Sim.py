@@ -864,7 +864,7 @@ class pool:
 A = 50
 
 
-A = st.slider('A: Amplification Coefficient', min_value = 10, max_value = 100, value=50)
+A = st.slider('A: Amplification Coefficient', min_value = 10, max_value = 100, value=50, key = 10)
 
 
 
@@ -932,4 +932,81 @@ y = 'y',render_mode="SVG"
 
 )
 st.write('CVXCRV-CRV')
+st.plotly_chart(aaa)
+
+
+
+
+A = 50
+
+
+A = st.slider('A: Amplification Coefficient', min_value = 10, max_value = 100, value=50, key = 1)
+
+
+
+
+steth_bal = requests.get(
+    f"https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84&address=0xDC24316b9AE028F1497c275EB9192a3Ea0f67022&tag=latest&apikey=6XRVSSB75KEQMXNHI48GYJ3TFFM81Y1I7M").json()
+steth_bal = float(steth_bal['result']) / 10 ** 18
+
+
+st.write(steth_bal)
+
+eth_bal = requests.get(
+    f"https://api.etherscan.io/api?module=account&action=balance&address=0xDC24316b9AE028F1497c275EB9192a3Ea0f67022&tag=latest&apikey=6XRVSSB75KEQMXNHI48GYJ3TFFM81Y1I7M").json()
+eth_bal = float(eth_bal['result']) / 10 ** 18
+
+
+st.write(eth_bal)
+
+
+
+assets = 2
+p0 = eth_bal
+p1 = steth_bal
+
+
+p = pool(A, [p0, p1], assets, p=None, tokens=None, fee=4*10**6)
+st.write("0: ETH")
+st.write("1: stETH")
+
+
+st.write(p.xp())
+
+
+
+
+def make_lists(r, func):
+    t = list(r)
+    return t, [func(x) for x in t]
+
+
+xlist, ylist = make_lists(range(100,500000 +1, 100), lambda i: p.dydxfee(0, 1, i))
+# xlist, ylist = make_lists([i / 10 for i in range(100)], lambda x: math.sin(x))
+
+df = pd.DataFrame(list(zip(xlist, ylist)), columns = ['x','y'])
+
+aaa = px.line(
+    df, #this is the dataframe you are trying to plot
+    x = 'x',
+    y = 'y'
+    ,render_mode="SVG"
+)
+st.write('ETH-stETH')
+st.plotly_chart(aaa)
+
+
+
+xlist, ylist = make_lists(range(100,500000 +1, 100), lambda i: p.dydxfee(1, 0, i))
+# xlist, ylist = make_lists([i / 10 for i in range(100)], lambda x: math.sin(x))
+
+df = pd.DataFrame(list(zip(xlist, ylist)), columns = ['x','y'])
+
+aaa = px.line(
+df, #this is the dataframe you are trying to plot
+x = 'x',
+y = 'y',render_mode="SVG"
+
+)
+st.write('stETH-ETH')
 st.plotly_chart(aaa)
