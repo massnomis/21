@@ -76,11 +76,20 @@ custom_lending = custom_lending.sort_values(by="time", ascending=True)
 custom_lending['rateAPY'] = custom_lending['rate'] * 24 * 36500
 custom_lending['interest'] = custom_lending['rate'] * custom_lending['size']
 st.write(custom_lending)
-aaa = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
-st.plotly_chart(aaa)
+# aaa = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
+# st.plotly_chart(aaa)
 aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
 st.plotly_chart(aaa)
 aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
 st.plotly_chart(aa)
 a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
 st.plotly_chart(a)
+
+custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
+custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
+# st.write('hourly funding rate in basis points')
+bbbbbb = px.line(custom_lending,x='time',y='rate_bps_hr',render_mode="SVG")
+st.plotly_chart(bbbbbb)
+bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
+st.plotly_chart(bbbbbbb)
+
