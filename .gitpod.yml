@@ -9,31 +9,35 @@ tasks:
     init: gp sync-await requirements # wait for the above 'init' to finish
     command: streamlit run instructions.py
 
-#   - name: app
-#     init: gp sync-await requirements # wait for the above 'init' to finish
-#     command: streamlit run app.py
+  - name: app
+    init: gp sync-await requirements # wait for the above 'init' to finish
+    command: streamlit run app.py
 
-#   - name: bidirectional
-#     init: gp sync-await requirements
-#     command: streamlit run bidirectional.py
+  - name: bidirectional
+    init: gp sync-await requirements
+    command: streamlit run bidirectional.py
 
-#   - name: debank
-#     init: gp sync-await requirements
-#     command: streamlit run debank.py
+  - name: debank
+    init: gp sync-await requirements
+    command: streamlit run debank.py
 
-#   - name: funding_checker
-#     init: gp sync-await requirements
-#     command: streamlit run funding_checker.py
+  - name: funding_checker
+    init: gp sync-await requirements
+    command: streamlit run funding_checker.py
 
-#   - name: lending_rates
-#     init: gp sync-await requirements
-#     command: streamlit run lending_rates.py
-#   - name: Pricing_Sim
-#     init: gp sync-await requirements
-#     command: streamlit run Pricing_Sim.py
-#   - name: liquidity_checker
-#     init: gp sync-await requirements
-#     command: streamlit run liquidity_checker.py
+  - name: lending_rates
+    init: gp sync-await requirements
+    command: streamlit run lending_rates.py
+  - name: Pricing_Sim
+    init: gp sync-await requirements
+    command: streamlit run Pricing_Sim.py
+  - name: liquidity_checker
+    init: gp sync-await requirements
+    command: streamlit run liquidity_checker.py
+  - name: cashcarryOLHC
+    init: gp sync-await requirements
+    command: streamlit run cashcarryOLHC.py
+
 
 
 ports:

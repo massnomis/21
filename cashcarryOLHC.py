@@ -121,3 +121,24 @@ fig.add_trace(go.Bar(x=df['startTime'], y=df['volume'],
 
 fig.update(layout_xaxis_rangeslider_visible=False)
 st.plotly_chart(fig)
+
+df1 = requests.get(f"https://ftx.com/api/markets/{names_premeiums}/orderbook?depth=100").json()
+df1 = pd.DataFrame(df1)
+df1 = df1['result']
+asks = df1['asks']
+bids = df1['bids']
+
+# rename collums
+# plot depth
+# pick orders
+# pragnate orders into ccxt
+# exec
+
+
+# loop later to show postioning
+asks = pd.DataFrame(asks)
+bids = pd.DataFrame(bids)
+# st.write(df1)
+st.write(asks)
+st.write(bids)
+
