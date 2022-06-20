@@ -41,6 +41,7 @@ funding = pd.DataFrame(funding)
 
 # st.write(funding)
 premiums_names = premiums['name']
+premiums_names.sort_values(ascending=True)
 # st.write(premiums_names)
 
 
@@ -57,7 +58,9 @@ perp_names = funding['name']
 
 names_premeiums = st.selectbox("premiums", premiums_names
 
-, index = 8
+, 
+index = 8, 
+key = 2
 )
 st.write(names_premeiums)
 names_lending = st.selectbox("lending", lending_names
