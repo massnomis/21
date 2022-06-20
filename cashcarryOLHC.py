@@ -19,27 +19,27 @@ import json
 import requests
 import pandas as pd
 import random
-
+st.set_page_config(layout="wide")
 premiums = requests.get('https://ftxpremiums.com/assets/data/premiums.json')
 premiums = json.loads(premiums.text)
 premiums = pd.DataFrame(premiums)
 # print(premiums)
-st.write("cash and carry premiums")
-st.write(premiums)
+# st.write("cash and carry premiums")
+# st.write(premiums)
 lending = requests.get('https://ftxpremiums.com/assets/data/lending.json')
 lending = json.loads(lending.text)
 lending = pd.DataFrame(lending)
 # print(lending)    
-st.write("lending rates")
+# st.write("lending rates")
 
-st.write(lending)
+# st.write(lending)
 funding = requests.get('https://ftxpremiums.com/assets/data/funding.json')
 funding = json.loads(funding.text)
 funding = pd.DataFrame(funding)
 # print(funding)
-st.write("funding rates")
+# st.write("funding rates")
 
-st.write(funding)
+# st.write(funding)
 premiums_names = premiums['name']
 # st.write(premiums_names)
 
@@ -115,7 +115,7 @@ st.write(name_perp)
 # fig.update(layout_xaxis_rangeslider_visible=False)
 # st.plotly_chart(fig)
 
-st.write(names_premeiums)
+# st.write(names_premeiums)
 df0 = requests.get(f"https://ftx.com/api/markets/{names_premeiums}/candles?resolution=14400").json()
 # st.write(df)
 df0 = pd.DataFrame(df0['result'])
@@ -145,9 +145,44 @@ bids = df1['bids']
 asks = pd.DataFrame(asks)
 bids = pd.DataFrame(bids)
 # st.write(df1)
+asks = asks.rename(columns={0: "price", 1: "size"})
+bids = bids.rename(columns={0: "price", 1: "size"})
+asks['accumulated']  = (list(accumulate(asks['size'])))
+bids['accumulated']  = (list(accumulate(bids['size'])))
 
-st.write(asks)
-st.write(bids)
+# asks['price'] = asks[0]
+# asks['size'] = asks[1]
+for i in range(1, 2):
+    cols = st.columns(2)
+    cols[0].write(bids)
+    
+    cols[1].write(asks)
+aaa = px.line(asks,x='price',y='accumulated')
+bbb = px.line(bids,x='price',y='accumulated')
+ccc = px.bar(asks,x='price',y='size')
+ddd = px.bar(bids,x='price',y='size')
+
+for i in range(1, 2):
+    colz = st.columns(2)
+    colz[1].plotly_chart(aaa)    
+    
+    colz[0].plotly_chart(bbb)    
+    
+for i in range(1, 2):
+    colx = st.columns(2)
+    colx[1].plotly_chart(ccc)    
+    
+    colx[0].plotly_chart(ddd)    
+    
+        
+# st.bar_chart(bids)
+
+# st.write(asks)
+# # st.write(asks.columns)
+# # asks.rename(index=str).index
+# # st.write(asks.index)
+# st.write(bids)
+# st.write(bids.columns)
 
 
 
