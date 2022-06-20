@@ -18,7 +18,8 @@ i = 0
 qq = {'i':[], 'input':[],'eth': [], 'op': [],'gnosis':[],'poly':[],'arb':[],'avax':[],'max':[]}
 df2 = pd.DataFrame(qq)
 qqq = 0
-while qqq < 10:
+aaa = st.number_input("how many obsrvations?",  3)
+while qqq < aaa:
     eth = "https://api.1inch.io/v4.0/1/quote?fromTokenAddress=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&toTokenAddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&amount=100000000000000000"
 
     token_return = requests.get(eth)
@@ -166,34 +167,26 @@ while qqq < 10:
 
     # st.write(final)
     qqq = qqq+1
+    st.write(i)
+
     i = i+1
 
     # st.write(profit)
     # page.write(qqq)
-    time.sleep(1)
+    time.sleep(1.5)
 
-st.write(df)
-st.write(df2)
+st.table(df)
+st.table(df2)
 chart = px.line(
     df, #this is the dataframe you are trying to plot
     x = "i",
-    y = ['eth','op','gnosis','poly','arb','avax'],
-    orientation = "v",
-    # color = "WEIGHT",
-    template = "plotly_white",
-    width = 1000,
-    height = 600
+    y = ['eth','op','gnosis','poly','arb','avax']
 )
 st.plotly_chart(chart)
 chart2 = px.line(
     df2, #this is the dataframe you are trying to plot
     x = "i",
-    y = ['eth','op','gnosis','poly','arb','avax'],
-    orientation = "v",
-    # color = "WEIGHT",
-    template = "plotly_white",
-    width = 1000,
-    height = 600
+    y = ['eth','op','gnosis','poly','arb','avax']
 )
 st.plotly_chart(chart2)
 

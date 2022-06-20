@@ -116,6 +116,7 @@ st.write(name_perp)
 # st.plotly_chart(fig)
 
 # st.write(names_premeiums)
+st.title('dated futures')
 df0 = requests.get(f"https://ftx.com/api/markets/{names_premeiums}/candles?resolution=14400").json()
 # st.write(df)
 df0 = pd.DataFrame(df0['result'])
@@ -152,19 +153,21 @@ bids['accumulated']  = (list(accumulate(bids['size'])))
 
 
 column = bids["price"]
-max_value = column.max()
-st.write(max_value)
+max_value_dated_futures = column.max()
+st.write(max_value_dated_futures)
 
 
 column = asks["price"]
-min_value = column.min()
-st.write(min_value)
+min_value_dated_futures = column.min()
+st.write(min_value_dated_futures)
 
-spred = min_value - max_value
-st.write(spred)
+spred_dated = min_value_dated_futures - max_value_dated_futures
+st.write(spred_dated)
 
-spred_pct = spred/min_value*1000
-st.write(spred_pct , "bps")
+
+
+spred_dated_BPS = spred_dated/min_value_dated_futures*1000
+st.write(spred_dated_BPS , "bps")
 # asks['price'] = asks[0]
 # asks['size'] = asks[1]
 for i in range(1, 2):
@@ -285,6 +288,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 
 st.write(names_lending)
+st.title('spot/usd/lending')
 
 dft2 = requests.get(f"https://ftx.com/api/markets/{names_lending}/USD/candles?resolution=14400").json()
 # st.write(df)
@@ -335,19 +339,18 @@ bids['accumulated']  = (list(accumulate(bids['size'])))
 
 
 column = bids["price"]
-max_value = column.max()
-st.write(max_value)
-
+max_value_spot = column.max()
+st.write(max_value_spot)
 
 column = asks["price"]
-min_value = column.min()
-st.write(min_value)
+min_value_spot = column.min()
+st.write(min_value_spot)
 
-spred = min_value - max_value
-st.write(spred)
+spred_spot = min_value_spot - max_value_spot
+st.write(spred_spot)
 
-spred_pct = spred/min_value*1000
-st.write(spred_pct , "bps")
+spred_bps_spot = spred_spot/min_value_spot*1000
+st.write(spred_bps_spot , "bps")
 # asks['price'] = asks[0]
 # asks['size'] = asks[1]
 for i in range(1, 2):
@@ -455,6 +458,7 @@ st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 st.write(name_perp)
+st.title('perpetual futures')
 
 
 
@@ -516,20 +520,21 @@ asks['accumulated']  = (list(accumulate(asks['size'])))
 bids['accumulated']  = (list(accumulate(bids['size'])))
 
 
+
 column = bids["price"]
-max_value = column.max()
-st.write(max_value)
+max_value_perps = column.max()
+st.write(max_value_perps)
 
 
 column = asks["price"]
-min_value = column.min()
-st.write(min_value)
+min_value_perps = column.min()
+st.write(min_value_perps)
 
-spred = min_value - max_value
-st.write(spred)
+spred_perps = min_value_perps - max_value_perps
+st.write(spred_perps)
 
-spred_pct = spred/min_value*1000
-st.write(spred_pct , "bps")
+spred_bps_perps = spred_perps/min_value_perps*1000
+st.write(spred_bps_perps , "bps")
 # asks['price'] = asks[0]
 # asks['size'] = asks[1]
 for i in range(1, 2):
