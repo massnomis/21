@@ -20,9 +20,9 @@ import requests
 import pandas as pd
 import random
 st.set_page_config(layout="wide")
-premiums = requests.get('https://ftxpremiums.com/assets/data/premiums.json')
-premiums = json.loads(premiums.text)
-premiums = pd.DataFrame(premiums)
+# premiums = requests.get('https://ftxpremiums.com/assets/data/premiums.json')
+# premiums = json.loads(premiums.text)
+# premiums = pd.DataFrame(premiums)
 # print(premiums)
 # st.write("cash and carry premiums")
 # st.write(premiums)
@@ -40,10 +40,10 @@ funding = pd.DataFrame(funding)
 # st.write("funding rates")
 
 # st.write(funding)
-premiums_names = premiums['name']
-premiums_names.sort_values(ascending=True)
-# st.write(premiums_names)
-
+# premiums_names = premiums['name']
+# premiums_names.sort_values(ascending=True)
+# 
+healthcheck = premiums_names
 
 lending_names = lending['name']
 # st.write(lending_names)
@@ -56,23 +56,19 @@ perp_names = funding['name']
 # st.title("HERE CREAMY D CLIUVK HERE")
 # st.write(names_premeiums)
 
-names_premeiums = st.selectbox("premiums", premiums_names
-
-, 
-index = 8, 
-key = 2
-)
-st.write(names_premeiums)
+premiums = pd.read_csv('out.csv')
+names_premeiums = st.selectbox("premiums", premiums)
+# st.write(names_premeiums)
 names_lending = st.selectbox("lending", lending_names
 
 # , index = random.randint(0, 100)
 )
-st.write(names_lending)
+# st.write(names_lending)
 name_perp = st.selectbox("perp", perp_names
 
 # , index = random.randint(0, 10)
 )
-st.write(name_perp)
+# st.write(name_perp)
 # st.write(names_premeiums)
 # page.write(lending_names)
 # custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={NAME_LENDING}&start_time=960368456&end_time=1854597556").json()
