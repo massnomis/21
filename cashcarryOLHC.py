@@ -291,7 +291,7 @@ fig.add_trace(
 
 # Add figure title
 fig.update_layout(
-    title_text="orderbook"
+    title_text="cash_equivelant"
 )
 
 # Set x-axis title
@@ -524,7 +524,7 @@ fig.add_trace(
 
 # Add figure title
 fig.update_layout(
-    title_text="orderbook"
+    title_text="cash_equivelant"
 )
 
 # Set x-axis title
@@ -752,7 +752,7 @@ fig.add_trace(
 
 # Add figure title
 fig.update_layout(
-    title_text="orderbook"
+    title_text="cash_equivelant"
 )
 
 # Set x-axis title
@@ -768,10 +768,15 @@ custom['time'] =  pd.to_datetime(custom['time'], unit='s')
 custom = custom.sort_values(by="time")
 
 custom['rate'] = custom['rate'] * 1000
+custom['rate_APY'] = custom['rate'] / 10 * 24 * 365.24
+
 custom['accumulated']  = (list(accumulate(custom['rate'])))
+# / 10 * 24 * 365.24
 st.write('hourly funding rate in basis points')
 bbbbbb = px.line(custom,x='time',y='rate',render_mode="SVG")
 st.plotly_chart(bbbbbb, use_container_width=True)
+bbbbbbx = px.line(custom,x='time',y='rate_APY',render_mode="SVG")
+st.plotly_chart(bbbbbbx, use_container_width=True)
 bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
 

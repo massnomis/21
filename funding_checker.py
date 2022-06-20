@@ -51,10 +51,15 @@ custom['time'] =  pd.to_datetime(custom['time'], unit='s')
 custom = custom.sort_values(by="time")
 
 custom['rate'] = custom['rate'] * 1000
+custom['rate_APY'] = custom['rate'] / 10 * 24 * 365.24
+
 custom['accumulated']  = (list(accumulate(custom['rate'])))
+# / 10 * 24 * 365.24
 st.write('hourly funding rate in basis points')
 bbbbbb = px.line(custom,x='time',y='rate',render_mode="SVG")
 st.plotly_chart(bbbbbb)
+bbbbbbx = px.line(custom,x='time',y='rate_APY',render_mode="SVG")
+st.plotly_chart(bbbbbbx)
 bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
 st.plotly_chart(bbbbbbb)
 
