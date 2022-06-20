@@ -26,17 +26,17 @@ st.set_page_config(layout="wide")
 # print(premiums)
 # st.write("cash and carry premiums")
 # st.write(premiums)
-lending = requests.get('https://ftxpremiums.com/assets/data/lending.json')
-lending = json.loads(lending.text)
-lending = pd.DataFrame(lending)
-# print(lending)    
-# st.write("lending rates")
+# lending = requests.get('https://ftxpremiums.com/assets/data/lending.json')
+# lending = json.loads(lending.text)
+# lending = pd.DataFrame(lending)
+# # print(lending)    
+# # st.write("lending rates")
 
-# st.write(lending)
-funding = requests.get('https://ftxpremiums.com/assets/data/funding.json')
-funding = json.loads(funding.text)
-funding = pd.DataFrame(funding)
-# print(funding)
+# # st.write(lending)
+# funding = requests.get('https://ftxpremiums.com/assets/data/funding.json')
+# funding = json.loads(funding.text)
+# funding = pd.DataFrame(funding)
+# # print(funding)
 # st.write("funding rates")
 
 # st.write(funding)
@@ -44,26 +44,28 @@ funding = pd.DataFrame(funding)
 # premiums_names.sort_values(ascending=True)
 # 
 
-lending_names = lending['name']
-# st.write(lending_names)
+# lending_names = lending['name']
+# # st.write(lending_names)
 
-perp_names = funding['name']
-# st.write(perp_names)
+# perp_names = funding['name']
+# # st.write(perp_names)
 
 # names_premeiums = 'BTC/USD'
 # @st.cache
 # st.title("HERE CREAMY D CLIUVK HERE")
 # st.write(names_premeiums)
+funding = pd.read_csv('funding.csv')
+lending = pd.read_csv('lending.csv')
 
-premiums = pd.read_csv('out.csv')
+premiums = pd.read_csv('premiums.csv')
 names_premeiums = st.selectbox("premiums", premiums)
 # st.write(names_premeiums)
-names_lending = st.selectbox("lending", lending_names
+names_lending = st.selectbox("lending", lending
 
 # , index = random.randint(0, 100)
 )
 # st.write(names_lending)
-name_perp = st.selectbox("perp", perp_names
+name_perp = st.selectbox("perp", funding
 
 # , index = random.randint(0, 10)
 )
