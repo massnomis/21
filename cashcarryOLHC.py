@@ -134,7 +134,7 @@ fig0.add_trace(go.Bar(x=df0['startTime'], y=df0['volume'],
             showlegend=False), row=2, col=1)
 
 fig0.update(layout_xaxis_rangeslider_visible=False)
-st.plotly_chart(fig0)
+st.plotly_chart(fig0, use_container_width=True)
 
 
 df1 = requests.get(f"https://ftx.com/api/markets/{names_premeiums}/orderbook?depth=100").json()
@@ -150,6 +150,21 @@ bids = bids.rename(columns={0: "price", 1: "size"})
 asks['accumulated']  = (list(accumulate(asks['size'])))
 bids['accumulated']  = (list(accumulate(bids['size'])))
 
+
+column = bids["price"]
+max_value = column.max()
+st.write(max_value)
+
+
+column = asks["price"]
+min_value = column.min()
+st.write(min_value)
+
+spred = min_value - max_value
+st.write(spred)
+
+spred_pct = spred/min_value*1000
+st.write(spred_pct , "bps")
 # asks['price'] = asks[0]
 # asks['size'] = asks[1]
 for i in range(1, 2):
@@ -157,6 +172,8 @@ for i in range(1, 2):
     cols[0].write(bids)
     
     cols[1].write(asks)
+
+
 aaa = px.line(asks,x='price',y='accumulated')
 bbb = px.line(bids,x='price',y='accumulated')
 ccc = px.bar(asks,x='price',y='size')
@@ -173,8 +190,78 @@ for i in range(1, 2):
     colx[1].plotly_chart(ccc)    
     
     colx[0].plotly_chart(ddd)    
-    
-        
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add traces
+fig.add_trace(
+    go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
+    secondary_y=False,
+)
+
+fig.add_trace(
+    go.Scatter(x=bids['price'], y=bids['accumulated'], name="bids"),
+    secondary_y=True,
+)
+
+# Add figure title
+fig.update_layout(
+    title_text="orderbook"
+)
+
+# Set x-axis title
+
+
+st.plotly_chart(fig, use_container_width=True)
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add traces
+fig.add_trace(
+    go.Bar(x=asks['price'], y=asks['size'], name="asks"),
+    secondary_y=False,
+)
+
+fig.add_trace(
+    go.Bar(x=bids['price'], y=bids['size'], name="bids"),
+    secondary_y=True,
+)
+
+# Add figure title
+fig.update_layout(
+    title_text="orderbook"
+)
+
+# Set x-axis title
+
+
+st.plotly_chart(fig, use_container_width=True)
+
+# from plotly.graph_objs import *
+# trace1 = {
+#   "mode": "lines+markers", 
+#   "name": "bid", 
+#   "type": "scatter", 
+#   "x": bid['price'], 
+#   "y": bid['size']
+# }
+# trace2 = {
+#   "mode": "lines+markers", 
+#   "name": "ask", 
+#   "type": "scatter", 
+#   "x": ask['price'], 
+#   "y": ask['size']
+# }
+# data = Data([trace1, trace2])
+# layout = {
+#   "title": "Limited Order Book", 
+#   "xaxis": {"title": "price"}, 
+#   "yaxis": {"title": "amount"}
+# }
+# fig = Figure(data=data, layout=layout)
+# st.plotly_chart(fig)
+
 # st.bar_chart(bids)
 
 # st.write(asks)
@@ -217,7 +304,7 @@ fig.add_trace(go.Bar(x=dft2['startTime'], y=dft2['volume'],
             showlegend=False), row=2, col=1)
 
 fig.update(layout_xaxis_rangeslider_visible=False)
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 
@@ -238,10 +325,101 @@ asks = pd.DataFrame(asks)
 bids = pd.DataFrame(bids)
 # st.write(df1)
 
-st.write(asks)
-st.write(bids)
+# st.write(asks)
+# st.write(bids)
+
+asks = asks.rename(columns={0: "price", 1: "size"})
+bids = bids.rename(columns={0: "price", 1: "size"})
+asks['accumulated']  = (list(accumulate(asks['size'])))
+bids['accumulated']  = (list(accumulate(bids['size'])))
 
 
+column = bids["price"]
+max_value = column.max()
+st.write(max_value)
+
+
+column = asks["price"]
+min_value = column.min()
+st.write(min_value)
+
+spred = min_value - max_value
+st.write(spred)
+
+spred_pct = spred/min_value*1000
+st.write(spred_pct , "bps")
+# asks['price'] = asks[0]
+# asks['size'] = asks[1]
+for i in range(1, 2):
+    cols = st.columns(2)
+    cols[0].write(bids)
+    
+    cols[1].write(asks)
+
+    
+aaa = px.line(asks,x='price',y='accumulated')
+bbb = px.line(bids,x='price',y='accumulated')
+ccc = px.bar(asks,x='price',y='size')
+ddd = px.bar(bids,x='price',y='size')
+
+for i in range(1, 2):
+    colz = st.columns(2)
+    colz[1].plotly_chart(aaa)    
+    
+    colz[0].plotly_chart(bbb)    
+    
+for i in range(1, 2):
+    colx = st.columns(2)
+    colx[1].plotly_chart(ccc)    
+    
+    colx[0].plotly_chart(ddd)    
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add traces
+fig.add_trace(
+    go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
+    secondary_y=False,
+)
+
+fig.add_trace(
+    go.Scatter(x=bids['price'], y=bids['accumulated'], name="bids"),
+    secondary_y=True,
+)
+
+# Add figure title
+fig.update_layout(
+    title_text="orderbook"
+)
+
+# Set x-axis title
+
+
+st.plotly_chart(fig, use_container_width=True)
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add traces
+fig.add_trace(
+    go.Bar(x=asks['price'], y=asks['size'], name="asks"),
+    secondary_y=False,
+)
+
+fig.add_trace(
+    go.Bar(x=bids['price'], y=bids['size'], name="bids"),
+    secondary_y=True,
+)
+
+# Add figure title
+fig.update_layout(
+    title_text="orderbook"
+)
+
+# Set x-axis title
+
+
+st.plotly_chart(fig, use_container_width=True)
 custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
 
 custom_lending = pd.DataFrame(custom_lending['result'])
@@ -257,19 +435,19 @@ custom_lending['interest'] = custom_lending['rate'] * custom_lending['size']
 # aaa = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
 # st.plotly_chart(aaa)
 aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
-st.plotly_chart(aaa)
+st.plotly_chart(aaa, use_container_width=True)
 aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-st.plotly_chart(aa)
+st.plotly_chart(aa, use_container_width=True)
 a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
-st.plotly_chart(a)
+st.plotly_chart(a, use_container_width=True)
 
 custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
 custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
 # st.write('hourly funding rate in basis points')
 bbbbbb = px.line(custom_lending,x='time',y='rate_bps_hr',render_mode="SVG")
-st.plotly_chart(bbbbbb)
+st.plotly_chart(bbbbbb, use_container_width=True)
 bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
-st.plotly_chart(bbbbbbb)
+st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 
@@ -298,7 +476,7 @@ fig.add_trace(go.Bar(x=df['startTime'], y=df['volume'],
             showlegend=False), row=2, col=1)
 
 fig.update(layout_xaxis_rangeslider_visible=False)
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 
@@ -331,8 +509,100 @@ asks = pd.DataFrame(asks)
 bids = pd.DataFrame(bids)
 # st.write(df1)
 
-st.write(asks)
-st.write(bids)
+
+asks = asks.rename(columns={0: "price", 1: "size"})
+bids = bids.rename(columns={0: "price", 1: "size"})
+asks['accumulated']  = (list(accumulate(asks['size'])))
+bids['accumulated']  = (list(accumulate(bids['size'])))
+
+
+column = bids["price"]
+max_value = column.max()
+st.write(max_value)
+
+
+column = asks["price"]
+min_value = column.min()
+st.write(min_value)
+
+spred = min_value - max_value
+st.write(spred)
+
+spred_pct = spred/min_value*1000
+st.write(spred_pct , "bps")
+# asks['price'] = asks[0]
+# asks['size'] = asks[1]
+for i in range(1, 2):
+    cols = st.columns(2)
+    cols[0].write(bids)
+    
+    cols[1].write(asks)
+
+    
+aaa = px.line(asks,x='price',y='accumulated')
+bbb = px.line(bids,x='price',y='accumulated')
+ccc = px.bar(asks,x='price',y='size')
+ddd = px.bar(bids,x='price',y='size')
+
+for i in range(1, 2):
+    colz = st.columns(2)
+    colz[1].plotly_chart(aaa)    
+    
+    colz[0].plotly_chart(bbb)    
+    
+for i in range(1, 2):
+    colx = st.columns(2)
+    colx[1].plotly_chart(ccc)    
+    
+    colx[0].plotly_chart(ddd)    
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add traces
+fig.add_trace(
+    go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
+    secondary_y=False,
+)
+
+fig.add_trace(
+    go.Scatter(x=bids['price'], y=bids['accumulated'], name="bids"),
+    secondary_y=True,
+)
+
+# Add figure title
+fig.update_layout(
+    title_text="orderbook"
+)
+
+# Set x-axis title
+
+
+st.plotly_chart(fig, use_container_width=True)
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add traces
+fig.add_trace(
+    go.Bar(x=asks['price'], y=asks['size'], name="asks"),
+    secondary_y=False,
+)
+
+fig.add_trace(
+    go.Bar(x=bids['price'], y=bids['size'], name="bids"),
+    secondary_y=True,
+)
+
+# Add figure title
+fig.update_layout(
+    title_text="orderbook"
+)
+
+# Set x-axis title
+
+
+st.plotly_chart(fig, use_container_width=True)
+
 st.write("Predicted funding rate. Longs pay shorts if positive, shorts pay longs if negative. 1/24 times the average premium over the hour.")
 custom = requests.get(f"https://ftxpremiums.com/assets/data/funding_data/{name_perp}.json").json()
 
@@ -345,9 +615,9 @@ custom['rate'] = custom['rate'] * 1000
 custom['accumulated']  = (list(accumulate(custom['rate'])))
 st.write('hourly funding rate in basis points')
 bbbbbb = px.line(custom,x='time',y='rate',render_mode="SVG")
-st.plotly_chart(bbbbbb)
+st.plotly_chart(bbbbbb, use_container_width=True)
 bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
-st.plotly_chart(bbbbbbb)
+st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 # names_premeiums = st.selectbox("premiums", premiums_names
