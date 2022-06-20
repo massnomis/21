@@ -43,7 +43,6 @@ funding = pd.DataFrame(funding)
 # premiums_names = premiums['name']
 # premiums_names.sort_values(ascending=True)
 # 
-healthcheck = premiums_names
 
 lending_names = lending['name']
 # st.write(lending_names)
