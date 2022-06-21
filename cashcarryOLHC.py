@@ -178,10 +178,10 @@ for i in range(1, 2):
     cols = st.columns(2)
     cols[0].subheader("bids")
 
-    cols[0].table(bids)
+    cols[0].write(bids)
     cols[1].subheader("asks")
 
-    cols[1].table(asks)
+    cols[1].write(asks)
     
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 
@@ -353,10 +353,10 @@ st.write("spred_bps", spred_bps_spot , "bps")
 for i in range(1, 2):
     cols = st.columns(2)
     cols[0].subheader("bids")
-    cols[0].table(bids)
+    cols[0].write(bids)
     cols[1].subheader("asks")
 
-    cols[1].table(asks)
+    cols[1].write(asks)
 
 
 fig = make_subplots(specs=[[{"secondary_y": True}]])
@@ -585,10 +585,10 @@ for i in range(1, 2):
     cols = st.columns(2)
     cols[0].subheader('bids')
 
-    cols[0].table(bids)
+    cols[0].write(bids)
     cols[1].subheader('asks')
     
-    cols[1].table(asks)
+    cols[1].write(asks)
 
 
 
