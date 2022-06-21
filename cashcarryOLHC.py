@@ -127,8 +127,8 @@ st.write("days until expiry: ", days_until_expiry)
 st.write("add the amount of funding events until expiry ")
 
 
-pct_expiry = days_until_expiry.days / 365 * 100
-st.write("expiry time - pct of a year: ", pct_expiry, "%")
+pct_expiry_dated = days_until_expiry.days / 365 * 100
+st.write("expiry time - pct of a year: ", pct_expiry_dated, "%")
 
 
 
@@ -456,8 +456,8 @@ custom_lending['interest'] = custom_lending['rate'] * custom_lending['size']
 custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
 custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
 
-window = st.sidebar.slider('window', 0, 1000, 20)
-no_of_std = st.sidebar.slider('no_of_std', 0, 10, 2)
+window = st.sidebar.slider('window size (periods for rolling average)', 1, 250, 20)
+no_of_std = st.sidebar.slider('number of standard deviations', 1, 5, 2)
 def bollinger_strat(custom_lending, window, no_of_std):
     rolling_mean = custom_lending['rateAPY'].rolling(window).mean()
     rolling_std = custom_lending['rateAPY'].rolling(window).std()
@@ -757,7 +757,6 @@ custom['rate_APY'] = custom['rate'] / 10 * 24 * 365.24
 
 custom['accumulated']  = (list(accumulate(custom['rate'])))
 # / 10 * 24 * 365.24
-st.write('hourly funding rate in basis points')
 
 
 
@@ -781,6 +780,7 @@ st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 
+st.write('hourly funding rate in basis points')
 
 
 def bollinger_strat(custom, window, no_of_std):
@@ -841,19 +841,19 @@ def spelling(numbers, names_premiums, names_lending, name_perp):
 a = spelling(numbers, names_premeiums, names_lending, name_perp)
 st.write("are the assets the same?",a)
 st.subheader("dated futures")
-st.write("best ask dated futures", max_value_dated_futures)
-st.write("best bid dated futures", min_value_dated_futures)
+st.write("best bid dated futures", max_value_dated_futures)
+st.write("best ask dated futures", min_value_dated_futures)
 st.write("spread dated futures", spred_dated)
 st.write("spread dated futures", spred_dated_BPS, "bps")
 st.write("expiry date", expiry)
 st.write("now",datetime.now())
 st.write("days until expiry: ", days_until_expiry)
-st.write("expiry time - pct of a year: ", pct_expiry, "%")
+st.write("expiry time - pct of a year: ", pct_expiry_dated, "%")
 
 
 st.subheader("lending/spot")
-latest_rateAPY = custom_lending['rateAPY'].iloc[-1]
-st.write("latest rate APY", latest_rateAPY)
+latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
+st.write("latest rate APY", latest_rateAPY_spot)
 latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
 st.write("rate_bps_hr", latest_rate_bps_hr)
 st.write("now",datetime.now())
@@ -877,16 +877,32 @@ st.write("best bid perps", max_value_perps)
 st.write("best bid asks", min_value_perps)
 st.write("perp spread",spred_perps)
 st.write("perp spread", spred_bps_perps , "bps")
+st.subheader("""first we look at spot vs dated """)
+st.write("sell", min_value_dated_futures, "dated_future", "buy", max_value_spot, "spot")
 
+calculated_income_by_lending = (max_value_spot * (1 + ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
+# st.write(calculated_income_by_lending)
+PREMIUM = (min_value_dated_futures - calculated_income_by_lending) 
+# * (1 - latest_rateAPY)
+PREMIUM_APY = PREMIUM / (max_value_spot * (pct_expiry_dated/100)) * 100
+
+st.write(PREMIUM_APY, "% APY")
+
+
+
+
+
+# st.write(PREMIUM_APY)
+# """previous formula has to be accrued hourly not daily """
 
 
 # """verify the profitavilty of the cash and carry"""
 
-"""first we look at spot vs dated """
+# """first we look at spot vs dated """
 
 
-"""next we look at spot vs perp """
+# """next we look at spot vs perp """
 
 
 
-"""third we look at dated vs perp """
+# """third we look at dated vs perp """
