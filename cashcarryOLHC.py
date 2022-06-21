@@ -870,6 +870,9 @@ st.write("perp spread", spred_bps_perps , "bps")
 # """verify the profitavilty of the cash and carry"""
 
 """first we look at spot vs dated """
+""" PREMIUM = min_value_dated_futures - min_value_spot* (1 - latest_rateAPY) """
+""" PREMIUM_APY = PREMIUM / (min_value_spot * (time_till_expiry/365)) """
+""" previous formula has to be accrued hourly not daily
 
 
 """next we look at spot vs perp """
