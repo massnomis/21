@@ -7,9 +7,19 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 SQL_QUERY = """
-Select (sum (fee_usd)) as eth_spent_fees_usd, (sum (TX_FEE)) as eth_spent_fees_native, date_trunc('hour',block_timestamp) as dayz 
-  from ethereum.transactions
-  group by dayz order by dayz desc 
+
+    SELECT
+        date_trunc('hour',block_timestamp) as hour,
+        sum(amount) as withdrawals,
+  from_label
+    FROM ethereum.udm_events
+    WHERE 
+        block_timestamp >= getdate() - interval '480 hours'
+        and from_label_type = 'cex'
+        and (to_label_type <> 'cex' OR to_label_type IS NULL)
+        and symbol = 'CEL' 
+    GROUP BY 1,3
+    order by 1 desc
 """
 
 API_KEY = st.text_input("Enter your API key", API_KEY )
@@ -57,6 +67,42 @@ data = get_query_results(token)
 # return data
 data = pd.DataFrame(data['results'], columns=data['columnLabels'])
 st.write(data)
-st.plotly_chart(px.line(data, x="DAYZ", y="ETH_SPENT_FEES_USD"))
-st.plotly_chart(px.line(data, x="DAYZ", y="ETH_SPENT_FEES_NATIVE"))
+st.plotly_chart(px.bar(data, x="HOUR", y="WITHDRAWALS", color = 'FROM_LABEL'))
+
+# def func():
+
+
+
+# st.plotly_chart(px.line(data, x="DAYZ", y="ETH_SPENT_FEES_NATIVE"))
 # http://localhost:3000, http://localhost:3001
+
+
+
+#     SELECT
+#         date_trunc('day',block_timestamp) as hour,
+#         sum(amount) as withdrawals,
+#   from_label
+#     FROM ethereum.udm_events
+#     WHERE 
+#         block_timestamp >= getdate() - interval '4800 hours'
+#         and from_label_type = 'cex'
+#         and (to_label_type <> 'cex' OR to_label_type IS NULL)
+#         and symbol = 'CEL' 
+#     GROUP BY 1,3
+
+
+
+
+
+#     SELECT
+#         date_trunc('day',block_timestamp) as hour,
+#         sum(amount) as deposits,
+#   to_label
+  
+#     FROM ethereum.udm_events
+#     WHERE 
+#         block_timestamp >= getdate() - interval '4800 hours'
+#         and to_label_type = 'cex'
+#         and (from_label_type <> 'cex' OR from_label_type IS NULL)
+#         and symbol = 'CEL' 
+#     GROUP BY 1,3
