@@ -124,6 +124,7 @@ days_until_expiry = expiry - datetime.now()
 # days_until_expiry = ((expiry).strftime('%m%d')) - (datetime.now().strftime('%m%d'))
 st.write("now",datetime.now())
 st.write("days until expiry: ", days_until_expiry)
+st.write("add the amount of funding events until expiry ")
 
 
 pct_expiry = days_until_expiry.days / 365 * 100
