@@ -11,7 +11,7 @@ from plotly.subplots import make_subplots
 from itertools import chain
 
 import plotly.express as px
-from datetime import datetime
+from datetime import datetime, timedelta
 # ts = int('1645598410')
 
 # print(datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S'))
@@ -95,66 +95,89 @@ st.plotly_chart(fig0, use_container_width=True)
 
 df1 = requests.get(f"https://ftx.com/api/markets/{names_premeiums}/orderbook?depth=100").json()
 df1 = pd.DataFrame(df1)
+expiry = names_premeiums.split('-')[1]
+expiry = pd.to_datetime(expiry, format='%m%d')
+# """ year is the same as this year"""
+expiry = expiry.replace(year=datetime.now().year)
+st.write("expiry date", expiry)
+
+# expiry = datetime.datetime.strftime(expiry,'%m%d')
+days_until_expiry = expiry - datetime.now()
+# """between now and expiry"""
+
+# st.write(int(datetime.now().('%m%d'strftime)))
+# days_until_expiry = ((expiry).strftime('%m%d')) - (datetime.now().strftime('%m%d'))
+st.write("now",datetime.now())
+st.write("days until expiry: ", days_until_expiry)
+
+
+pct_expiry = days_until_expiry.days / 365 * 100
+st.write("expiry time - pct of a year: ", pct_expiry, "%")
+
+
+
+
+
+
 df1 = df1['result']
 asks = df1['asks']
 bids = df1['bids']
 asks = pd.DataFrame(asks)
 bids = pd.DataFrame(bids)
-# st.write(df1)
 asks = asks.rename(columns={0: "price", 1: "size"})
 bids = bids.rename(columns={0: "price", 1: "size"})
 
-asks['accumulated']  = (list(accumulate(asks['size'])))
+asks['accumulated_size']  = (list(accumulate(asks['size'])))
 asks['accumulated_price']  = (asks['price']) * asks['size']
-asks['accumulated_avg_price'] = (list(accumulate(asks['accumulated_price'])))  / asks['accumulated']
-asks['cash_equivelant'] = asks['accumulated'] * asks['accumulated_avg_price']
+asks['accumulated_avg_price'] = (list(accumulate(asks['accumulated_price'])))  / asks['accumulated_size']
+asks['cash_equivelant'] = asks['accumulated_size'] * asks['accumulated_avg_price']
 
 
-bids['accumulated']  = (list(accumulate(bids['size'])))
+bids['accumulated_size']  = (list(accumulate(bids['size'])))
 bids['accumulated_price']  = (bids['price']) * bids['size']
-bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
-bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']
+bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated_size']
+bids['cash_equivelant'] = bids['accumulated_size'] * bids['accumulated_avg_price']
 
 
-
-# sum of price*size 
-# divided by sum of size
 
 
 column = bids["price"]
 max_value_dated_futures = column.max()
-st.write(max_value_dated_futures)
+st.write("best ask dated futures", max_value_dated_futures)
 
 
 column = asks["price"]
 min_value_dated_futures = column.min()
-st.write(min_value_dated_futures)
+st.write("best bid dated futures", min_value_dated_futures)
 
 spred_dated = min_value_dated_futures - max_value_dated_futures
-st.write(spred_dated)
+st.write("spread dated futures", spred_dated)
 
 
 
 spred_dated_BPS = spred_dated/min_value_dated_futures*1000
-st.write(spred_dated_BPS , "bps")
+st.write("spread dated futures", spred_dated_BPS, "bps")
 # asks['price'] = asks[0]
 # asks['size'] = asks[1]
 for i in range(1, 2):
     cols = st.columns(2)
-    cols[0].write(bids)
-    
-    cols[1].write(asks)
+    cols[0].subheader("bids")
 
+    cols[0].table(bids)
+    cols[1].subheader("asks")
+
+    cols[1].table(asks)
+    
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add traces
 fig.add_trace(
-    go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
+    go.Scatter(x=asks['price'], y=asks['accumulated_size'], name="asks"),
     secondary_y=True,
 )
 
 fig.add_trace(
-    go.Scatter(x=bids['price'], y=bids['accumulated'], name="bids"),
+    go.Scatter(x=bids['price'], y=bids['accumulated_size'], name="bids"),
     secondary_y=True,
 )
 
@@ -286,48 +309,51 @@ bids = pd.DataFrame(bids)
 
 asks = asks.rename(columns={0: "price", 1: "size"})
 bids = bids.rename(columns={0: "price", 1: "size"})
-asks['accumulated']  = (list(accumulate(asks['size'])))
+asks['accumulated_size']  = (list(accumulate(asks['size'])))
 asks['accumulated_price']  = (asks['price']) * asks['size']
-asks['accumulated_avg_price'] = (list(accumulate(asks['accumulated_price'])))  / asks['accumulated']
-asks['cash_equivelant'] = asks['accumulated'] * asks['accumulated_avg_price']
+asks['accumulated_avg_price'] = (list(accumulate(asks['accumulated_price'])))  / asks['accumulated_size']
+asks['cash_equivelant'] = asks['accumulated_size'] * asks['accumulated_avg_price']
 
 
-bids['accumulated']  = (list(accumulate(bids['size'])))
+bids['accumulated_size']  = (list(accumulate(bids['size'])))
 bids['accumulated_price']  = (bids['price']) * bids['size']
-bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
-bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']
+bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated_size']
+bids['cash_equivelant'] = bids['accumulated_size'] * bids['accumulated_avg_price']
 column = bids["price"]
 max_value_spot = column.max()
-st.write(max_value_spot)
+st.write("now",datetime.now())
+st.write("best bid", max_value_spot)
 
 column = asks["price"]
 min_value_spot = column.min()
-st.write(min_value_spot)
+st.write("best ask", min_value_spot)
 
 spred_spot = min_value_spot - max_value_spot
-st.write(spred_spot)
+st.write("spot spread", spred_spot)
 
 spred_bps_spot = spred_spot/min_value_spot*1000
-st.write(spred_bps_spot , "bps")
+st.write("spred_bps", spred_bps_spot , "bps")
 # asks['price'] = asks[0]
 # asks['size'] = asks[1]
 for i in range(1, 2):
     cols = st.columns(2)
-    cols[0].write(bids)
-    
-    cols[1].write(asks)
+    cols[0].subheader("bids")
+    cols[0].table(bids)
+    cols[1].subheader("asks")
+
+    cols[1].table(asks)
 
 
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add traces
 fig.add_trace(
-    go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
+    go.Scatter(x=asks['price'], y=asks['accumulated_size'], name="asks"),
     secondary_y=True,
 )
 
 fig.add_trace(
-    go.Scatter(x=bids['price'], y=bids['accumulated'], name="bids"),
+    go.Scatter(x=bids['price'], y=bids['accumulated_size'], name="bids"),
     secondary_y=True,
 )
 
@@ -501,27 +527,50 @@ bids['accumulated_price']  = (bids['price']) * bids['size']
 bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
 bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']
 
+now = datetime.now()
+next_hour = now + timedelta(hours=1)
+# st.write(now)
+# st.write(next_hour)
+date = datetime.strptime(str(next_hour), '%Y-%m-%d %H:%M:%S.%f')
+newdate = date.replace(minute=0,second=0)
+# newdate = date.replace(second=0)
+
+# st.write(date)
+# st.write(newdate)
+time_till_expiry = newdate - now
+st.write("time till expiry", time_till_expiry)
+
+pct_expiry = (time_till_expiry.total_seconds() / 3600) / 24
+st.write("percentage till expiry", pct_expiry, "%")
+
+
+# st.write(hour)
+# expiry = pd.to_datetime(hour, format='%m%d')
+# st.write(expiry)
 column = bids["price"]
 max_value_perps = column.max()
-st.write(max_value_perps)
+st.write("best bid perps", max_value_perps)
 
 
 column = asks["price"]
 min_value_perps = column.min()
-st.write(min_value_perps)
+st.write("best bid asks", min_value_perps)
 
 spred_perps = min_value_perps - max_value_perps
-st.write(spred_perps)
+st.write("perp spread",spred_perps)
 
 spred_bps_perps = spred_perps/min_value_perps*1000
-st.write(spred_bps_perps , "bps")
+st.write("perp spread", spred_bps_perps , "bps")
 # asks['price'] = asks[0]
 # asks['size'] = asks[1]
 for i in range(1, 2):
     cols = st.columns(2)
-    cols[0].write(bids)
+    cols[0].subheader('bids')
+
+    cols[0].table(bids)
+    cols[1].subheader('asks')
     
-    cols[1].write(asks)
+    cols[1].table(asks)
 
 
 
@@ -616,18 +665,26 @@ bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
 
 st.title("misc")
+# st.write(max_value_dated_futures-)
+# st.write( "max_value_dated_futures")
+# st.wr()
+st.write  
 st.write(
-
-max_value_dated_futures,
 max_value_perps,
+
 max_value_spot,
 
+
 min_value_dated_futures,
+
 min_value_perps,
+
 min_value_spot,
 
 spred_dated_BPS,
+
 spred_bps_perps,
+
 spred_bps_spot
 
 )
