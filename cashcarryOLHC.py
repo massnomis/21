@@ -23,7 +23,7 @@ st.set_page_config(layout="wide")
 
 
 
-st.text('comments 1')
+# st.text('comments 1')
 # st.markdown('_Markdown_') # see *
 # st.latex(r''' e^{i\pi} + 1 = 0 ''')
 # st.write('Most objects') # df, err, func, keras!
@@ -461,6 +461,9 @@ st.plotly_chart(a, use_container_width=True)
 
 custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
 custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
+
+
+
 # st.write('hourly funding rate in basis points')
 bbbbbb = px.line(custom_lending,x='time',y='rate_bps_hr',render_mode="SVG")
 st.plotly_chart(bbbbbb, use_container_width=True)
@@ -555,7 +558,7 @@ newdate = date.replace(minute=0,second=0)
 time_till_expiry = newdate - now
 st.write("time till expiry", time_till_expiry)
 
-pct_expiry = (time_till_expiry.total_seconds() / 3600) / 24
+pct_expiry = (time_till_expiry.total_seconds() / 3600) / 24 / 365.24 * 100
 st.write("percentage till expiry", pct_expiry, "%")
 
 
@@ -680,26 +683,41 @@ bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
 
 st.title("misc")
-# st.write(max_value_dated_futures-)
-# st.write( "max_value_dated_futures")
-# st.wr()
-st.write  
-st.write(
-max_value_perps,
 
-max_value_spot,
+st.subheader("dated futures")
+st.write("best ask dated futures", max_value_dated_futures)
+st.write("best bid dated futures", min_value_dated_futures)
+st.write("spread dated futures", spred_dated)
+st.write("spread dated futures", spred_dated_BPS, "bps")
+st.write("expiry date", expiry)
+st.write("now",datetime.now())
+st.write("days until expiry: ", days_until_expiry)
+st.write("expiry time - pct of a year: ", pct_expiry, "%")
 
 
-min_value_dated_futures,
+st.subheader("lending/spot")
+latest_rateAPY = custom_lending['rateAPY'].iloc[-1]
+st.write("latest rate APY", latest_rateAPY)
+latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
+st.write("rate_bps_hr", latest_rate_bps_hr)
+st.write("now",datetime.now())
+st.write("best bid", max_value_spot)
+st.write("best ask", min_value_spot)
+st.write("spot spread", spred_spot)
+st.write("spred_bps", spred_bps_spot , "bps")
 
-min_value_perps,
 
-min_value_spot,
 
-spred_dated_BPS,
 
-spred_bps_perps,
 
-spred_bps_spot
-
-)
+st.subheader("funding/perpetual")
+latest_rateAPY = custom['rate_APY'].iloc[-1]
+st.write("latest rate APY", latest_rateAPY)
+latest_rate_bps_hr = custom['rate'].iloc[-1]
+st.write("rate_bps_hr", latest_rate_bps_hr)
+st.write("time till expiry", time_till_expiry)
+st.write("percentage till expiry", pct_expiry, "%")
+st.write("best bid perps", max_value_perps)
+st.write("best bid asks", min_value_perps)
+st.write("perp spread",spred_perps)
+st.write("perp spread", spred_bps_perps , "bps")
