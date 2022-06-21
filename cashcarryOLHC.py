@@ -453,23 +453,102 @@ custom_lending['interest'] = custom_lending['rate'] * custom_lending['size']
 # st.write(custom_lending)
 # aaa = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
 # st.plotly_chart(aaa)
-aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
-st.plotly_chart(aaa, use_container_width=True)
-aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-st.plotly_chart(aa, use_container_width=True)
-a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
-st.plotly_chart(a, use_container_width=True)
-
 custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
 custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
 
 
 
-# st.write('hourly funding rate in basis points')
-bbbbbb = px.line(custom_lending,x='time',y='rate_bps_hr',render_mode="SVG")
-st.plotly_chart(bbbbbb, use_container_width=True)
-bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
+def bollinger_strat(custom_lending, window, no_of_std):
+    rolling_mean = custom_lending['rateAPY'].rolling(window).mean()
+    rolling_std = custom_lending['rateAPY'].rolling(window).std()
+
+    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'] 
+bollinger_strat(custom_lending,20,2)
+bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rateAPY'],render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+
+def bollinger_strat(custom_lending, window, no_of_std):
+    rolling_mean = custom_lending['size'].rolling(window).mean()
+    rolling_std = custom_lending['size'].rolling(window).std()
+
+    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'] 
+bollinger_strat(custom_lending,20,2)
+bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','size'],render_mode="SVG")
+st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+def bollinger_strat(custom_lending, window, no_of_std):
+    rolling_mean = custom_lending['accumulated'].rolling(window).mean()
+    rolling_std = custom_lending['accumulated'].rolling(window).std()
+
+    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'] 
+bollinger_strat(custom_lending,20,2)
+bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','accumulated'],render_mode="SVG")
+st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+
+
+
+
+# aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
+# st.plotly_chart(aaa, use_container_width=True)
+# aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
+# st.plotly_chart(aa, use_container_width=True)
+# a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
+# st.plotly_chart(a, use_container_width=True)
+
+
+def bollinger_strat(custom_lending, window, no_of_std):
+    rolling_mean = custom_lending['interest'].rolling(window).mean()
+    rolling_std = custom_lending['interest'].rolling(window).std()
+
+    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'] 
+bollinger_strat(custom_lending,20,2)
+bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','interest'],render_mode="SVG")
+st.plotly_chart(bbbbbbb, use_container_width=True)
+
+def bollinger_strat(custom_lending, window, no_of_std):
+    rolling_mean = custom_lending['rate_bps_hr'].rolling(window).mean()
+    rolling_std = custom_lending['rate_bps_hr'].rolling(window).std()
+
+    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'] 
+bollinger_strat(custom_lending,20,2)
+bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rate_bps_hr'],render_mode="SVG")
+st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+def bollinger_strat(custom_lending, window, no_of_std):
+    rolling_mean = custom_lending['rate_bps_hr'].rolling(window).mean()
+    rolling_std = custom_lending['rate_bps_hr'].rolling(window).std()
+
+    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'] 
+bollinger_strat(custom_lending,20,2)
+bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rate_bps_hr'],render_mode="SVG")
+st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+
+
+# st.write('hourly funding rate in basis points')
+# bbbbbb = px.line(custom_lending,x='time',y='rate_bps_hr',render_mode="SVG")
+# st.plotly_chart(bbbbbb, use_container_width=True)
+# bbbbbbb = px.line(custom_lending,x='time',y='accumulated',render_mode="SVG")
+# st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 
@@ -680,19 +759,66 @@ custom['rate_APY'] = custom['rate'] / 10 * 24 * 365.24
 custom['accumulated']  = (list(accumulate(custom['rate'])))
 # / 10 * 24 * 365.24
 st.write('hourly funding rate in basis points')
-bbbbbb = px.line(custom,x='time',y='rate',render_mode="SVG")
-st.plotly_chart(bbbbbb, use_container_width=True)
-bbbbbbx = px.line(custom,x='time',y='rate_APY',render_mode="SVG")
-st.plotly_chart(bbbbbbx, use_container_width=True)
-bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
+
+def bollinger_strat(custom, window, no_of_std):
+    rolling_mean = custom['rate_APY'].rolling(window).mean()
+    rolling_std = custom['rate_APY'].rolling(window).std()
+
+    custom['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom['Bollinger High'] , custom['Bollinger Low'] 
+bollinger_strat(custom,20,2)
+bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','rate_APY'],render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
+
+def bollinger_strat(custom, window, no_of_std):
+    rolling_mean = custom['rate'].rolling(window).mean()
+    rolling_std = custom['rate'].rolling(window).std()
+
+    custom['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom['Bollinger High'] , custom['Bollinger Low'] 
+bollinger_strat(custom,20,2)
+bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','rate'],render_mode="SVG")
+st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+
+
+
+
+def bollinger_strat(custom, window, no_of_std):
+    rolling_mean = custom['accumulated'].rolling(window).mean()
+    rolling_std = custom['accumulated'].rolling(window).std()
+
+    custom['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    custom['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return custom['Bollinger High'] , custom['Bollinger Low'] 
+bollinger_strat(custom,20,2)
+bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','accumulated'],render_mode="SVG")
+st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+
+
+# try and do rolling average and rolling stddev
+
+
+
+
+
+
+
+
+
+
 
 st.title("misc")
 st.write("dated:",names_premeiums)
 st.write("spot:",names_lending)
 st.write("perp:", name_perp)
 
-
+st.number_input("number", min_value=1, max_value=100, value=4)
 # """verify that names_premiums, names_lending, name_perp are the same asset by looking at the fist 4 letters"""
 def spelling(names_premiums, names_lending, name_perp):
     if names_premiums[:4] == names_lending[:4] and names_premiums[:4] == name_perp[:4]:
