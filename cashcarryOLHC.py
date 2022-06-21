@@ -23,7 +23,7 @@ st.set_page_config(layout="wide")
 
 
 
-st.text('Fixed width text')
+# st.text('Fixed width text')
 # st.markdown('_Markdown_') # see *
 # st.latex(r''' e^{i\pi} + 1 = 0 ''')
 # st.write('Most objects') # df, err, func, keras!
