@@ -672,7 +672,6 @@ for i in range(1, 2):
 
 
 fig = make_subplots(specs=[[{"secondary_y": True}]])
-fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add traces
 fig.add_trace(
