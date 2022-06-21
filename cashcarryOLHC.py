@@ -615,6 +615,10 @@ fig.update_layout(
 
 
 st.plotly_chart(fig, use_container_width=True)
+
+
+
+
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add traces
@@ -683,7 +687,19 @@ bbbbbbb = px.line(custom,x='time',y='accumulated',render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
 
 st.title("misc")
+st.write("dated:",names_premeiums)
+st.write("spot:",names_lending)
+st.write("perp:", name_perp)
 
+
+# """verify that names_premiums, names_lending, name_perp are the same asset by looking at the fist 4 letters"""
+def spelling(names_premiums, names_lending, name_perp):
+    if names_premiums[:4] == names_lending[:4] and names_premiums[:4] == name_perp[:4]:
+        return True
+    else:
+        return False
+a = spelling(names_premeiums, names_lending, name_perp)
+st.write("are the assets the same?",a)
 st.subheader("dated futures")
 st.write("best ask dated futures", max_value_dated_futures)
 st.write("best bid dated futures", min_value_dated_futures)
@@ -721,3 +737,16 @@ st.write("best bid perps", max_value_perps)
 st.write("best bid asks", min_value_perps)
 st.write("perp spread",spred_perps)
 st.write("perp spread", spred_bps_perps , "bps")
+
+
+
+# """verify the profitavilty of the cash and carry"""
+
+"""first we look at spot vs dated """
+
+
+"""next we look at spot vs perp """
+
+
+
+"""third we look at dated vs perp """
