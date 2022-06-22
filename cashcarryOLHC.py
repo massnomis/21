@@ -877,19 +877,49 @@ st.write("best bid asks", min_value_perps)
 st.write("perp spread",spred_perps)
 st.write("perp spread", spred_bps_perps , "bps")
 st.subheader("""first we look at spot vs dated """)
-st.write("sell", min_value_dated_futures, "dated_future", "buy", max_value_spot, "spot")
 
-#calculated_income_by_lending = (min_value_spot * (1 + ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
 long_spot_position_to_expiry = (min_value_spot * (1 + ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
 short_spot_position_to_expiry = (max_value_spot * (1 - ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
-# st.write(calculated_income_by_lending)
-PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE = (min_value_dated_futures - long_spot_position_to_marurity) 
-PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE = (short_spot_position_to_marurity - max_value_dated_futures) 
-# * (1 - latest_rateAPY)
+
+
+
+
+
+
+
+
+
+PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE = (min_value_dated_futures - long_spot_position_to_expiry) 
+PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE = (short_spot_position_to_expiry - max_value_dated_futures) 
+
+
+
+
+
 PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE_APY = PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE / (min_value_spot * (pct_expiry_dated/100)) * 100
 PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE_APY = PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE / (max_value_spot * (pct_expiry_dated/100)) * 100
+
+
+
+
+st.write("sell", max_value_dated_futures, "dated_future", "buy", min_value_spot, "spot")
+st.write("long_spot_position_to_expiry",long_spot_position_to_expiry)
+st.write("PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE",PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE)
 st.write(PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE_APY, "% APY")
+
+
+
+
+
+
+
+
+
+st.write("buy", min_value_dated_futures, "dated_future", "sell", max_value_spot, "spot")
+st.write("short_spot_position_to_expiry",short_spot_position_to_expiry)
+st.write("PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE",PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE)
 st.write(PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE, "% APY")
+
 
 
 
