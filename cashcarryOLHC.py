@@ -110,6 +110,7 @@ st.plotly_chart(fig0, use_container_width=True)
 
 df1 = requests.get(f"https://ftx.com/api/markets/{names_premeiums}/orderbook?depth=100").json()
 df1 = pd.DataFrame(df1)
+# names_premeiums = BTC-0930
 expiry = names_premeiums.split('-')[1]
 expiry = pd.to_datetime(expiry, format='%m%d')
 # """ year is the same as this year"""
