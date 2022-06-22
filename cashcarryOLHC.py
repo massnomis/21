@@ -879,13 +879,19 @@ st.write("perp spread", spred_bps_perps , "bps")
 st.subheader("""first we look at spot vs dated """)
 st.write("sell", min_value_dated_futures, "dated_future", "buy", max_value_spot, "spot")
 
-calculated_income_by_lending = (max_value_spot * (1 + ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
+#calculated_income_by_lending = (min_value_spot * (1 + ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
+long_spot_position_to_expiry = (min_value_spot * (1 + ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
+short_spot_position_to_expiry = (max_value_spot * (1 - ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
 # st.write(calculated_income_by_lending)
-PREMIUM = (min_value_dated_futures - calculated_income_by_lending) 
+PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE = (min_value_dated_futures - long_spot_position_to_marurity) 
+PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE = (short_spot_position_to_marurity - max_value_dated_futures ) 
 # * (1 - latest_rateAPY)
 PREMIUM_APY = PREMIUM / (max_value_spot * (pct_expiry_dated/100)) * 100
-
+st.write(short_spot_position_to_maturity, "% APY")
 st.write(PREMIUM_APY, "% APY")
+
+if PREMIUM_APY > 15 :
+
 
 
 
