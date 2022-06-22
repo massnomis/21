@@ -173,7 +173,7 @@ while qqq < aaa:
 
     # st.write(profit)
     # page.write(qqq)
-    time.sleep(1.5)
+    time.sleep(3)
 
 st.table(df)
 st.table(df2)
