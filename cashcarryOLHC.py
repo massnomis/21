@@ -884,13 +884,14 @@ long_spot_position_to_expiry = (min_value_spot * (1 + ((latest_rateAPY_spot/100)
 short_spot_position_to_expiry = (max_value_spot * (1 - ((latest_rateAPY_spot/100)*(pct_expiry_dated/100))))
 # st.write(calculated_income_by_lending)
 PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE = (min_value_dated_futures - long_spot_position_to_marurity) 
-PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE = (short_spot_position_to_marurity - max_value_dated_futures ) 
+PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE = (short_spot_position_to_marurity - max_value_dated_futures) 
 # * (1 - latest_rateAPY)
-PREMIUM_APY = PREMIUM / (max_value_spot * (pct_expiry_dated/100)) * 100
-st.write(short_spot_position_to_maturity, "% APY")
-st.write(PREMIUM_APY, "% APY")
+PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE_APY = PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE / (min_value_spot * (pct_expiry_dated/100)) * 100
+PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE_APY = PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE / (max_value_spot * (pct_expiry_dated/100)) * 100
+st.write(PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE_APY, "% APY")
+st.write(PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE, "% APY")
 
-if PREMIUM_APY > 15 :
+
 
 
 
