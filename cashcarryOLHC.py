@@ -675,6 +675,7 @@ fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add traces
 fig.add_trace(
+    
     go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
     secondary_y=True,
 )
