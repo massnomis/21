@@ -675,7 +675,7 @@ fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add traces
 fig.add_trace(
-    
+
     go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
     secondary_y=True,
 )
@@ -834,7 +834,7 @@ numbers = len(names_lending)
 st.write(numbers)
 # """verify that names_premiums, names_lending, name_perp are the same asset by looking at the fist 4 letters"""
 def spelling(numbers, names_premiums, names_lending, name_perp):
-    if names_premiums[:numbers] == names_lending[:numbers] and names_premiums[:numbers] == name_perp[:4]:
+    if names_premiums[:numbers] == names_lending[:numbers] and names_premiums[:numbers] == name_perp[:numbers]:
         return True
     else:
         return False
