@@ -748,6 +748,9 @@ st.plotly_chart(fig, use_container_width=True)
 st.write("Predicted funding rate. Longs pay shorts if positive, shorts pay longs if negative. 1/24 times the average premium over the hour.")
 custom = requests.get(f"https://ftxpremiums.com/assets/data/funding_data/{name_perp}.json").json()
 
+
+
+
 custom = pd.DataFrame(custom)
 custom['rate'] = custom['rate'].astype(float)
 custom['time'] =  pd.to_datetime(custom['time'], unit='s')
