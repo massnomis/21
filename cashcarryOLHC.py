@@ -951,18 +951,18 @@ PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY = PREMIUM_SHORT_PERP_LONG_DATED_FUTURE 
 
 
 
-st.write("buy", min_value_perps, "spot", "sell", max_value_dated_futures, "dated_future")
+st.write("buy", min_value_perps, "perp", "sell", max_value_dated_futures, "dated_future")
 st.write("long_perp_position_to_expiry",long_perp_position_to_expiry)
-st.write("PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE",PREMIUM_LONG_PERP_SHORT_DATED_FUTURE)
+st.write("PREMIUM_LONG_PERP_SHORT_DATED_FUTURE",PREMIUM_LONG_PERP_SHORT_DATED_FUTURE)
 st.write(PREMIUM_LONG_PERP_SHORT_DATED_FUTURE_APY, "% APY")
 
 
 
 
 
-st.write("sell", max_value_perps, "spot", "buy", min_value_dated_futures, "dated_future")
+st.write("sell", max_value_perps, "perp", "buy", min_value_dated_futures, "dated_future")
 st.write("short_perp_position_to_expiry",short_perp_position_to_expiry)
-st.write("PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE",PREMIUM_SHORT_PERP_LONG_DATED_FUTURE)
+st.write("PREMIUM_SHORT_PERP_LONG_DATED_FUTURE",PREMIUM_SHORT_PERP_LONG_DATED_FUTURE)
 st.write(PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY, "% APY")
 
 # """previous formula has to be accrued hourly not daily """
