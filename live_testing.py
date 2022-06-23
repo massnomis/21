@@ -27,8 +27,9 @@ premiums = pd.read_csv('premiums.csv')
 names_premeiums = st.selectbox("premiums", premiums)
 # st.write(names_premeiums)
 names_lending = st.selectbox("lending", lending
+,
 
-# , index = random.randint(0, 100)
+ index = 3
 )
 # st.write(names_lending)
 name_perp = st.selectbox("perp", funding
@@ -838,28 +839,20 @@ while True:
         st.write("best bid asks", min_value_perps)
         st.write("perp spread",spred_perps)
         st.write("perp spread", spred_bps_perps , "bps")
+        
+        
         st.subheader("""first we look at spot vs dated """)
 
         long_spot_position_to_expiry = (min_value_spot * (1 - ((latest_rateAPY_spot/1000)*(pct_expiry_dated/100))))
         short_spot_position_to_expiry = (max_value_spot * (1 - ((latest_rateAPY_spot/1000)*(pct_expiry_dated/100))))
 
-
-
-        # PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE = (min_value_dated_futures - long_spot_position_to_expiry) 
-        # PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE = (short_spot_position_to_expiry - max_value_dated_futures) 
-
-
         PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE = (max_value_dated_futures - long_spot_position_to_expiry) 
         PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE = (short_spot_position_to_expiry - min_value_dated_futures) 
-
-
 
         PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE_APY = PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE / (min_value_spot * (pct_expiry_dated/100)) * 100
         PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE_APY = PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE / (max_value_spot * (pct_expiry_dated/100)) * 100
 
-
-
-        st.write("sell", max_value_dated_futures, "dated_future", "buy", min_value_spot, "spot")
+        st.write("buy", min_value_spot, "spot", "sell", max_value_dated_futures, "dated_future")
         st.write("long_spot_position_to_expiry",long_spot_position_to_expiry)
         st.write("PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE",PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE)
         st.write(PREMIUM_LONG_SPOT_SHORT_DATED_FUTURE_APY, "% APY")
@@ -868,10 +861,59 @@ while True:
 
 
 
-        st.write("buy", min_value_dated_futures, "dated_future", "sell", max_value_spot, "spot")
+        st.write("sell", max_value_spot, "spot", "buy", min_value_dated_futures, "dated_future")
         st.write("short_spot_position_to_expiry",short_spot_position_to_expiry)
         st.write("PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE",PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE)
         st.write(PREMIUM_SHORT_SPOT_LONG_DATED_FUTURE, "% APY")
-            # time.sleep(0.1)
+
+
+        st.subheader("""next we look at spot vs perp""")
+
+        # st.write("time till expiry", time_till_expiry)
+        # st.write("percentage till expiry", pct_expiry, "%")
+
+
+        # max_value_perps
+        # min_value_perps 
+        # short_spot_position_to_expiry_perp
+        # long_spot_position_to_expiry_perp 
+
+
+        spot_long_spot_position_to_expiry_perp = (min_value_spot * (1 - ((latest_rateAPY_spot/1000)*(pct_expiry/100))))
+        spot_short_spot_position_to_expiry_perp = (max_value_spot * (1 - ((latest_rateAPY_spot/1000)*(pct_expiry/100))))
+
+        perp_long_spot_position_to_expiry_perp = (max_value_perps * (1 - ((latest_rateAPY/1000)*(pct_expiry/100))))
+        perp_short_spot_position_to_expiry_perp = (min_value_perps * (1 - ((latest_rateAPY/1000)*(pct_expiry/100))))
+
+
+        PREMIUM_LONG_SPOT_SHORT_PERP = (perp_long_spot_position_to_expiry_perp - spot_long_spot_position_to_expiry_perp) 
+        PREMIUM_SHORT_SPOT_LONG_PERP = (spot_short_spot_position_to_expiry_perp - perp_short_spot_position_to_expiry_perp)
+
+
+
+
+
+        PREMIUM_LONG_SPOT_SHORT_PERP_APY = PREMIUM_LONG_SPOT_SHORT_PERP / (min_value_spot * (pct_expiry/100)) * 100
+        PREMIUM_SHORT_SPOT_LONG_PERP_APY = PREMIUM_SHORT_SPOT_LONG_PERP / (max_value_spot * (pct_expiry/100)) * 100
+
+        st.write("sell PERP @ ", max_value_perps, "buy spot @ ", min_value_spot)
+        st.write("long_spot_position_to_expiry",spot_long_spot_position_to_expiry_perp)
+        st.write("perp_long_spot_position_to_expiry_perp",perp_long_spot_position_to_expiry_perp)
+
+        st.write("PREMIUM_LONG_SPOT_SHORT_PERP",PREMIUM_LONG_SPOT_SHORT_PERP)
+        st.write(PREMIUM_LONG_SPOT_SHORT_PERP_APY, "% APY")
+
+
+
+
+
+
+        st.write("sell spot @ ", max_value_spot, "buy perp @ ", min_value_perps)
+        st.write("short_spot_position_to_expiry",spot_short_spot_position_to_expiry_perp)
+        st.write("perp_short_spot_position_to_expiry_perp",perp_short_spot_position_to_expiry_perp)
+        st.write("PREMIUM_SHORT_SPOT_LONG_PERP",PREMIUM_SHORT_SPOT_LONG_PERP)
+
+        st.write(PREMIUM_SHORT_SPOT_LONG_PERP_APY, "% APY")
+
 
 
