@@ -5,10 +5,8 @@ import streamlit as st
 import pandas as pd
 
 import plotly.express as px
+
 df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
-
-
-
 placeholder1 = st.empty()
 # for seconds in range(200):
 # while True: 
@@ -38,6 +36,56 @@ async def consumer() -> None:
                         # st.write(df)
 
 asyncio.run(consumer())
+
+
+
+
+
+
+
+# df2 = pd.DataFrame(columns = ['action', 'bids', 'asks', 'checksum', 'time'])
+# placeholder2 = st.empty()
+# # for seconds in range(200):
+# # while True: 
+
+ 
+
+# async def consumer() -> None:
+#     async with websockets.connect("wss://ftx.com/ws/") as websocket:
+#         await websocket.send(
+#             json.dumps(
+#                 {"op": "subscribe", "channel": "orderbook", "market": "BTC-PERP"}
+#             )
+#         )
+#         totalVol = 0
+#         async for message in websocket:
+#             message = json.loads(message)
+#             if message["type"] == "update":
+#                 result = message["data"]
+
+#                 global df2
+           
+#                 df2 = df2.append(result, ignore_index=True)
+#                 with placeholder2.container():
+#                     st.write(df2)
+
+#                         # st.write(df)
+
+# asyncio.run(consumer())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # import json   
 
