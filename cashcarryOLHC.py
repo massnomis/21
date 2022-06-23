@@ -967,6 +967,69 @@ st.write("short_perp_position_to_expiry",short_perp_position_to_expiry)
 st.write("PREMIUM_SHORT_PERP_LONG_DATED_FUTURE",PREMIUM_SHORT_PERP_LONG_DATED_FUTURE)
 st.write(PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY, "% APY")
 
+
+
+
+
+st.subheader("""next we look at spot vs perp rolling mean""")
+
+
+spot_long_spot_position_to_expiry_perp = (min_value_spot * (1 - ((latest_rateAPY_spot/1000)*(pct_expiry/100))))
+spot_short_spot_position_to_expiry_perp = (max_value_spot * (1 - ((latest_rateAPY_spot/1000)*(pct_expiry/100))))
+
+perp_long_spot_position_to_expiry_perp = (max_value_perps * (1 + ((rolling_mean_funding/1000)*(pct_expiry/100))))
+perp_short_spot_position_to_expiry_perp = (min_value_perps * (1 + ((rolling_mean_funding/1000)*(pct_expiry/100))))
+
+PREMIUM_LONG_SPOT_SHORT_PERP = (perp_long_spot_position_to_expiry_perp - spot_long_spot_position_to_expiry_perp) 
+PREMIUM_SHORT_SPOT_LONG_PERP = (spot_short_spot_position_to_expiry_perp - perp_short_spot_position_to_expiry_perp)
+
+
+PREMIUM_LONG_SPOT_SHORT_PERP_APY = PREMIUM_LONG_SPOT_SHORT_PERP / (min_value_spot * (pct_expiry/100)) * 100
+PREMIUM_SHORT_SPOT_LONG_PERP_APY = PREMIUM_SHORT_SPOT_LONG_PERP / (max_value_spot * (pct_expiry/100)) * 100
+
+
+
+st.write("sell PERP @ ", max_value_perps, "buy spot @ ", min_value_spot)
+st.write("long_spot_position_to_expiry",spot_long_spot_position_to_expiry_perp)
+st.write("perp_long_spot_position_to_expiry_perp",perp_long_spot_position_to_expiry_perp)
+st.write("PREMIUM_LONG_SPOT_SHORT_PERP",PREMIUM_LONG_SPOT_SHORT_PERP)
+st.write(PREMIUM_LONG_SPOT_SHORT_PERP_APY, "% APY")
+
+st.write("sell spot @ ", max_value_spot, "buy perp @ ", min_value_perps)
+st.write("short_spot_position_to_expiry",spot_short_spot_position_to_expiry_perp)
+st.write("perp_short_spot_position_to_expiry_perp",perp_short_spot_position_to_expiry_perp)
+st.write("PREMIUM_SHORT_SPOT_LONG_PERP",PREMIUM_SHORT_SPOT_LONG_PERP)
+st.write(PREMIUM_SHORT_SPOT_LONG_PERP_APY, "% APY")
+
+st.subheader("now dated_futures vs perps rolling mean")
+
+
+long_perp_position_to_expiry = (min_value_perps * (1 + ((rolling_mean_funding/1000)*(pct_expiry_dated/100))))
+short_perp_position_to_expiry = (max_value_perps * (1 + ((rolling_mean_funding/1000)*(pct_expiry_dated/100))))
+
+PREMIUM_LONG_PERP_SHORT_DATED_FUTURE = (max_value_dated_futures - long_perp_position_to_expiry) 
+PREMIUM_SHORT_PERP_LONG_DATED_FUTURE = (short_perp_position_to_expiry - min_value_dated_futures) 
+
+PREMIUM_LONG_PERP_SHORT_DATED_FUTURE_APY = PREMIUM_LONG_PERP_SHORT_DATED_FUTURE / (min_value_perps * (pct_expiry_dated/100)) * 100
+PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY = PREMIUM_SHORT_PERP_LONG_DATED_FUTURE / (max_value_perps * (pct_expiry_dated/100)) * 100
+
+
+
+
+st.write("buy", min_value_perps, "perp", "sell", max_value_dated_futures, "dated_future")
+st.write("long_perp_position_to_expiry",long_perp_position_to_expiry)
+st.write("PREMIUM_LONG_PERP_SHORT_DATED_FUTURE",PREMIUM_LONG_PERP_SHORT_DATED_FUTURE)
+st.write(PREMIUM_LONG_PERP_SHORT_DATED_FUTURE_APY, "% APY")
+
+
+
+
+
+st.write("sell", max_value_perps, "perp", "buy", min_value_dated_futures, "dated_future")
+st.write("short_perp_position_to_expiry",short_perp_position_to_expiry)
+st.write("PREMIUM_SHORT_PERP_LONG_DATED_FUTURE",PREMIUM_SHORT_PERP_LONG_DATED_FUTURE)
+st.write(PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY, "% APY")
+
 # """previous formula has to be accrued hourly not daily """
 
 
