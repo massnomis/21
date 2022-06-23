@@ -769,13 +769,13 @@ custom['accumulated']  = (list(accumulate(custom['rate'])))
 def bollinger_strat(custom, window, no_of_std):
     rolling_mean = custom['rate_APY'].rolling(window).mean()
     rolling_std = custom['rate_APY'].rolling(window).std()
-    custom['rolling_mean'] = rolling_mean
+    custom['rolling_mean_rate_APY'] = rolling_mean
 
     custom['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
     custom['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-    return custom['Bollinger High'] , custom['Bollinger Low'], custom['rolling_mean'] 
+    return custom['Bollinger High'] , custom['Bollinger Low'], custom['rolling_mean_rate_APY'] 
 bollinger_strat(custom,window,no_of_std)
-bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','rate_APY','rolling_mean'],render_mode="SVG")
+bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','rate_APY','rolling_mean_rate_APY'],render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
@@ -787,26 +787,26 @@ st.write('hourly funding rate in basis points')
 def bollinger_strat(custom, window, no_of_std):
     rolling_mean = custom['rate'].rolling(window).mean()
     rolling_std = custom['rate'].rolling(window).std()
-    custom['rolling_mean'] = rolling_mean
+    custom['rolling_mean_rate'] = rolling_mean
 
     custom['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
     custom['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-    return custom['Bollinger High'] , custom['Bollinger Low'], custom['rolling_mean'] 
+    return custom['Bollinger High'] , custom['Bollinger Low'], custom['rolling_mean_rate'] 
 bollinger_strat(custom,window,no_of_std)
-bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','rate','rolling_mean'],render_mode="SVG")
+bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','rate','rolling_mean_rate'],render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 def bollinger_strat(custom, window, no_of_std):
     rolling_mean = custom['accumulated'].rolling(window).mean()
     rolling_std = custom['accumulated'].rolling(window).std()
-    custom['rolling_mean'] = rolling_mean
+    custom['rolling_mean_accumulated'] = rolling_mean
 
     custom['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
     custom['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-    return custom['Bollinger High'] , custom['Bollinger Low'], custom['rolling_mean'] 
+    return custom['Bollinger High'] , custom['Bollinger Low'], custom['rolling_mean_accumulated'] 
 bollinger_strat(custom,window,no_of_std)
-bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','accumulated','rolling_mean'],render_mode="SVG")
+bbbbbbb = px.line(custom,x='time',y=['Bollinger High','Bollinger Low','accumulated','rolling_mean_accumulated'],render_mode="SVG")
 st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
@@ -872,6 +872,8 @@ latest_rateAPY = custom['rate_APY'].iloc[-1]
 st.write("Latest Funding rate APY", latest_rateAPY)
 latest_rate_bps_hr = custom['rate'].iloc[-1]
 st.write("funding_rate_bps_hr", latest_rate_bps_hr)
+rolling_mean_funding = custom['rolling_mean_rate_APY'].iloc[-1]
+st.write("rolling_mean_funding", rolling_mean_funding)
 st.write("time till expiry", time_till_expiry)
 st.write("percentage till expiry", pct_expiry, "%")
 st.write("best bid perps", max_value_perps)
