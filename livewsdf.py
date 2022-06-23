@@ -3,6 +3,8 @@ import websockets
 import json
 import streamlit as st
 import pandas as pd
+
+import plotly.express as px
 df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
 
 
@@ -28,14 +30,17 @@ async def consumer() -> None:
                 for record in result:
                     totalVol += record["size"] * record["price"]
                 global df
-                while True:
-                    with placeholder1.container():
-                        df = df.append(result, ignore_index=True)
-                        st.dataframe(df)
+           
+                df = df.append(result, ignore_index=True)
+                with placeholder1.container():
+                    st.plotly_chart(px.scatter(df, x="time", y="price", color="side",  size='size'))
+
+                        # st.write(df)
 
 asyncio.run(consumer())
 
-# import json
+# import json   
+
 
 # import pandas as pd
 # import websocket
