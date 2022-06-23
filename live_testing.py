@@ -917,3 +917,33 @@ while True:
 
 
 
+        st.subheader("now dated_futures vs perps")
+
+
+        long_perp_position_to_expiry = (min_value_perps * (1 + ((latest_rateAPY/1000)*(pct_expiry_dated/100))))
+        short_perp_position_to_expiry = (max_value_perps * (1 + ((latest_rateAPY/1000)*(pct_expiry_dated/100))))
+
+        PREMIUM_LONG_PERP_SHORT_DATED_FUTURE = (max_value_dated_futures - long_perp_position_to_expiry) 
+        PREMIUM_SHORT_PERP_LONG_DATED_FUTURE = (short_perp_position_to_expiry - min_value_dated_futures) 
+
+        PREMIUM_LONG_PERP_SHORT_DATED_FUTURE_APY = PREMIUM_LONG_PERP_SHORT_DATED_FUTURE / (min_value_perps * (pct_expiry_dated/100)) * 100
+        PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY = PREMIUM_SHORT_PERP_LONG_DATED_FUTURE / (max_value_perps * (pct_expiry_dated/100)) * 100
+
+
+
+
+
+        st.write("buy", min_value_perps, "perp", "sell", max_value_dated_futures, "dated_future")
+        st.write("long_perp_position_to_expiry",long_perp_position_to_expiry)
+        st.write("PREMIUM_LONG_PERP_SHORT_DATED_FUTURE",PREMIUM_LONG_PERP_SHORT_DATED_FUTURE)
+        st.write(PREMIUM_LONG_PERP_SHORT_DATED_FUTURE_APY, "% APY")
+
+
+
+
+
+        st.write("sell", max_value_perps, "perp", "buy", min_value_dated_futures, "dated_future")
+        st.write("short_perp_position_to_expiry",short_perp_position_to_expiry)
+        st.write("PREMIUM_SHORT_PERP_LONG_DATED_FUTURE",PREMIUM_SHORT_PERP_LONG_DATED_FUTURE)
+        st.write(PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY, "% APY")
+
