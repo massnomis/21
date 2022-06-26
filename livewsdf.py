@@ -124,6 +124,7 @@ async def consumer() -> None:
                         bids = bids.drop_duplicates(subset=['price_bid'], keep='first')
                         bids.sort_values(by=['price_bid'], inplace=True, ascending=False)
                         bids.reset_index(drop=True, inplace=False)
+                        bids.loc[bids["price_bid"] == bids_update.loc[i]["price_bid"], "size_bid"] = bids_update.loc[i]["size_bid"]
 
                     asks = pd.DataFrame(asks)
                     bids = pd.DataFrame(bids)
