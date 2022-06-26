@@ -169,3 +169,48 @@ async def consumer() -> None:
                     st.plotly_chart(fig, use_container_width=True)
                     
 asyncio.run(consumer())
+import asyncio
+from glob import glob
+from rx import empty
+import websockets
+import json
+import streamlit as st
+import pandas as pd
+import time
+import plotly.express as px
+from itertools import accumulate
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+st.set_page_config(layout="wide")
+
+df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
+placeholder1 = st.empty()
+
+# for seconds in range(200):
+# while True: 
+
+ 
+df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
+placeholder2 = st.empty()
+
+
+async def consumer() -> None:
+    async with websockets.connect("wss://ftx.com/ws/") as websocket:
+        await websocket.send(
+            json.dumps(
+                {"op": "subscribe", "channel": "trades", "market": "BTC-PERP"}
+            )
+        )
+        totalVol = 0
+        async for message in websocket:
+            message = json.loads(message)
+            if message["type"] == "update":
+                result = message["data"]
+                global df
+                df = df.append(result, ignore_index=True)
+                with placeholder2.container():
+                    st.plotly_chart(px.scatter(df, x="time", y="price", color="side",  size='size'))
+
+                        # st.write(df)
+
+asyncio.run(consumer())
