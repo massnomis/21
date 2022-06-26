@@ -1,5 +1,6 @@
 import asyncio
 from glob import glob
+from numpy import full_like
 from rx import empty
 import websockets
 import json
@@ -17,14 +18,32 @@ placeholder1 = st.empty()
 
 # for seconds in range(200):
 # while True: 
+dict_dumps = {
+  "op": "subscribe",
+  "channel": "trades",
+  "market": "BTC-PERP"
+}
 
- 
+name = st.text_input("market name", "BTC-PERP")
+dict_dumps["market"] = name
+# dumps =  '''{"op": "subscribe", "channel": "trades", "market": ''' 
+# rest = f'''"{name}"'''
+# last = "}"
+# full_dump = dumps + rest + last
+# full_dump.astype(dict)
+st.write(dict_dumps)
 
 async def consumer() -> None:
+    global full_dump
+
     async with websockets.connect("wss://ftx.com/ws/", ping_interval=20, ping_timeout=2000) as websocket:
+        global full_dump
         await websocket.send(
             json.dumps(
-                {"op": "subscribe", "channel": "trades", "market": "BTC-PERP"}
+                # {"op": "subscribe", "channel": "trades", "market": "BTC-PERP"}
+            #   full_dump
+            # 
+            dict_dumps
             )
         )
 
@@ -50,7 +69,7 @@ async def consumer() -> None:
                     # size = df["size"][0]
                     # df['size_new'] = size
 
-                    st.plotly_chart(px.scatter(df, y="time", x="price", color="side", size='size_new'),use_container_width=True)
+                    st.plotly_chart(px.scatter(df, x="time", y="price", color="side", size='size_new'),use_container_width=True)
                     # st.write(size)
                         # st.write(df)
     # await asyncio.sleep(30)

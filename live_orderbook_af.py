@@ -19,6 +19,16 @@ st.set_page_config(layout="wide")
 a = "Subscribed to orderbook"
 
 b = "fat d8ta"
+
+dict_dumps = {
+  "op": "subscribe",
+  "channel": "orderbook",
+  "market": "BTC-PERP"
+}
+
+name = st.text_input("market name", "BTC-PERP")
+dict_dumps["market"] = name
+
 placeholder1 = st.empty()
 
 
@@ -26,7 +36,7 @@ async def consumer() -> None:
     async with websockets.connect("wss://ftx.com/ws/", ping_interval=20, ping_timeout=2000) as websocket:
         await websocket.send(
             json.dumps(
-                {"op": "subscribe", "channel": "orderbook", "market": "BTC-PERP"}
+                dict_dumps
             )
         )
         async for message in websocket:
