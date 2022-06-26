@@ -139,8 +139,15 @@ async def consumer() -> None:
                     bids['accumulated_price']  = (bids['price_bid']) * bids['size_bid']
                     bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
                     bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']                
-   
-                    st.write(asks,bids, use_container_width=True)
+                    for i in range(1, 2):
+                        cols = st.columns(2)
+                        cols[0].subheader("bids")
+
+                        cols[0].write(bids)
+                        cols[1].subheader("asks")
+
+                        cols[1].write(asks)
+                    # st.write(asks,bids, use_container_width=True)
                     # st.write(asks_update,bids_update, use_container_width=True)
                     
                     fig = make_subplots(specs=[[{"secondary_y": True}]])
