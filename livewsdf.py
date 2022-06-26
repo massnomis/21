@@ -4,10 +4,10 @@ import json
 import streamlit as st
 import pandas as pd
 
-import plotly.express as px
+# import plotly.express as px
 
-df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
-placeholder1 = st.empty()
+# df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
+# placeholder1 = st.empty()
 # for seconds in range(200):
 # while True: 
 
@@ -17,21 +17,60 @@ async def consumer() -> None:
     async with websockets.connect("wss://ftx.com/ws/") as websocket:
         await websocket.send(
             json.dumps(
-                {"op": "subscribe", "channel": "trades", "market": "BTC-PERP"}
+                {"op": "subscribe", "channel": "orderbook", "market": "BTC-PERP"}
             )
         )
-        totalVol = 0
         async for message in websocket:
             message = json.loads(message)
+            if message["type"] == "subscribed":
+                a = "Subscribed to orderbook"
+                st.write('1', a)
+            if message["type"] == "partial":
+                b = "fat d8ta"
+                market = message["market"]
+                type = message["type"]
+                channel = message["channel"]
+                data = message["data"]
+                time  = data["time"]
+                checksum = data["checksum"]
+                bids = data["bids"]
+                bids = pd.DataFrame(bids)
+                bids = bids.rename(columns={0: "price_bid", 1: "size_bid"})
+
+                asks = data["asks"]
+                asks = pd.DataFrame(asks)
+                asks = asks.rename(columns={0: "price_ask", 1: "size_ask"})
+                action = data["action"]
+                st.write('2',b, message, market, type, channel, data, time, checksum, bids, asks, action)
             if message["type"] == "update":
-                result = message["data"]
-                for record in result:
-                    totalVol += record["size"] * record["price"]
-                global df
-           
-                df = df.append(result, ignore_index=True)
-                with placeholder1.container():
-                    st.plotly_chart(px.scatter(df, x="time", y="price", color="side",  size='size'))
+                b = "fat upd8"
+
+                st.write('3', message)
+                type = message["type"]
+                channel = message["channel"]
+                data = message["data"]
+                time  = data["time"]
+                checksum = data["checksum"]
+                bids = data["bids"]
+                bids = pd.DataFrame(bids)
+                bids = bids.rename(columns={0: "price_bid", 1: "size_bid"})
+
+                asks = data["asks"]
+                asks = pd.DataFrame(asks)
+                asks = asks.rename(columns={0: "price_ask", 1: "size_ask"})
+                action = data["action"]
+                st.write('3',b, message, market, type, channel, data, time, checksum, bids, asks, action)
+                break
+
+                    # for record in result:
+                    # totalVol += record["size"] * record["price"]
+            #     global df
+                            #    result = message["data"]
+
+            #     df = df.append(result, ignore_index=True)
+            #     with placeholder1.container():
+            # st.write(message)
+                    # st.plotly_chart(px.scatter(df, x="time", y="price", color="side",  size='size'))
 
                         # st.write(df)
 
