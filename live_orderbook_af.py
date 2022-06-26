@@ -1,24 +1,26 @@
 import asyncio
-from glob import glob
-from rx import empty
 import websockets
 import json
 import streamlit as st
-import pandas as pd
 import time
 import plotly.express as px
+import pandas as pd
 from itertools import accumulate
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 st.set_page_config(layout="wide")
 
-result = pd.DataFrame(columns = ['time', 'checksum', 'bids', 'asks', 'update'])
+# import plotly.express as px
+
+# df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
+# placeholder1 = st.empty()
+# for seconds in range(200):
+# while True: 
+a = "Subscribed to orderbook"
+
+b = "fat d8ta"
 placeholder1 = st.empty()
 
-# for seconds in range(200):
-# while True:
-bids = pd.DataFrame(result["bids"], columns=['0', '1'])
-asks = pd.DataFrame(result["asks"], columns=['0', '1'])
 
 async def consumer() -> None:
     async with websockets.connect("wss://ftx.com/ws/") as websocket:
@@ -27,118 +29,143 @@ async def consumer() -> None:
                 {"op": "subscribe", "channel": "orderbook", "market": "BTC-PERP"}
             )
         )
-        totalVol = 0
         async for message in websocket:
+            global a
+            global b
+
             message = json.loads(message)
-            if message["type"] == "update":
-                result = message["data"]
-                global df
-                global bids
-                global asks
-                # df = df.append(result, ignore_index=True)
-                # bids = bids.append(result["bids"], ignore_index=True)
-                # asks = asks.append(result["asks"], ignore_index=True)
-                bids = pd.DataFrame(result["bids"])
-                asks = pd.DataFrame(result["asks"])
-                if not bids.empty and not asks.empty:
+            with placeholder1.container():
 
-                    with placeholder1.container():
-                        # bids = pd.DataFrame({'0': ["0"]} )
-                        # bids = asks.append(result["bids"])
-                        # asks = pd.DataFrame({'0': ["0"]} )
-                        # asks = asks.append(result["asks"])    
-                        if not bids.empty and not asks.empty:
-                                        # st.write(df)
-                            # st.write(bids)
-                            # st.write(asks)
-                        # st.plotly_chart(px.imshow(bids.T))
-                            
-                            asks = asks.rename(columns={0: "price", 1: "size"})
-                            bids = bids.rename(columns={0: "price", 1: "size"})
-                            asks['accumulated']  = (list(accumulate(asks['size'])))
-                            asks['accumulated_price']  = (asks['price']) * asks['size']
-                            asks['accumulated_avg_price'] = (list(accumulate(asks['accumulated_price'])))  / asks['accumulated']
-                            asks['cash_equivelant'] = asks['accumulated'] * asks['accumulated_avg_price']
+                if message["type"] == "subscribed":
+                    st.write(a, use_container_width=True)
 
+                if message["type"] == "partial":
+                    market = message["market"]
+                    type = message["type"]
+                    channel = message["channel"]
+                    data = message["data"]
+                    time  = data["time"]
+                    checksum = data["checksum"]
+                    bids = data["bids"]
+                    bids = pd.DataFrame(bids)
+                    bids = bids.rename(columns={0: "price_bid", 1: "size_bid"})
 
-                            bids['accumulated']  = (list(accumulate(bids['size'])))
-                            bids['accumulated_price']  = (bids['price']) * bids['size']
-                            bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
-                            bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']
-                           
-                            fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    asks = data["asks"]
+                    asks = pd.DataFrame(asks)
+                    asks.reset_index(drop=True, inplace=False)
+                    bids.reset_index(drop = True, inplace=False)
 
-                            # Add traces
-                            fig.add_trace(
+                    asks = asks.rename(columns={0: "price_ask", 1: "size_ask"})
+                    action = data["action"]
+                    # st.write('2', bids, asks, action)
 
-                                go.Scatter(x=asks['price'], y=asks['accumulated'], name="asks"),
-                                secondary_y=True,
-                            )
+                    # return bids, asks, action, time, checksum
+                if message["type"] == "update":
+                    # global asks
+                    # global bids
+                    st.write(b, use_container_width=True)
+                    type_update = message["type"]
+                    channel_update = message["channel"]
+                    data_update = message["data"]
+                    time_update  = data_update["time"]
+                    checksum = data_update["checksum"]
+                    bids_update = pd.DataFrame(data_update["bids"])
+                    bids_update = bids_update.rename(columns={0: "price_bid", 1: "size_bid"})
+                    asks_update = pd.DataFrame(data_update["asks"])
+                    asks_update = asks_update.rename(columns={0: "price_ask", 1: "size_ask"})
+  
+                    action = data_update["action"]
+                    # st.write(asks)
+                    # asks_update['accumulated']  = (list(accumulate(asks_update['size_ask'])))
+                    # asks_update['accumulated_price']  = (asks_update['price_ask']) * asks_update['size_ask']
+                    # asks_update['accumulated_avg_price'] = (list(accumulate(asks_update['accumulated_price'])))  / asks_update['accumulated']
+                    # asks_update['cash_equivelant'] = asks_update['accumulated'] * asks_update['accumulated_avg_price']
 
-                            fig.add_trace(
-                                go.Scatter(x=bids['price'], y=bids['accumulated'], name="bids"),
-                                secondary_y=True,
-                            )
-
-                            # Add figure title
-                            fig.update_layout(
-                                title_text="orderbook"
-                            )
-
-                            # Set x-axis title
+                    # bids_update['accumulated']  = (list(accumulate(bids_update['size_bid'])))
+                    # bids_update['accumulated_price']  = (bids_update['price_bid']) *bids_update['size_bid']
+                    # bids_update['accumulated_avg_price'] = (list(accumulate(bids_update['accumulated_price'])))  / bids_update['accumulated']
+                    # bids_update['cash_equivelant'] = bids_update['accumulated'] * bids_update['accumulated_avg_price']
 
 
-                            st.plotly_chart(fig, use_container_width=True)
+                    # asks.reset_index(drop = True, inplace=True)
+                    # bids.reset_index(drop = True, inplace=True)
 
 
+                    for i in range(len(asks_update)):
+                        # global asks_update
+                        # if asks_update['price_ask'][i] == bids_update['price_bid'][i]:
+                            # global bids_update
+                        # asks.append(asks_update.loc[i])
 
+                        # asks.reset_index(drop = True, inplace=True)
+                        # asks.dropna(inplace=True)
+                        asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
+                        asks.dropna(inplace=True)
 
-                            fig = make_subplots(specs=[[{"secondary_y": True}]])
+                        asks = asks.append(asks_update, ignore_index=True)
+                        asks = asks.drop_duplicates(subset=['price_ask'], keep='first')
+                        asks.sort_values(by=['price_ask'], inplace=True)
+                        asks.reset_index(drop = True, inplace=False)
 
-                            # Add traces
-                            fig.add_trace(
-                                go.Bar(x=asks['price'], y=asks['size'], name="asks"),
-                                secondary_y=False,
-                            )
+                        asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
+                    for i in range(len(bids_update)):
+                        # global bids_update
+                        # if bids_update['price_bid'][i] == asks_update['price_ask'][i]:
+                            # global asks_update
+                        # bids.reset_index(drop = True, inplace=True)
 
-                            fig.add_trace(
-                                go.Bar(x=bids['price'], y=bids['size'], name="bids"),
-                                secondary_y=True,
-                            )
+                        # bids.dropna(inplace=True)
+                        bids.reset_index(drop=True)
 
-                            # Add figure title
-                            fig.update_layout(
-                                title_text="orderbook"
-                            )
+                        # bids.append(bids_update.loc[i])
+                        bids.loc[bids["price_bid"] == bids_update.loc[i]["price_bid"], "size_bid"] = bids_update.loc[i]["size_bid"]
+                        bids.dropna(inplace=True)
+                        bids = bids.append(bids_update, ignore_index=True)
+                        bids = bids.drop_duplicates(subset=['price_bid'], keep='first')
+                        bids.sort_values(by=['price_bid'], inplace=True, ascending=False)
+                        bids.reset_index(drop=True, inplace=False)
+                        bids.loc[bids["price_bid"] == bids_update.loc[i]["price_bid"], "size_bid"] = bids_update.loc[i]["size_bid"]
 
-                            # Set x-axis title
+                    asks = pd.DataFrame(asks)
+                    bids = pd.DataFrame(bids)
+                    # st.write(asks_update)
+                    # st.write(bids_update)
+                    asks['accumulated']  = (list(accumulate(asks['size_ask'])))
+                    asks['accumulated_price']  = (asks['price_ask']) * asks['size_ask']
+                    asks['accumulated_avg_price'] = (list(accumulate(asks['accumulated_price'])))  / asks['accumulated']
+                    asks['cash_equivelant'] = asks['accumulated'] * asks['accumulated_avg_price']
 
+                    bids['accumulated']  = (list(accumulate(bids['size_bid'])))
+                    bids['accumulated_price']  = (bids['price_bid']) * bids['size_bid']
+                    bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
+                    bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']                
+                    for i in range(1, 2):
+                        cols = st.columns(2)
+                        cols[0].subheader("bids")
 
-                            st.plotly_chart(fig, use_container_width=True)
+                        cols[0].write(bids)
+                        cols[1].subheader("asks")
 
+                        cols[1].write(asks)
+                    # st.write(asks,bids, use_container_width=True)
+                    # st.write(asks_update,bids_update, use_container_width=True)
+                    
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                            fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                            # Add traces
-                            fig.add_trace(
-                                go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),
-                                secondary_y=True,
-                            )
-
-                            fig.add_trace(
-                                go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),
-                                secondary_y=True,
-                            )
-
-                            # Add figure title
-                            fig.update_layout(
-                                title_text="cash_equivelant"
-                            )
-
-                            # Set x-axis title
-
-
-                            st.plotly_chart(fig, use_container_width=True)
-                                                    # st.write(df)
-
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="cash_equivelant")
+                    st.plotly_chart(fig, use_container_width=True)
+                    
 asyncio.run(consumer())

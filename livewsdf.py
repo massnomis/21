@@ -26,7 +26,7 @@ async def consumer() -> None:
     async with websockets.connect("wss://ftx.com/ws/") as websocket:
         await websocket.send(
             json.dumps(
-                {"op": "subscribe", "channel": "orderbook", "market": "ETH/USD"}
+                {"op": "subscribe", "channel": "orderbook", "market": "BTC-PERP"}
             )
         )
         async for message in websocket:
