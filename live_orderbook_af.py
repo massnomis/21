@@ -23,7 +23,7 @@ placeholder1 = st.empty()
 
 
 async def consumer() -> None:
-    async with websockets.connect("wss://ftx.com/ws/") as websocket:
+    async with websockets.connect("wss://ftx.com/ws/", ping_interval=20, ping_timeout=2000) as websocket:
         await websocket.send(
             json.dumps(
                 {"op": "subscribe", "channel": "orderbook", "market": "BTC-PERP"}
@@ -167,5 +167,6 @@ async def consumer() -> None:
                     fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
                     fig.update_layout(title_text="cash_equivelant")
                     st.plotly_chart(fig, use_container_width=True)
-                    
+    # await asyncio.sleep(30)
+            
 asyncio.run(consumer())

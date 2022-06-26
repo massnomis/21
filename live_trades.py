@@ -21,7 +21,7 @@ placeholder1 = st.empty()
  
 
 async def consumer() -> None:
-    async with websockets.connect("wss://ftx.com/ws/") as websocket:
+    async with websockets.connect("wss://ftx.com/ws/", ping_interval=20, ping_timeout=2000) as websocket:
         await websocket.send(
             json.dumps(
                 {"op": "subscribe", "channel": "trades", "market": "BTC-PERP"}
@@ -50,8 +50,9 @@ async def consumer() -> None:
                     # size = df["size"][0]
                     # df['size_new'] = size
 
-                    st.plotly_chart(px.scatter(df, x="time", y="price", color="side", size='size_new'),use_container_width=True)
+                    st.plotly_chart(px.scatter(df, y="time", x="price", color="side", size='size_new'),use_container_width=True)
                     # st.write(size)
                         # st.write(df)
+    # await asyncio.sleep(30)
 
 asyncio.run(consumer())
