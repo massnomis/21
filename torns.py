@@ -144,6 +144,7 @@ async def another_name():
                     #     cols[0].write(bids)
                     #     cols[1].subheader("asks")
 
+
                     #     cols[1].write(asks)
                     # # st.write(asks,bids, use_container_width=True)
                     # st.write(asks_update,bids_update, use_container_width=True)
@@ -205,9 +206,7 @@ async def stream():
 
                     st.plotly_chart(px.scatter(df, x="time", y="price", color="side", size='size_new'),use_container_width=True)
 
-# if __name__ == "__main__":
-#     loop = asyncio.get_event_loop()
-#     coros = []
+
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)   
