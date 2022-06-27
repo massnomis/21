@@ -77,6 +77,3 @@ async def consumer() -> None:
 asyncio.run(consumer())
 st.write(merge_v2_USD)
 
-for row in merge_v2_USD:
-    st.write(merge_v2_USD[row])
-    # st.write(name_x)

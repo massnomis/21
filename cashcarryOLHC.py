@@ -73,7 +73,8 @@ funding = pd.read_csv('funding.csv')
 lending = pd.read_csv('lending.csv')
 
 premiums = pd.read_csv('premiums.csv')
-names_premeiums = st.selectbox("premiums", premiums)
+names_premeiums = 'BTC-0930'
+# names_premeiums = st.selectbox("premiums", premiums, index = here)
 # st.write(names_premeiums)
 names_lending = st.selectbox("lending", lending
 ,
