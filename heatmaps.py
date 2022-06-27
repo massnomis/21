@@ -5,6 +5,10 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+st.set_page_config(layout="wide")
+
 place1 = st.empty()
 place2 = st.empty()
 df = pd.DataFrame()
@@ -32,13 +36,25 @@ for i in range(20):
     )
 
     with place3.container():
-        st.plotly_chart(px.scatter(f, x="timestamp", y="price", size="size"))
+        st.plotly_chart(px.scatter(f, y="timestamp", x="price", size="size"),use_container_width=True)
     with place1.container():
-        st.plotly_chart(px.scatter(d, x="timestamp", y="price", size="size"))
-    with place2.container():
-        st.plotly_chart(go.Figure(go.Heatmap(x=d["timestamp"], y=d["price"], z=d["size"] , colorscale="plasma")))
+        st.plotly_chart(px.scatter(d, y="timestamp", x="price", size="size"),use_container_width=True)
+    # with place2.container():
+    #     figg = make_subplots(specs=[[{"secondary_y": True}]])
+    #     figg.add_trace(go.scatter(x=d["timestamp"], y=d["price"],size=d["size"], name="asks"),secondary_y=True,)
+    #     figg.add_trace(go.scatter(x=f["timestamp"], y=f["price"],size=f["size"] ,name="bids"),secondary_y=True,)
+    #     figg.update_layout(title_text="orderbook")
+    #     st.plotly_chart(figg, use_container_width=True)
     with place4.container():
-        st.plotly_chart(go.Figure(go.Heatmap(x=f["timestamp"], y=f["price"], z=f["size"] , colorscale="solar")))        # st.write(df1)
+        # st.plotly_chart(go.Figure(go.Heatmap(x=f["timestamp"], y=f["price"], z=f["size"] , colorscale="solar")))        # st.write(df1)
+        
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        fig.add_trace(go.Heatmap(x=d["timestamp"],  y=d["price"], z=d["size"], name="asks"),secondary_y=True,)
+        fig.add_trace(go.Heatmap(x=f["timestamp"], y=f["price"], z=f["size"] , name="bids"),secondary_y=True,)
+        fig.update_layout(title_text="orderbook")
+        st.plotly_chart(fig, use_container_width=True)
+   
+   
     time.sleep(1)
 
 # for i in range(20):
