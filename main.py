@@ -76,4 +76,15 @@ async def consumer() -> None:
                     # break
 asyncio.run(consumer())
 st.write(merge_v2_USD)
+merge_v2_USD = pd.DataFrame(merge_v2_USD)
+new = merge_v2_USD[['name_x','name_y','name', 'baseCurrency']]
+# new = new.to_dict(orient='records')
+st.write(new)
 
+for index, row in new.iterrows():
+    # st.write(row['name_x'], row['name_y'], row['name'])
+    spot = row['name_x']
+    dated = row['name_y']
+    perp = row['name']
+    lending = row['baseCurrency']
+    st.write(spot, dated, perp)
