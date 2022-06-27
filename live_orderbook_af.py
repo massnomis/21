@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+from datetime import datetime
 import streamlit as st
 import time
 import plotly.express as px
@@ -177,6 +178,21 @@ async def consumer() -> None:
                     fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
                     fig.update_layout(title_text="cash_equivelant")
                     st.plotly_chart(fig, use_container_width=True)
+
+                    column = bids["price_bid"]
+                    max_value_spot = column.max()
+                    st.write("now",datetime.now())
+                    st.write("best bid", max_value_spot)
+
+                    column = asks["price_ask"]
+                    min_value_spot = column.min()
+                    st.write("best ask", min_value_spot)
+
+                    spred_spot = min_value_spot - max_value_spot
+                    st.write("spot spread", spred_spot)
+
+                    spred_bps_spot = spred_spot/min_value_spot*1000
+                    st.write("spred_bps", spred_bps_spot , "bps")
     # await asyncio.sleep(30)
             
 asyncio.run(consumer())
