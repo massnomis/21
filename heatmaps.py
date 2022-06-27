@@ -16,7 +16,7 @@ place3 = st.empty()
 place4 = st.empty()
 df1 = pd.DataFrame()
 for i in range(20):
-    df = pd.concat([df, pd.json_normalize(requests.get("https://api.cryptowat.ch/markets/kraken/btcusd/orderbook").json()["result"]).assign(timestamp=pd.to_datetime("now", utc=True))])
+    df = pd.concat([df, pd.json_normalize(requests.get("https://api.cryptowat.ch/markets/kraken/btcusd/orderbook").json()['result']).assign(timestamp=pd.to_datetime("now", utc=True))])
     d = df.loc[:, ["timestamp", "asks"]].explode("asks").assign(
     price=lambda d: d["asks"].apply(lambda a: a[0]),
     size=lambda d: d["asks"].apply(lambda a: a[1]),
@@ -36,9 +36,9 @@ for i in range(20):
     )
 
     with place3.container():
-        st.plotly_chart(px.scatter(f, y="timestamp", x="price", size="size"),use_container_width=True)
+        st.plotly_chart(px.scatter(f, x="timestamp", y="price", size="size"),use_container_width=True)
     with place1.container():
-        st.plotly_chart(px.scatter(d, y="timestamp", x="price", size="size"),use_container_width=True)
+        st.plotly_chart(px.scatter(d, x="timestamp", y="price", size="size"),use_container_width=True)
     # with place2.container():
     #     figg = make_subplots(specs=[[{"secondary_y": True}]])
     #     figg.add_trace(go.scatter(x=d["timestamp"], y=d["price"],size=d["size"], name="asks"),secondary_y=True,)

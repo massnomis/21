@@ -2,6 +2,8 @@ import websockets
 import asyncio
 import json
 import time
+import datetime
+
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -59,11 +61,15 @@ async def another_name():
                 if message["type"] == "update":
                     # global asks
                     # global bids
-                    st.write("orderbook incoming", use_container_width=True)
+                    # st.write(message, use_container_width=True)
+                    # st.write("orderbook incoming", use_container_width=True)
                     type_update = message["type"]
                     channel_update = message["channel"]
                     data_update = message["data"]
                     time_update  = data_update["time"]
+                    # time_update = pd.to_datetime(time_update)
+                    time_update = datetime.datetime.utcfromtimestamp(time_update)
+                    # st.write(time_update)
                     checksum = data_update["checksum"]
                     bids_update = pd.DataFrame(data_update["bids"])
                     bids_update = bids_update.rename(columns={0: "price_bid", 1: "size_bid"})
@@ -95,6 +101,7 @@ async def another_name():
 
                         # asks.reset_index(drop = True, inplace=True)
                         # asks.dropna(inplace=True)
+                        asks['time'] = time_update
                         asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
                         asks.dropna(inplace=True)
 
@@ -106,6 +113,7 @@ async def another_name():
 
                         asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
                     for i in range(len(bids_update)):
+                        bids['time'] = time_update
                         # global bids_update
                         # if bids_update['price_bid'][i] == asks_update['price_ask'][i]:
                             # global asks_update
@@ -160,7 +168,13 @@ async def another_name():
                     fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
                     fig.update_layout(title_text="orderbook")
                     st.plotly_chart(fig, use_container_width=True)
-
+                    # st.write(time)
+                    # st.write(time_update)
+                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    # fig.add_trace(go.Scatter(x=asks['time'], y=asks['price_ask'], line=asks['size_ask'], name="asks"),secondary_y=True,)
+                    # fig.add_trace(go.Scatter(x=bids['time'], y=bids['price_bid'], line=bids['size_bid'] , name="bids"),secondary_y=True,)
+                    # fig.update_layout(title_text="orderbook")
+                    # st.plotly_chart(fig, use_container_width=True)
                     # fig = make_subplots(specs=[[{"secondary_y": True}]])
                     # fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
                     # fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
