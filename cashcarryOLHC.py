@@ -553,9 +553,10 @@ for index, row in new.iterrows():
         # st.plotly_chart(aaa)
         custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
         custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
-
-        window = st.sidebar.slider('window size (periods for rolling average)', 1, 250, 20)
-        no_of_std = st.sidebar.slider('number of standard deviations', 1, 5, 2)
+        window = 20
+        no_of_std = 2
+        # window = st.sidebar.slider('window size (periods for rolling average)', 1, 250, 20)
+        # no_of_std = st.sidebar.slider('number of standard deviations', 1, 5, 2)
         def bollinger_strat(custom_lending, window, no_of_std):
             rolling_mean = custom_lending['rateAPY'].rolling(window).mean()
             rolling_std = custom_lending['rateAPY'].rolling(window).std()
