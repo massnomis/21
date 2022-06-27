@@ -1033,6 +1033,7 @@ st.write("short_perp_position_to_expiry",short_perp_position_to_expiry)
 st.write("PREMIUM_SHORT_PERP_LONG_DATED_FUTURE",PREMIUM_SHORT_PERP_LONG_DATED_FUTURE)
 st.write(PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY, "% APY")
 
+
 # """previous formula has to be accrued hourly not daily """
 
 
@@ -1046,3 +1047,4 @@ st.write(PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY, "% APY")
 
 
 # """third we look at dated vs perp """
+
