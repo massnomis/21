@@ -640,9 +640,9 @@ for index, row in new.iterrows():
                 bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rate_bps_hr','rolling_mean'],render_mode="SVG")
                 st.plotly_chart(bbbbbbb, use_container_width=True)
 
-                latest_rateAPY_spot = custom_lending['rate_APY'].iloc[-1]
+                latest_rateAPY_spot = custom['rate_APY'].iloc[-1]
                 st.write("Latest Funding rate APY", latest_rateAPY)
-                latest_rate_bps_hr = custom_lending['rate'].iloc[-1]
+                latest_rate_bps_hr = custom['rate'].iloc[-1]
                 st.write("funding_rate_bps_hr", latest_rate_bps_hr)
                 return latest_rateAPY_spot, latest_rate_bps_hr
         if custom_lending['success'] == 'false':
@@ -977,7 +977,7 @@ for index, row in new.iterrows():
 
 
     st.subheader("lending/spot")
-    # latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
+    latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
     st.write("latest rate APY", latest_rateAPY_spot)
     # latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
     st.write("rate_bps_hr", latest_rate_bps_hr)
