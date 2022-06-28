@@ -635,7 +635,7 @@ for index, row in new.iterrows():
             latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
             st.write("Latest Funding rate APY", latest_rateAPY_spot)
             latest_rate_bps_hr_spot = custom_lending['rate'].iloc[-1]
-            st.write("funding_rate_bps_hr", latest_rate_bps_hr_spot)
+            st.write("latest_rate_bps_hr_spot", latest_rate_bps_hr_spot)
         #     return latest_rateAPY_spot, latest_rate_bps_hr_spot
         # return latest_rateAPY_spot, latest_rate_bps_hr_spot
     else:
@@ -1145,7 +1145,7 @@ for index, row in new.iterrows():
     st.write("short_perp_position_to_expiry",short_perp_position_to_expiry)
     st.write("PREMIUM_SHORT_PERP_LONG_DATED_FUTURE",PREMIUM_SHORT_PERP_LONG_DATED_FUTURE)
     st.write(PREMIUM_SHORT_PERP_LONG_DATED_FUTURE_APY, "% APY")
-#     time.sleep(3)
+    # time.sleep(3)
 # """previous formula has to be accrued hourly not daily """
 
 
