@@ -539,7 +539,8 @@ for index, row in new.iterrows():
     def test():
     # """if the requesst is not sucessfull print fail"""
         custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
-        if custom_lending['status'] == 'success' & pd.DataFrame(custom_lending['result']) != []:
+        # st.write(custom_lending)
+        if custom_lending['success'] & custom_lending['result'] != []:
         
             custom_lending = pd.DataFrame(custom_lending['result'])
             st.write(custom_lending)
@@ -639,7 +640,7 @@ for index, row in new.iterrows():
             st.plotly_chart(bbbbbbb, use_container_width=True)
 
         
-        else:
+        if custom_lending['success'] == 'false':
             custom_lending['rate'] = 0.00000000001
             custom_lending['rateAPY'] = 0.00000000001
 
