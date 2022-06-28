@@ -18,8 +18,8 @@ ftx = ccxt.ftx()
 api_key = st.text_input("API Key")
 secret = st.text_input("Secret")
 exchange = ccxt.ftx({
-    'apiKey': "o-K3J3uWrgVg1XJoA7M7HTSkKhnNWuUDHkBv2vIx",
-    'secret': "RILDuy61-zChmkfdFQ0s-G5jneevMbN8n5vvHhK0",
+    'apiKey': api_key,
+    'secret': secret,
     'subaccount': "h"
 })
 
