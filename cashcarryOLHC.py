@@ -540,112 +540,113 @@ for index, row in new.iterrows():
     # """if the requesst is not sucessfull print fail"""
         custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
         # st.write(custom_lending)
-        if custom_lending['success'] == 'true' & custom_lending['result'] != []:
+        if custom_lending['success'] == "true": 
+            if custom_lending['result'] != []:
         
-            custom_lending = pd.DataFrame(custom_lending['result'])
-            st.write(custom_lending)
-            custom_lending['rate'] = custom_lending['rate'].astype(float)
-            custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
-            custom_lending = custom_lending.sort_values(by="time", ascending=True)
+                custom_lending = pd.DataFrame(custom_lending['result'])
+                st.write(custom_lending)
+                custom_lending['rate'] = custom_lending['rate'].astype(float)
+                custom_lending['time'] =  pd.to_datetime(custom_lending['time'])
+                custom_lending = custom_lending.sort_values(by="time", ascending=True)
 
-            # custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
+                # custom_lending['accumulated']  = (list(accumulate(custom_lending['rate'] * custom_lending['size'])))
 
-            custom_lending['rateAPY'] = custom_lending['rate'] * 24 * 36500
-            custom_lending['interest'] = custom_lending['rate'] * custom_lending['size']
-            # st.write(custom_lending)
-            # aaa = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
-            # st.plotly_chart(aaa)
-            custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
-            custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
-            window = 20
-            no_of_std = 2
-            def bollinger_strat(custom_lending, window, no_of_std):
-                rolling_mean = custom_lending['rateAPY'].rolling(window).mean()
-                rolling_std = custom_lending['rateAPY'].rolling(window).std()
-                custom_lending['rolling_mean'] = rolling_mean
+                custom_lending['rateAPY'] = custom_lending['rate'] * 24 * 36500
+                custom_lending['interest'] = custom_lending['rate'] * custom_lending['size']
+                # st.write(custom_lending)
+                # aaa = px.line(custom_lending,x='time',y='rate',render_mode="SVG")
+                # st.plotly_chart(aaa)
+                custom_lending['rate_bps_hr'] = custom_lending['rate'] * 1000
+                custom_lending['accumulated']  = (list(accumulate(custom_lending['rate_bps_hr'])))
+                window = 20
+                no_of_std = 2
+                def bollinger_strat(custom_lending, window, no_of_std):
+                    rolling_mean = custom_lending['rateAPY'].rolling(window).mean()
+                    rolling_std = custom_lending['rateAPY'].rolling(window).std()
+                    custom_lending['rolling_mean'] = rolling_mean
 
-                custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
-                custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-                return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
-            bollinger_strat(custom_lending,window,no_of_std)
-            bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rateAPY','rolling_mean'],render_mode="SVG")
-            st.plotly_chart(bbbbbbb, use_container_width=True)
-
-
-
-
-
-            def bollinger_strat(custom_lending, window, no_of_std):
-                rolling_mean = custom_lending['size'].rolling(window).mean()
-                rolling_std = custom_lending['size'].rolling(window).std()
-                custom_lending['rolling_mean'] = rolling_mean
-
-                custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
-                custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-                return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
-            bollinger_strat(custom_lending,window,no_of_std)
-            bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','size','rolling_mean'],render_mode="SVG")
-            st.plotly_chart(bbbbbbb, use_container_width=True)
+                    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+                    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+                    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
+                bollinger_strat(custom_lending,window,no_of_std)
+                bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rateAPY','rolling_mean'],render_mode="SVG")
+                st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 
 
 
+                def bollinger_strat(custom_lending, window, no_of_std):
+                    rolling_mean = custom_lending['size'].rolling(window).mean()
+                    rolling_std = custom_lending['size'].rolling(window).std()
+                    custom_lending['rolling_mean'] = rolling_mean
+
+                    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+                    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+                    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
+                bollinger_strat(custom_lending,window,no_of_std)
+                bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','size','rolling_mean'],render_mode="SVG")
+                st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
-            def bollinger_strat(custom_lending, window, no_of_std):
-                rolling_mean = custom_lending['accumulated'].rolling(window).mean()
-                rolling_std = custom_lending['accumulated'].rolling(window).std()
-                custom_lending['rolling_mean'] = rolling_mean
-
-                custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
-                custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-                return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
-            bollinger_strat(custom_lending,window,no_of_std)
-            bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','accumulated','rolling_mean'],render_mode="SVG")
-            st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
 
-            # aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
-            # st.plotly_chart(aaa, use_container_width=True)
-            # aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-            # st.plotly_chart(aa, use_container_width=True)
-            # a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
-            # st.plotly_chart(a, use_container_width=True)
-
-            def bollinger_strat(custom_lending, window, no_of_std):
-                rolling_mean = custom_lending['interest'].rolling(window).mean()
-                rolling_std = custom_lending['interest'].rolling(window).std()
-                custom_lending['rolling_mean'] = rolling_mean
-
-                custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
-                custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-                return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
-            bollinger_strat(custom_lending,window,no_of_std)
-            bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','interest','rolling_mean'],render_mode="SVG")
-            st.plotly_chart(bbbbbbb, use_container_width=True)
 
 
-            def bollinger_strat(custom_lending, window, no_of_std):
-                rolling_mean = custom_lending['rate_bps_hr'].rolling(window).mean()
-                rolling_std = custom_lending['rate_bps_hr'].rolling(window).std()
-                custom_lending['rolling_mean'] = rolling_mean
+                def bollinger_strat(custom_lending, window, no_of_std):
+                    rolling_mean = custom_lending['accumulated'].rolling(window).mean()
+                    rolling_std = custom_lending['accumulated'].rolling(window).std()
+                    custom_lending['rolling_mean'] = rolling_mean
 
-                custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
-                custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
-                return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
-            bollinger_strat(custom_lending,window,no_of_std)
-            bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rate_bps_hr','rolling_mean'],render_mode="SVG")
-            st.plotly_chart(bbbbbbb, use_container_width=True)
+                    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+                    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+                    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
+                bollinger_strat(custom_lending,window,no_of_std)
+                bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','accumulated','rolling_mean'],render_mode="SVG")
+                st.plotly_chart(bbbbbbb, use_container_width=True)
 
-        
+
+
+                # aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
+                # st.plotly_chart(aaa, use_container_width=True)
+                # aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
+                # st.plotly_chart(aa, use_container_width=True)
+                # a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
+                # st.plotly_chart(a, use_container_width=True)
+
+                def bollinger_strat(custom_lending, window, no_of_std):
+                    rolling_mean = custom_lending['interest'].rolling(window).mean()
+                    rolling_std = custom_lending['interest'].rolling(window).std()
+                    custom_lending['rolling_mean'] = rolling_mean
+
+                    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+                    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+                    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
+                bollinger_strat(custom_lending,window,no_of_std)
+                bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','interest','rolling_mean'],render_mode="SVG")
+                st.plotly_chart(bbbbbbb, use_container_width=True)
+
+
+                def bollinger_strat(custom_lending, window, no_of_std):
+                    rolling_mean = custom_lending['rate_bps_hr'].rolling(window).mean()
+                    rolling_std = custom_lending['rate_bps_hr'].rolling(window).std()
+                    custom_lending['rolling_mean'] = rolling_mean
+
+                    custom_lending['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+                    custom_lending['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+                    return custom_lending['Bollinger High'] , custom_lending['Bollinger Low'], custom_lending['rolling_mean'] 
+                bollinger_strat(custom_lending,window,no_of_std)
+                bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rate_bps_hr','rolling_mean'],render_mode="SVG")
+                st.plotly_chart(bbbbbbb, use_container_width=True)
+
+            
         if custom_lending['success'] == 'false':
             custom_lending['rate'] = 0.00000000001
             custom_lending['rateAPY'] = 0.00000000001
 
             latest_rateAPY_spot = 0.0000000001
-
+            custom_lending['rateAPY'].iloc[-1] = 0.0000000001
             return custom_lending['rate'] , custom_lending['rateAPY'], latest_rateAPY_spot
             # continue
 
