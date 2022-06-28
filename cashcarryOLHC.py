@@ -531,12 +531,15 @@ for index, row in new.iterrows():
 
     # Set x-axis title
 
-
+    latest_rateAPY_spot = 0.0000001
+    latest_rate_bps_hr = 0.00000001
     st.plotly_chart(fig, use_container_width=True)
     names_lending = lending
     custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
 
     def test():
+        global latest_rateAPY_spot
+        global latest_rate_bps_hr
     # """if the requesst is not sucessfull print fail"""
         custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
         # st.write(custom_lending)
@@ -644,7 +647,7 @@ for index, row in new.iterrows():
                 st.write("Latest Funding rate APY", latest_rateAPY)
                 latest_rate_bps_hr = custom['rate'].iloc[-1]
                 st.write("funding_rate_bps_hr", latest_rate_bps_hr)
-                return latest_rateAPY_spot, latest_rate_bps_hr
+                return latest_rateAPY_spot, latest_rate_bps_hr, custom_lending['rateAPY'], custom_lending['rate']
         if custom_lending['success'] == 'false':
             custom_lending['rate'] = 0.00000000001
             custom_lending['rateAPY'] = 0.00000000001
@@ -657,7 +660,7 @@ for index, row in new.iterrows():
             st.write("rate_bps_hr", latest_rate_bps_hr)
             return custom_lending['rate'] , custom_lending['rateAPY'], latest_rateAPY_spot, latest_rate_bps_hr
             # continue
-
+        return  latest_rateAPY_spot, latest_rate_bps_hr
     test()
 
 
@@ -977,9 +980,9 @@ for index, row in new.iterrows():
 
 
     st.subheader("lending/spot")
-    latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
+    # latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
     st.write("latest rate APY", latest_rateAPY_spot)
-    latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
+    # latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
     st.write("rate_bps_hr", latest_rate_bps_hr)
     st.write("now",datetime.now())
     st.write("best bid", max_value_spot)
