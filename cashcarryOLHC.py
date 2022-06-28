@@ -410,22 +410,16 @@ for index, row in new.iterrows():
 
     df2 = requests.get(f"https://ftx.com/api/markets/{names_lending}/orderbook?depth=100").json()
     # st.write(df2)
+    # df2 = pd.DataFrame(df2)
     df2 = pd.DataFrame(df2)
-    df2 = pd.DataFrame(df2['result'])
+    df2 = df2['result']
     asks = df2['asks']
     bids = df2['bids']
-    st.write(asks)
-    st.write(bids
-    )
-
-
     asks = pd.DataFrame(asks)
     bids = pd.DataFrame(bids)
-    # st.write(df1)
-
-    # st.write(asks)
-    # st.write(bids)
-
+    # asks = asks.rename(columns={0: "price", 1: "size"})
+    # bids = bids.rename(columns={0: "price", 1: "size"})
+    # st.write(bids, asks)
     asks = asks.rename(columns={0: "price", 1: "size"})
     bids = bids.rename(columns={0: "price", 1: "size"})
     asks['accumulated_size']  = (list(accumulate(asks['size'])))
@@ -648,10 +642,13 @@ for index, row in new.iterrows():
         else:
             custom_lending['rate'] = 0.00000000001
             custom_lending['rateAPY'] = 0.00000000001
-            return custom_lending['rate'] , custom_lending['rateAPY']
+
+            latest_rateAPY_spot = 0.0000000001
+
+            return custom_lending['rate'] , custom_lending['rateAPY'], latest_rateAPY_spot
             # continue
 
-    
+    test()
 
 
 
@@ -878,7 +875,8 @@ for index, row in new.iterrows():
 
 
 
-
+    window = 20
+    no_of_std = 2
 
 
 
