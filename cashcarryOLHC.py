@@ -647,7 +647,11 @@ for index, row in new.iterrows():
 
             latest_rateAPY_spot = 0.0000000001
             custom_lending['rateAPY'].iloc[-1] = 0.0000000001
-            return custom_lending['rate'] , custom_lending['rateAPY'], latest_rateAPY_spot
+            latest_rateAPY_spot = 0.00000000001
+            st.write("latest rate APY", latest_rateAPY_spot)
+            latest_rate_bps_hr = 0.000000000001
+            st.write("rate_bps_hr", latest_rate_bps_hr)
+            return custom_lending['rate'] , custom_lending['rateAPY'], latest_rateAPY_spot, latest_rate_bps_hr
             # continue
 
     test()
