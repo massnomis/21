@@ -180,19 +180,19 @@ async def consumer() -> None:
                     st.plotly_chart(fig, use_container_width=True)
 
                     column = bids["price_bid"]
-                    max_value_spot = column.max()
+                    max_value = column.max()
                     st.write("now",datetime.now())
-                    st.write("best bid", max_value_spot)
+                    st.write("best bid", max_value)
 
                     column = asks["price_ask"]
-                    min_value_spot = column.min()
-                    st.write("best ask", min_value_spot)
+                    min_value = column.min()
+                    st.write("best ask", min_value)
 
-                    spred_spot = min_value_spot - max_value_spot
-                    st.write("spot spread", spred_spot)
+                    spred = min_value - max_value
+                    st.write("spot spread", spred)
 
-                    spred_bps_spot = spred_spot/min_value_spot*1000
-                    st.write("spred_bps", spred_bps_spot , "bps")
+                    spred_bps = spred/min_value*1000
+                    st.write("spred_bps", spred_bps , "bps")
     # await asyncio.sleep(30)
             
 asyncio.run(consumer())
