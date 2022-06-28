@@ -658,7 +658,9 @@ for index, row in new.iterrows():
             st.write("latest rate APY", latest_rateAPY_spot)
             latest_rate_bps_hr = 0.000000000001
             st.write("rate_bps_hr", latest_rate_bps_hr)
+            st.write("no spot lending")
             return custom_lending['rate'] , custom_lending['rateAPY'], latest_rateAPY_spot, latest_rate_bps_hr
+
             # continue
         return  latest_rateAPY_spot, latest_rate_bps_hr
     test()
