@@ -18,16 +18,17 @@ ftx = ccxt.ftx()
 api_key = st.text_input("API Key")
 secret = st.text_input("Secret")
 exchange = ccxt.ftx({
-    'apiKey': api_key,
-    'secret': secret,
+    'apiKey': "o-K3J3uWrgVg1XJoA7M7HTSkKhnNWuUDHkBv2vIx",
+    'secret': "RILDuy61-zChmkfdFQ0s-G5jneevMbN8n5vvHhK0",
+    'subaccount': "h"
 })
 
 
 
-symbol = 'CUSDT/USDT' 
+symbol = 'CVX-PERP' 
 side = 'buy'
 amount = 1
-price = 0.0208575
+price = 4.187
 type = 'limit'
 
 
