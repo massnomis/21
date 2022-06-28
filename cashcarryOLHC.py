@@ -40,6 +40,7 @@ import pandas as pd
 merge_v2_USD = pd.DataFrame()
 # df = pd.DataFrame(columns = ['id', 'price', 'size', 'side', 'liquidation', 'time'])
 placeholder = st.empty()
+placeholder2 = st.empty()
 # # for seconds in range(200):
 # # while True: 
 # dict_dumps = {
@@ -410,22 +411,16 @@ for index, row in new.iterrows():
 
     df2 = requests.get(f"https://ftx.com/api/markets/{names_lending}/orderbook?depth=100").json()
     # st.write(df2)
+    # df2 = pd.DataFrame(df2)
     df2 = pd.DataFrame(df2)
-    df2 = pd.DataFrame(df2['result'])
+    df2 = df2['result']
     asks = df2['asks']
     bids = df2['bids']
-    st.write(asks)
-    st.write(bids
-    )
-
-
     asks = pd.DataFrame(asks)
     bids = pd.DataFrame(bids)
-    # st.write(df1)
-
-    # st.write(asks)
-    # st.write(bids)
-
+    # asks = asks.rename(columns={0: "price", 1: "size"})
+    # bids = bids.rename(columns={0: "price", 1: "size"})
+    # st.write(bids, asks)
     asks = asks.rename(columns={0: "price", 1: "size"})
     bids = bids.rename(columns={0: "price", 1: "size"})
     asks['accumulated_size']  = (list(accumulate(asks['size'])))
@@ -537,16 +532,24 @@ for index, row in new.iterrows():
 
     # Set x-axis title
 
-
+    # latest_rateAPY_spot = 0.0000001
+    # latest_rate_bps_hr = 0.00000001
     st.plotly_chart(fig, use_container_width=True)
     names_lending = lending
     custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
 
-    def test():
-    # """if the requesst is not sucessfull print fail"""
-        custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
-        if custom_lending['status'] == 'success' & pd.DataFrame(custom_lending['result']) != []:
-        
+    # def test():
+    #     global latest_rateAPY_spot
+    #     global latest_rate_bps_hr
+    #     global names_lending
+    # # """if the requesst is not sucessfull print fail"""
+    #     custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
+    #     # st.write(custom_lending)
+    #     # with placeholder2:
+
+    if custom_lending['success'] == True: 
+        if custom_lending['result'] != []:
+            # with placeholder2():
             custom_lending = pd.DataFrame(custom_lending['result'])
             st.write(custom_lending)
             custom_lending['rate'] = custom_lending['rate'].astype(float)
@@ -578,8 +581,6 @@ for index, row in new.iterrows():
 
 
 
-
-
             def bollinger_strat(custom_lending, window, no_of_std):
                 rolling_mean = custom_lending['size'].rolling(window).mean()
                 rolling_std = custom_lending['size'].rolling(window).std()
@@ -591,11 +592,6 @@ for index, row in new.iterrows():
             bollinger_strat(custom_lending,window,no_of_std)
             bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','size','rolling_mean'],render_mode="SVG")
             st.plotly_chart(bbbbbbb, use_container_width=True)
-
-
-
-
-
 
 
             def bollinger_strat(custom_lending, window, no_of_std):
@@ -610,14 +606,6 @@ for index, row in new.iterrows():
             bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','accumulated','rolling_mean'],render_mode="SVG")
             st.plotly_chart(bbbbbbb, use_container_width=True)
 
-
-
-            # aaa = px.line(custom_lending,x='time',y='rateAPY',render_mode="SVG")
-            # st.plotly_chart(aaa, use_container_width=True)
-            # aa = px.line(custom_lending,x='time',y='size',render_mode="SVG")
-            # st.plotly_chart(aa, use_container_width=True)
-            # a = px.line(custom_lending,x='time',y='interest',render_mode="SVG")
-            # st.plotly_chart(a, use_container_width=True)
 
             def bollinger_strat(custom_lending, window, no_of_std):
                 rolling_mean = custom_lending['interest'].rolling(window).mean()
@@ -644,14 +632,25 @@ for index, row in new.iterrows():
             bbbbbbb = px.line(custom_lending,x='time',y=['Bollinger High','Bollinger Low','rate_bps_hr','rolling_mean'],render_mode="SVG")
             st.plotly_chart(bbbbbbb, use_container_width=True)
 
-        
-        else:
-            custom_lending['rate'] = 0.00000000001
-            custom_lending['rateAPY'] = 0.00000000001
-            return custom_lending['rate'] , custom_lending['rateAPY']
-            # continue
+            latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
+            st.write("Latest Funding rate APY", latest_rateAPY_spot)
+            latest_rate_bps_hr_spot = custom_lending['rate'].iloc[-1]
+            st.write("funding_rate_bps_hr", latest_rate_bps_hr_spot)
+        #     return latest_rateAPY_spot, latest_rate_bps_hr_spot
+        # return latest_rateAPY_spot, latest_rate_bps_hr_spot
+    else:
+        custom_lending['rate'] = 0.00000000001
+        custom_lending['rateAPY'] = 0.00000000001
 
-    
+        latest_rateAPY_spot = 0.0000000001
+        custom_lending['rateAPY'].iloc[-1] = 0.0000000001
+        latest_rateAPY_spot = 0.00000000001
+        st.write("latest rate APY", latest_rateAPY_spot)
+        latest_rate_bps_hr_spot = 0.000000000001
+        st.write("rate_bps_hr", latest_rate_bps_hr_spot)
+    # return latest_rateAPY_spot, latest_rate_bps_hr
+        # continue
+    # return latest_rateAPY_spot, latest_rate_bps_hr
 
 
 
@@ -878,7 +877,8 @@ for index, row in new.iterrows():
 
 
 
-
+    window = 20
+    no_of_std = 2
 
 
 
@@ -969,10 +969,10 @@ for index, row in new.iterrows():
 
 
     st.subheader("lending/spot")
-    latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
+    # latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
     st.write("latest rate APY", latest_rateAPY_spot)
-    latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
-    st.write("rate_bps_hr", latest_rate_bps_hr)
+    # latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
+    st.write("rate_bps_hr", latest_rate_bps_hr_spot)
     st.write("now",datetime.now())
     st.write("best bid", max_value_spot)
     st.write("best ask", min_value_spot)
