@@ -540,7 +540,7 @@ for index, row in new.iterrows():
     # """if the requesst is not sucessfull print fail"""
         custom_lending = requests.get(f"https://ftx.com/api/spot_margin/history?coin={names_lending}&start_time=960368456&end_time=1854597556").json()
         # st.write(custom_lending)
-        if custom_lending['success'] & custom_lending['result'] != []:
+        if custom_lending['success'] == 'true' & custom_lending['result'] != []:
         
             custom_lending = pd.DataFrame(custom_lending['result'])
             st.write(custom_lending)
