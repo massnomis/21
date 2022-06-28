@@ -979,7 +979,7 @@ for index, row in new.iterrows():
     st.subheader("lending/spot")
     latest_rateAPY_spot = custom_lending['rateAPY'].iloc[-1]
     st.write("latest rate APY", latest_rateAPY_spot)
-    # latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
+    latest_rate_bps_hr = custom_lending['rate_bps_hr'].iloc[-1]
     st.write("rate_bps_hr", latest_rate_bps_hr)
     st.write("now",datetime.now())
     st.write("best bid", max_value_spot)
