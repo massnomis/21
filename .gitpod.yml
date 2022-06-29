@@ -37,9 +37,9 @@ tasks:
   #   init: gp sync-await requirements
   #   command: streamlit run liquidity_checker.py
 
-  - name: cashcarryOLHC
-    init: gp sync-await requirements
-    command: streamlit run cashcarryOLHC.py
+#   - name: cashcarryOLHC
+#     init: gp sync-await requirements
+#     command: streamlit run cashcarryOLHC.py
 
 
 
