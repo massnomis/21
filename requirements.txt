@@ -9,3 +9,4 @@ requests==2.27.1
 Rx==3.2.0
 streamlit==1.10.0
 websockets==10.3
+streamlit-aggrid==0.0.4

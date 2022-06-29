@@ -9,7 +9,7 @@ import plotly.express as px
 st.set_page_config(layout="wide")
 API_KEY = "48bd4a71-3872-4b90-a0a0-a8a879cfb113"
 reserve_name = pd.read_csv('download-1b921f5f-164b-4202-bf85-467b7dde828d.csv')
-reserve_name = st.selectbox("reserve_name", reserve_name)
+reserve_name = st.selectbox("reserve_name", reserve_name, index = 6)
 st.write(reserve_name)
 SQL_QUERY = """select * from flipside_prod_db.aave.market_stats where RESERVE_NAME = '""" + reserve_name + """' order by block_hour desc"""
 
