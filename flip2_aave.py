@@ -75,8 +75,8 @@ number_of_y_axis = st.number_input("Number of y values to plot", value=1, min_va
 
 color = st.checkbox("Color sort?")
 if number_of_y_axis == 1:
-    x = st.selectbox("X axis", df.columns, index = 2)
-    y = st.selectbox("Y axis", df.columns, index = 3)
+    x = st.selectbox("X axis", df.columns, index = 0)
+    y = st.selectbox("Y axis", df.columns, index = 16)
     if color:
         color_sort = st.selectbox("Color by", df.columns)
         if chart_type == "line":
