@@ -15,6 +15,7 @@ SQL_QUERY = """select *, date_trunc('""" + variable + """', block_timestamp) as 
 API_KEY = st.text_input("Enter your API key", API_KEY )
 SQL_QUERY = st.text_input("Enter your SQL query", SQL_QUERY)
 TTL_MINUTES = 15
+st.code(SQL_QUERY)
 
 def create_query():
     r = requests.post(
@@ -45,7 +46,8 @@ def get_query_results(token):
         return get_query_results(token)
 
     return data
-
+# run_query = st.button("Run query")
+# if run_query:
 
 query = create_query()
 token = query.get('token')
@@ -55,9 +57,14 @@ data = get_query_results(token)
 # for row in data['results']:
 #     print(row)
 # return data
+# placeholder = st.empty()
+# with placeholder:
 df = pd.DataFrame(data['results'], columns=data['columnLabels'])
-st.write(df)
+st.write(df.head())
 st.write(df.columns)
+see_full = st.checkbox("See full data")
+if see_full:
+    st.write(df)
 df = df.fillna('null')
 
 chart_type = st.selectbox("Chart type", ["line", "bar", "scatter"])
@@ -123,30 +130,3 @@ if number_of_y_axis == 3:
             st.plotly_chart(px.bar(df, y =[y1, y2, y3], x =x), use_container_width=True)
         if chart_type == "scatter":
             st.plotly_chart(px.scatter(df, y =[y1, y2, y3], x =x), use_container_width=True)
-
-
-
-    # st.write(data.head())
-    # st.write(data.columns())
-    # st.plotly_chart(px.bar(data, x="HOUR", y="DEPOSITS", color = 'TO_LABEL'))
-    # st.plotly_chart(px.line(data, x="DAYZ", y="ETH_SPENT_FEES_NATIVE"))
-    # http://localhost:3000, http://localhost:3001
-
-
-
-    #     SELECT
-    #         date_trunc('day',block_timestamp) as hour,
-    #         sum(amount) as withdrawals,
-    #   from_label
-    #     FROM ethereum.udm_events
-    #     WHERE 
-    #         block_timestamp >= getdate() - interval '4800 hours'
-#         and from_label_type = 'cex'
-#         and (to_label_type <> 'cex' OR to_label_type IS NULL)
-#         and symbol = 'CEL' 
-#     GROUP BY 1,3
-
-
-
-
-
