@@ -62,10 +62,11 @@ data = get_query_results(token)
 # with placeholder:
 df = pd.DataFrame(data['results'], columns=data['columnLabels'])
 st.write(df.head())
-st.write(df.columns)
 see_full = st.checkbox("See full data")
 if see_full:
     st.write(df)
+st.write(df.columns)
+
 df = df.fillna('null')
 
 chart_type = st.selectbox("Chart type", ["line", "bar", "scatter"])
