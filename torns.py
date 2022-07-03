@@ -854,6 +854,9 @@ async def Spot():
 # st.write("perp spread", spred_bps_perps , "bps")
 
 # info()
+# self._drain_lock = asyncio.Lock(
+#     **({"loop": loop} if sys.version_info[:2] < (3, 8) else {})
+# )
 
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()

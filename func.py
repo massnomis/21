@@ -23,10 +23,11 @@ from streamlit_pandas_profiling import st_profile_report
 
 st.set_page_config(layout="wide")
 copy_this_ex = """select * from aave.liquidations limit 543"""
+
 st.code(copy_this_ex)
 # content = """ """ 
 API_KEY = "48bd4a71-3872-4b90-a0a0-a8a879cfb113"
-
+API_KEY = st.text_input("Enter your API key", API_KEY )
 def ace():
     c1, c2 = st.columns([3, 1])
     c2.subheader("Parameters")
@@ -104,6 +105,19 @@ def ace():
                 df = pd.DataFrame(data['results'], columns=data['columnLabels'])
                 st.write(df.head())
                 st.write(df.columns)
+                def convert_df(df):
+                    return df.to_csv().encode('utf-8')
+
+
+                csv = convert_df(df)
+
+                st.download_button(
+                "Press to Download",
+                csv,
+                "file.csv",
+                "text/csv",
+                key='download-csv'
+                )
                 see_full = st.checkbox("See full data")
                 if see_full:
                     st.write(df)
@@ -276,7 +290,6 @@ def ace():
                     }
                 };
                 """)
-                gb.configure_column("group", cellStyle=cellsytle_jscode)
 
                 if enable_sidebar:
                     gb.configure_side_bar()
@@ -323,8 +336,20 @@ def ace():
                     convert_selected_into_df = st.checkbox("Convert selected rows into dataframe and chart again", value=False)
                     if convert_selected_into_df:
                         df = selected_df
-                        chart_type = st.selectbox("Chart type", ["scatter", "line", "bar"] ,key =2)
+                        def convert_df(df):
+                            return df.to_csv().encode('utf-8')
 
+
+                        csv = convert_df(df)
+
+                        st.download_button(
+                        "Press to Download",
+                        csv,
+                        "file.csv",
+                        "text/csv",
+                        key='download-csv'
+                        )
+                        chart_type = st.selectbox("Chart type", ["scatter", "line", "bar"] ,key =2)
 
                         number_of_y_axis = st.number_input("Number of y values to plot", value=1, min_value=1, max_value=3 ,key =2)
 

@@ -34,8 +34,8 @@ apiKey = st.text_input("apiKey")
 secret = st.text_input("secret")
 ftx = ccxt.ftx()
 exchange = ccxt.ftx({
-    'apiKey': apiKey,
-    'secret': secret
+    'apiKey': "nkoPFdU_pwnqqorKhqwZaxLWqs5Ik3lsF1KlTvie",
+    'secret': "fQ2xniA9shyT30PoIOX2nFCSsBo55vc3SuhIls69"
 })
 
 a = exchange.fetchBalance()

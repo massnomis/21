@@ -6,12 +6,11 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 st.set_page_config(layout="wide")
-API_KEY = "48bd4a71-3872-4b90-a0a0-a8a879cfb113"
 
 variable = st.text_input("Enter your date_variable", "day")
 
 SQL_QUERY = """select *, date_trunc('""" + variable + """', block_timestamp) as dayz from flipside_prod_db.aave.liquidations order by block_timestamp desc"""
-
+API_KEY = "48bd4a71-3872-4b90-a0a0-a8a879cfb113"
 API_KEY = st.text_input("Enter your API key", API_KEY )
 SQL_QUERY = st.text_input("Enter your SQL query", SQL_QUERY)
 TTL_MINUTES = 15
