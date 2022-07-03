@@ -1,66 +1,11 @@
-# import streamlit as st
-# from streamlit_ace import st_ace, KEYBINDINGS, LANGUAGES, THEMES
-
-
-# def ace():
-#     c1, c2 = st.columns([3, 1])
-#     c2.subheader("Parameters")
-#     with c1:
-#         content = st_ace(
-#             placeholder=c2.text_input("Editor placeholder", value="Write your code here"),
-#             language=c2.selectbox("Language mode", options=LANGUAGES, index=145),
-#             theme=c2.selectbox("Theme", options=THEMES, index=35),
-#             keybinding=c2.selectbox("Keybinding mode", options=KEYBINDINGS, index=3),
-#             font_size=c2.slider("Font size", 5, 24, 20),
-#             tab_size=c2.slider("Tab size", 1, 8, 5),
-#             show_gutter=c2.checkbox("Show gutter", value=True),
-#             show_print_margin=c2.checkbox("Show print margin", value=False),
-#             wrap=c2.checkbox("Wrap enabled", value=False),
-#             auto_update=c2.checkbox("Auto update", value=False),
-#             readonly=c2.checkbox("Read-only", value=False),
-#             min_lines=45,
-#             key="ace",
-#         )
-
-#         if content:
-#             st.subheader("Content")
-#             st.code(content)
-# ace()
-
-
-# import pandas as pd
-# import pandas_profiling
-# import streamlit as st
-
-# # from streamlit_gallery.utils.readme import readme
-# from streamlit_pandas_profiling import st_profile_report
-
-# dataset = "https://storage.googleapis.com/tf-datasets/titanic/train.csv"
-
-# df = pd.read_csv(dataset)
-
-# def gen_report(df):
-#     # with readme("streamlit-pandas-profiling", st_profile_report, __file__):
-
-#         pr = gen_profile_report(df, explorative=True)
-
-#         # st.write(f"🔗 [Titanic dataset]({dataset})")
-#         st.write(df)
-
-#         with st.expander("REPORT", expanded=True):
-#             st_profile_report(pr)
-
-
-# @st.cache(allow_output_mutation=True)
-# def gen_profile_report(df, *report_args, **report_kwargs):
-#     return df.profile_report(*report_args, **report_kwargs)
-
-# gen_report(df=df)
-
-
-
-
-
+import streamlit as st
+from streamlit_ace import st_ace, KEYBINDINGS, LANGUAGES, THEMES
+import requests
+import json
+import time
+import streamlit as st
+import pandas as pd
+import plotly.express as px
 from distutils import errors
 from distutils.log import error
 import streamlit as st
@@ -68,196 +13,385 @@ import pandas as pd
 import numpy as np
 import altair as alt
 from itertools import cycle
-
 from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode, JsCode
+import pandas as pd
+import pandas_profiling
+import streamlit as st
 
-np.random.seed(42)
+# from streamlit_gallery.utils.readme import readme
+from streamlit_pandas_profiling import st_profile_report
 
-@st.cache(allow_output_mutation=True)
-def fetch_data(samples):
-    deltas = cycle([
-            pd.Timedelta(weeks=-2),
-            pd.Timedelta(days=-1),
-            pd.Timedelta(hours=-1),
-            pd.Timedelta(0),
-            pd.Timedelta(minutes=5),
-            pd.Timedelta(seconds=10),
-            pd.Timedelta(microseconds=50),
-            pd.Timedelta(microseconds=10)
-            ])
-    dummy_data = {
-        "date_time_naive":pd.date_range('2021-01-01', periods=samples),
-        "apple":np.random.randint(0,100,samples) / 3.0,
-        "banana":np.random.randint(0,100,samples) / 5.0,
-        "chocolate":np.random.randint(0,100,samples),
-        "group": np.random.choice(['A','B'], size=samples),
-        "date_only":pd.date_range('2020-01-01', periods=samples).date,
-        "timedelta":[next(deltas) for i in range(samples)],
-        "date_tz_aware":pd.date_range('2022-01-01', periods=samples, tz="Asia/Katmandu")
-    }
-    return pd.DataFrame(dummy_data)
+st.set_page_config(layout="wide")
+copy_this_ex = """select * from aave.liquidations limit 543"""
+st.code(copy_this_ex)
+# content = """ """ 
+API_KEY = "48bd4a71-3872-4b90-a0a0-a8a879cfb113"
 
-#Example controlers
-st.sidebar.subheader("St-AgGrid example options")
+def ace():
+    c1, c2 = st.columns([3, 1])
+    c2.subheader("Parameters")
+    with c1:
+        content = st_ace(
+            placeholder=c2.text_input("Editor placeholder", value="Write your code here"),
+            language=c2.selectbox("Language mode", options=LANGUAGES, index=145),
+            theme=c2.selectbox("Theme", options=THEMES, index=35),
+            keybinding=c2.selectbox("Keybinding mode", options=KEYBINDINGS, index=3),
+            font_size=c2.slider("Font size", 5, 24, 20),
+            tab_size=c2.slider("Tab size", 1, 8, 5),
+            show_gutter=c2.checkbox("Show gutter", value=True),
+            show_print_margin=c2.checkbox("Show print margin", value=False),
+            wrap=c2.checkbox("Wrap enabled", value=False),
+            auto_update=c2.checkbox("Auto update", value=True),
+            readonly=c2.checkbox("Read-only", value=False),
+            min_lines=45,
+            key="ace",
+        )
 
-sample_size = st.sidebar.number_input("rows", min_value=10, value=30)
-grid_height = st.sidebar.number_input("Grid height", min_value=200, max_value=800, value=300)
+        if content:
+            # st.subheader("Content")
+            st.code(content)
+            
+            SQL_QUERY = content
+            # st.write(SQL_QUERY)
+            # st.code(SQL_QUERY)
 
-return_mode = st.sidebar.selectbox("Return Mode", list(DataReturnMode.__members__), index=1)
-return_mode_value = DataReturnMode.__members__[return_mode]
+            TTL_MINUTES = 15
 
-update_mode = st.sidebar.selectbox("Update Mode", list(GridUpdateMode.__members__), index=6)
-update_mode_value = GridUpdateMode.__members__[update_mode]
-
-#enterprise modules
-enable_enterprise_modules = st.sidebar.checkbox("Enable Enterprise Modules")
-if enable_enterprise_modules:
-    enable_sidebar =st.sidebar.checkbox("Enable grid sidebar", value=False)
-else:
-    enable_sidebar = False
-
-#features
-fit_columns_on_grid_load = st.sidebar.checkbox("Fit Grid Columns on Load")
-
-enable_selection=st.sidebar.checkbox("Enable row selection", value=True)
-if enable_selection:
-    st.sidebar.subheader("Selection options")
-    selection_mode = st.sidebar.radio("Selection Mode", ['single','multiple'], index=1)
-
-    use_checkbox = st.sidebar.checkbox("Use check box for selection", value=True)
-    if use_checkbox:
-        groupSelectsChildren = st.sidebar.checkbox("Group checkbox select children", value=True)
-        groupSelectsFiltered = st.sidebar.checkbox("Group checkbox includes filtered", value=True)
-
-    if ((selection_mode == 'multiple') & (not use_checkbox)):
-        rowMultiSelectWithClick = st.sidebar.checkbox("Multiselect with click (instead of holding CTRL)", value=False)
-        if not rowMultiSelectWithClick:
-            suppressRowDeselection = st.sidebar.checkbox("Suppress deselection (while holding CTRL)", value=False)
-        else:
-            suppressRowDeselection=False
-    st.sidebar.text("___")
-
-enable_pagination = st.sidebar.checkbox("Enable pagination", value=False)
-if enable_pagination:
-    st.sidebar.subheader("Pagination options")
-    paginationAutoSize = st.sidebar.checkbox("Auto pagination size", value=True)
-    if not paginationAutoSize:
-        paginationPageSize = st.sidebar.number_input("Page size", value=5, min_value=0, max_value=sample_size)
-    st.sidebar.text("___")
-
-df = fetch_data(sample_size)
-
-#Infer basic colDefs from dataframe types
-gb = GridOptionsBuilder.from_dataframe(df)
-
-#customize gridOptions
-gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-
-gb.configure_column("date_tz_aware", type=["dateColumnFilter","customDateTimeFormat"], custom_format_string='yyyy-MM-dd HH:mm zzz', pivot=True)
-
-gb.configure_column("apple", type=["numericColumn","numberColumnFilter","customNumericFormat"], precision=2, aggFunc='sum')
-gb.configure_column("banana", type=["numericColumn", "numberColumnFilter", "customNumericFormat"], precision=1, aggFunc='avg')
-gb.configure_column("chocolate", type=["numericColumn", "numberColumnFilter", "customCurrencyFormat"], custom_currency_symbol="R$", aggFunc='max')
-
-#configures last row to use custom styles based on cell's value, injecting JsCode on components front end
-cellsytle_jscode = JsCode("""
-function(params) {
-    if (params.value == 'A') {
-        return {
-            'color': 'white',
-            'backgroundColor': 'darkred'
-        }
-    } else {
-        return {
-            'color': 'black',
-            'backgroundColor': 'white'
-        }
-    }
-};
-""")
-gb.configure_column("group", cellStyle=cellsytle_jscode)
-
-if enable_sidebar:
-    gb.configure_side_bar()
-
-if enable_selection:
-    gb.configure_selection(selection_mode)
-    if use_checkbox:
-        gb.configure_selection(selection_mode, use_checkbox=True, groupSelectsChildren=groupSelectsChildren, groupSelectsFiltered=groupSelectsFiltered)
-    if ((selection_mode == 'multiple') & (not use_checkbox)):
-        gb.configure_selection(selection_mode, use_checkbox=False, rowMultiSelectWithClick=rowMultiSelectWithClick, suppressRowDeselection=suppressRowDeselection)
-
-if enable_pagination:
-    if paginationAutoSize:
-        gb.configure_pagination(paginationAutoPageSize=True)
-    else:
-        gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=paginationPageSize)
-
-gb.configure_grid_options(domLayout='normal')
-gridOptions = gb.build()
-
-#Display the grid
-# st.header("Streamlit Ag-Grid")
-# st.markdown("""
-#     AgGrid can handle many types of columns and will try to render the most human readable way.  
-#     On editions, grid will fallback to string representation of data, DateTime and TimeDeltas are converted to ISO format.
-#     Custom display formating may be applied to numeric fields, but returned data will still be numeric.
-# """)
-
-grid_response = AgGrid(
-    df, 
-    gridOptions=gridOptions,
-    height=grid_height, 
-    width='100%',
-    data_return_mode=return_mode_value, 
-    update_mode=update_mode_value,
-    fit_columns_on_grid_load=fit_columns_on_grid_load,
-    allow_unsafe_jscode=True, #Set it to True to allow jsfunction to be injected
-    enable_enterprise_modules=enable_enterprise_modules,
-    )
-
-df = grid_response['data']
-selected = grid_response['selected_rows']
-selected_df = pd.DataFrame(selected).apply(pd.to_numeric, errors='coerce')
+            def create_query():
+                r = requests.post(
+                    'https://node-api.flipsidecrypto.com/queries', 
+                    data=json.dumps({
+                        "sql": SQL_QUERY,
+                        "ttlMinutes": TTL_MINUTES
+                    }),
+                    headers={"Accept": "application/json", "Content-Type": "application/json", "x-api-key": API_KEY},
+                )
+                if r.status_code != 200:
+                    raise Exception("Error creating query, got response: " + r.text + "with status code: " + str(r.status_code))
+                
+                return json.loads(r.text)    
 
 
-with st.spinner("Displaying results..."):
-    #displays the chart
-    # chart_data = df.loc[:,['apple','banana','chocolate']].assign(source='total')
+            def get_query_results(token):
+                r = requests.get(
+                    'https://node-api.flipsidecrypto.com/queries/' + token, 
+                    headers={"Accept": "application/json", "Content-Type": "application/json", "x-api-key": API_KEY}
+                )
+                if r.status_code != 200:
+                    raise Exception("Error getting query results, got response: " + r.text + "with status code: " + str(r.status_code))
+                
+                data = json.loads(r.text)
+                if data['status'] == 'running':
+                    time.sleep(10)
+                    return get_query_results(token)
 
-    # if not selected_df.empty :
-    #     selected_data = selected_df.loc[:,['apple','banana','chocolate']].assign(source='selection')
-    #     chart_data = pd.concat([chart_data, selected_data])
+                return data
+            # run_query = st.button("Run query")
+            # if run_query:
 
-    # chart_data = pd.melt(chart_data, id_vars=['source'], var_name="item", value_name="quantity")
-    # #st.dataframe(chart_data)
-    # chart = alt.Chart(data=chart_data).mark_bar().encode(
-    #     x=alt.X("item:O"),
-    #     y=alt.Y("sum(quantity):Q", stack=False),
-    #     color=alt.Color('source:N', scale=alt.Scale(domain=['total','selection'])),
-    # )
+            run_query = st.checkbox("Run query")
+            if run_query:
+                query = create_query()
+                token = query.get('token')
+                data = get_query_results(token)
 
-    # st.header("Component Outputs - Example chart")
-    # st.markdown("""
-    # This chart is built with data returned from the grid. rows that are selected are also identified.
-    # Experiment selecting rows, group and filtering and check how the chart updates to match.
-    # """)
+                # print(data['columnLabels'])
+                # for row in data['results']:
+                #     print(row)
+                # return data
+                # placeholder = st.empty()
+                # with placeholder:
+                df = pd.DataFrame(data['results'], columns=data['columnLabels'])
+                st.write(df.head())
+                st.write(df.columns)
+                see_full = st.checkbox("See full data")
+                if see_full:
+                    st.write(df)
+                # df = df.fillna('null')
 
-    # st.altair_chart(chart, use_container_width=True)
+            # df = df
+                # df = df.fillna('null')
 
-    # st.subheader("Returned grid data:") 
-    #returning as HTML table bc streamlit has issues when rendering dataframes with timedeltas:
-    # https://github.com/streamlit/streamlit/issues/3781
-    # st.markdown(grid_response['data'].to_html(), unsafe_allow_html=True)
+                chart_type = st.selectbox("Chart type", ["scatter", "line", "bar"])
 
-    st.subheader("grid selection:")
-    # st.write(grid_response['selected_rows'])
-    new_df = pd.DataFrame(grid_response['selected_rows'])
-    st.write(new_df)
-    # st.header("Generated gridOptions")
-    st.markdown("""
-        All grid configuration is done thorugh a dictionary passed as ```gridOptions``` parameter to AgGrid call.
-        You can build it yourself, or use ```gridOptionBuilder``` helper class.  
-        Ag-Grid documentation can be read [here](https://www.ag-grid.com/documentation)
-    """)
-    # st.write(gridOptions)
+
+                number_of_y_axis = st.number_input("Number of y values to plot", value=1, min_value=1, max_value=3)
+
+                color = st.checkbox("Color sort?")
+                if number_of_y_axis == 1:
+                    x = st.selectbox("X axis", df.columns, index = 2)
+                    y = st.selectbox("Y axis", df.columns, index = 3)
+                    if color:
+                        color_sort = st.selectbox("Color by", df.columns)
+                        if chart_type == "line":
+                            st.plotly_chart(px.line(df, y =y, x =x, color=color_sort), use_container_width=True)
+                        if chart_type == "bar":
+                            st.plotly_chart(px.bar(df, y =y, x =x, color=color_sort), use_container_width=True)
+                        if chart_type == "scatter":
+                            st.plotly_chart(px.scatter(df, y =y, x =x, color=color_sort), use_container_width=True)
+                    else:
+                        if chart_type == "line":
+                            st.plotly_chart(px.line(df, y =y, x =x), use_container_width=True)
+                        if chart_type == "bar":
+                            st.plotly_chart(px.bar(df, y =y, x =x), use_container_width=True)
+                        if chart_type == "scatter":
+                            st.plotly_chart(px.scatter(df, y =y, x =x), use_container_width=True)
+                if number_of_y_axis == 2:
+                    x = st.selectbox("X axis", df.columns)
+                    y1 = st.selectbox("Y axis 1", df.columns)
+                    y2 = st.selectbox("Y axis 2", df.columns)
+                    if color:
+                        color_sort = st.selectbox("Color by", df.columns)
+                        if chart_type == "line":
+                            st.plotly_chart(px.line(df, y =[y1, y2], x =x, color=color_sort), use_container_width=True)
+                        if chart_type == "bar":
+                            st.plotly_chart(px.bar(df, y =[y1, y2], x =x, color=color_sort), use_container_width=True)
+                        if chart_type == "scatter":
+                            st.plotly_chart(px.scatter(df, y =[y1, y2], x =x, color=color_sort), use_container_width=True)
+                    else:
+                        if chart_type == "line":
+                            st.plotly_chart(px.line(df, y =[y1, y2], x =x), use_container_width=True)
+                        if chart_type == "bar":
+                            st.plotly_chart(px.bar(df, y =[y1, y2], x =x), use_container_width=True)
+                        if chart_type == "scatter":
+                            st.plotly_chart(px.scatter(df, y =[y1, y2], x =x), use_container_width=True)
+                if number_of_y_axis == 3: 
+                    x = st.selectbox("X axis", df.columns)
+                    y1 = st.selectbox("Y axis 1", df.columns)
+                    y2 = st.selectbox("Y axis 2", df.columns)
+                    y3 = st.selectbox("Y axis 3", df.columns)
+                    if color:
+                        color_sort = st.selectbox("Color by", df.columns)
+                        if chart_type == "line":
+                            st.plotly_chart(px.line(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
+                        if chart_type == "bar":
+                            st.plotly_chart(px.bar(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
+                        if chart_type == "scatter":
+                            st.plotly_chart(px.scatter(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
+                    else:
+                        if chart_type == "line":
+                            st.plotly_chart(px.line(df, y =[y1, y2, y3], x =x), use_container_width=True)
+                        if chart_type == "bar":
+                            st.plotly_chart(px.bar(df, y =[y1, y2, y3], x =x), use_container_width=True)
+                        if chart_type == "scatter":
+                            st.plotly_chart(px.scatter(df, y =[y1, y2, y3], x =x), use_container_width=True)
+                def gen_report(df):
+    
+                        pr = gen_profile_report(df, explorative=True)
+
+                        st.write(df)
+
+                        with st.expander("REPORT", expanded=True):
+                            st_profile_report(pr)
+
+
+                @st.cache(allow_output_mutation=True)
+                def gen_profile_report(df, *report_args, **report_kwargs):
+                    return df.profile_report(*report_args, **report_kwargs)
+                gen_report_click = st.checkbox("Generate report", False)
+                if gen_report_click:
+                    gen_report(df=df)
+                # gen_report(df=df)
+
+
+
+
+
+
+                #Example controlers
+                st.subheader("St-AgGrid example options")
+
+                sample_size = st.number_input("rows", min_value=10, value=30)
+                grid_height = st.number_input("Grid height", min_value=200, max_value=800, value=300)
+
+                return_mode = st.selectbox("Return Mode", list(DataReturnMode.__members__), index=1)
+                return_mode_value = DataReturnMode.__members__[return_mode]
+
+                update_mode = st.selectbox("Update Mode", list(GridUpdateMode.__members__), index=6)
+                update_mode_value = GridUpdateMode.__members__[update_mode]
+
+                #enterprise modules
+                enable_enterprise_modules = st.checkbox("Enable Enterprise Modules")
+                if enable_enterprise_modules:
+                    enable_sidebar =st.checkbox("Enable grid sidebar", value=False)
+                else:
+                    enable_sidebar = False
+
+                #features
+                fit_columns_on_grid_load = st.checkbox("Fit Grid Columns on Load")
+
+                enable_selection=st.checkbox("Enable row selection", value=True)
+                if enable_selection:
+                    st.subheader("Selection options")
+                    selection_mode = st.radio("Selection Mode", ['single','multiple'], index=1)
+
+                    use_checkbox = st.checkbox("Use check box for selection", value=True)
+                    if use_checkbox:
+                        groupSelectsChildren = st.checkbox("Group checkbox select children", value=True)
+                        groupSelectsFiltered = st.checkbox("Group checkbox includes filtered", value=True)
+
+                    if ((selection_mode == 'multiple') & (not use_checkbox)):
+                        rowMultiSelectWithClick = st.checkbox("Multiselect with click (instead of holding CTRL)", value=False)
+                        if not rowMultiSelectWithClick:
+                            suppressRowDeselection = st.checkbox("Suppress deselection (while holding CTRL)", value=False)
+                        else:
+                            suppressRowDeselection=False
+                    st.text("___")
+
+                enable_pagination = st.checkbox("Enable pagination", value=False)
+                if enable_pagination:
+                    st.subheader("Pagination options")
+                    paginationAutoSize = st.checkbox("Auto pagination size", value=True)
+                    if not paginationAutoSize:
+                        paginationPageSize = st.number_input("Page size", value=5, min_value=0, max_value=sample_size)
+                    st.text("___")
+
+                # df = fetch_data(sample_size)
+
+                #Infer basic colDefs from dataframe types
+                gb = GridOptionsBuilder.from_dataframe(df)
+
+                #customize gridOptions
+                gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
+
+                gb.configure_column("date_tz_aware", type=["dateColumnFilter","customDateTimeFormat"], custom_format_string='yyyy-MM-dd HH:mm zzz', pivot=True)
+
+                gb.configure_column("apple", type=["numericColumn","numberColumnFilter","customNumericFormat"], precision=2, aggFunc='sum')
+                gb.configure_column("banana", type=["numericColumn", "numberColumnFilter", "customNumericFormat"], precision=1, aggFunc='avg')
+                gb.configure_column("chocolate", type=["numericColumn", "numberColumnFilter", "customCurrencyFormat"], custom_currency_symbol="R$", aggFunc='max')
+
+                #configures last row to use custom styles based on cell's value, injecting JsCode on components front end
+                cellsytle_jscode = JsCode("""
+                function(params) {
+                    if (params.value == 'A') {
+                        return {
+                            'color': 'white',
+                            'backgroundColor': 'darkred'
+                        }
+                    } else {
+                        return {
+                            'color': 'black',
+                            'backgroundColor': 'white'
+                        }
+                    }
+                };
+                """)
+                gb.configure_column("group", cellStyle=cellsytle_jscode)
+
+                if enable_sidebar:
+                    gb.configure_side_bar()
+
+                if enable_selection:
+                    gb.configure_selection(selection_mode)
+                    if use_checkbox:
+                        gb.configure_selection(selection_mode, use_checkbox=True, groupSelectsChildren=groupSelectsChildren, groupSelectsFiltered=groupSelectsFiltered)
+                    if ((selection_mode == 'multiple') & (not use_checkbox)):
+                        gb.configure_selection(selection_mode, use_checkbox=False, rowMultiSelectWithClick=rowMultiSelectWithClick, suppressRowDeselection=suppressRowDeselection)
+
+                if enable_pagination:
+                    if paginationAutoSize:
+                        gb.configure_pagination(paginationAutoPageSize=True)
+                    else:
+                        gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=paginationPageSize)
+
+                gb.configure_grid_options(domLayout='normal')
+                gridOptions = gb.build()
+
+
+                grid_response = AgGrid(
+                    df, 
+                    gridOptions=gridOptions,
+                    height=grid_height, 
+                    width='100%',
+                    data_return_mode=return_mode_value, 
+                    update_mode=update_mode_value,
+                    fit_columns_on_grid_load=fit_columns_on_grid_load,
+                    allow_unsafe_jscode=True, #Set it to True to allow jsfunction to be injected
+                    enable_enterprise_modules=enable_enterprise_modules,
+                    )
+
+                df = grid_response['data']
+                selected = grid_response['selected_rows']
+                selected_df = pd.DataFrame(selected).apply(pd.to_numeric, errors='coerce')
+
+
+                with st.spinner("Displaying results..."):
+                    
+                    st.subheader("grid selection:")
+                    selected_df = pd.DataFrame(grid_response['selected_rows'])
+                    st.write(selected_df)
+                    convert_selected_into_df = st.checkbox("Convert selected rows into dataframe and chart again", value=False)
+                    if convert_selected_into_df:
+                        df = selected_df
+                        chart_type = st.selectbox("Chart type", ["scatter", "line", "bar"] ,key =2)
+
+
+                        number_of_y_axis = st.number_input("Number of y values to plot", value=1, min_value=1, max_value=3 ,key =2)
+
+                        color = st.checkbox("Color sort?" ,key =2)
+                        if number_of_y_axis == 1:
+                            x = st.selectbox("X axis", df.columns, index = 2 ,key =2)
+                            y = st.selectbox("Y axis", df.columns, index = 3 ,key =2)
+                            if color:
+                                color_sort = st.selectbox("Color by", df.columns)
+                                if chart_type == "line":
+                                    st.plotly_chart(px.line(df, y =y, x =x, color=color_sort), use_container_width=True)
+                                if chart_type == "bar":
+                                    st.plotly_chart(px.bar(df, y =y, x =x, color=color_sort), use_container_width=True)
+                                if chart_type == "scatter":
+                                    st.plotly_chart(px.scatter(df, y =y, x =x, color=color_sort), use_container_width=True)
+                            else:
+                                if chart_type == "line":
+                                    st.plotly_chart(px.line(df, y =y, x =x), use_container_width=True)
+                                if chart_type == "bar":
+                                    st.plotly_chart(px.bar(df, y =y, x =x), use_container_width=True)
+                                if chart_type == "scatter":
+                                    st.plotly_chart(px.scatter(df, y =y, x =x), use_container_width=True)
+                        if number_of_y_axis == 2:
+                            x = st.selectbox("X axis", df.columns ,key =2)
+                            y1 = st.selectbox("Y axis 1", df.columns ,key =2)
+                            y2 = st.selectbox("Y axis 2", df.columns ,key =2)
+                            if color:
+                                color_sort = st.selectbox("Color by", df.columns ,key =2)
+                                if chart_type == "line":
+                                    st.plotly_chart(px.line(df, y =[y1, y2], x =x, color=color_sort), use_container_width=True)
+                                if chart_type == "bar":
+                                    st.plotly_chart(px.bar(df, y =[y1, y2], x =x, color=color_sort), use_container_width=True)
+                                if chart_type == "scatter":
+                                    st.plotly_chart(px.scatter(df, y =[y1, y2], x =x, color=color_sort), use_container_width=True)
+                            else:
+                                if chart_type == "line":
+                                    st.plotly_chart(px.line(df, y =[y1, y2], x =x), use_container_width=True)
+                                if chart_type == "bar":
+                                    st.plotly_chart(px.bar(df, y =[y1, y2], x =x), use_container_width=True)
+                                if chart_type == "scatter":
+                                    st.plotly_chart(px.scatter(df, y =[y1, y2], x =x), use_container_width=True)
+                        if number_of_y_axis == 3: 
+                            x = st.selectbox("X axis", df.columns ,key =2)
+                            y1 = st.selectbox("Y axis 1", df.columns ,key =2)
+                            y2 = st.selectbox("Y axis 2", df.columns ,key =2)
+                            y3 = st.selectbox("Y axis 3", df.columns ,key =2)
+                            if color:
+                                color_sort = st.selectbox("Color by", df.columns)
+                                if chart_type == "line":
+                                    st.plotly_chart(px.line(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
+                                if chart_type == "bar":
+                                    st.plotly_chart(px.bar(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
+                                if chart_type == "scatter":
+                                    st.plotly_chart(px.scatter(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
+                            else:
+                                if chart_type == "line":
+                                    st.plotly_chart(px.line(df, y =[y1, y2, y3], x =x), use_container_width=True)
+                                if chart_type == "bar":
+                                    st.plotly_chart(px.bar(df, y =[y1, y2, y3], x =x), use_container_width=True)
+                                if chart_type == "scatter":
+                                    st.plotly_chart(px.scatter(df, y =[y1, y2, y3], x =x), use_container_width=True)
+
+ace()
+
+
+# st.set_page_config(layout="wide")
+
+# variable = st.text_input("Enter your date_variable", "day")
+
+
