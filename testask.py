@@ -1,75 +1,61 @@
-import requests
-import json
-import streamlit as st
-import pandas as pd
-from st_aggrid import AgGrid
-from st_aggrid.grid_options_builder import GridOptionsBuilder
-from st_aggrid.shared import GridUpdateMode
-
-import requests
-import json
-import time
-import streamlit as st
-import pandas as pd
 import plotly.express as px
+import pandas as pd
+import json
+import requests
+import streamlit as st
 
+from sys import version, exit
+
+from distutils import errors
+from distutils.log import error
+import streamlit as st
+import pandas as pd 
+import numpy as np
+import altair as alt
+from itertools import cycle
+from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode, JsCode
+import pandas as pd
+import pandas_profiling
+import streamlit as st
+
+# from streamlit_gallery.utils.readme import readme
+from streamlit_pandas_profiling import st_profile_report
 st.set_page_config(layout="wide")
-API_KEY = "48bd4a71-3872-4b90-a0a0-a8a879cfb113"
-reserve_name = pd.read_csv('download-1b921f5f-164b-4202-bf85-467b7dde828d.csv')
-reserve_name = st.selectbox("reserve_name", reserve_name, index = 6)
-st.write(reserve_name)
-SQL_QUERY = """select * from flipside_prod_db.aave.market_stats
- where RESERVE_NAME = '""" 
-+ reserve_name + """' order by block_hour desc""" 
 
-API_KEY = st.text_input("Enter your API key", API_KEY )
-SQL_QUERY = st.text_input("Enter your SQL query", SQL_QUERY)
-TTL_MINUTES = 15
-st.code(SQL_QUERY)
+eth = "https://node-api.flipsidecrypto.com/api/v2/queries/fd06b165-9b39-4a3e-a496-e352225e6011/data/latest"
+poly = "https://node-api.flipsidecrypto.com/api/v2/queries/b6937d3a-152f-4261-ac26-64bf84a31744/data/latest"
+df_eth = pd.read_json(
+    eth,
+    convert_dates=["TIMESTAMP_NTZ"],
+)
+# st.write(df_eth)
+df_poly = pd.read_json(
+    poly,
+    convert_dates=["TIMESTAMP_NTZ"],
+)
+# st.write(df_poly)
 
-def create_query():
-    r = requests.post(
-        'https://node-api.flipsidecrypto.com/queries', 
-        data=json.dumps({
-            "sql": SQL_QUERY,
-            "ttlMinutes": TTL_MINUTES
-        }),
-        headers={"Accept": "application/json", "Content-Type": "application/json", "x-api-key": API_KEY},
-    )
-    if r.status_code != 200:
-        raise Exception("Error creating query, got response: " + r.text + "with status code: " + str(r.status_code))
-    
-    return json.loads(r.text)    
+merged_df = pd.merge(df_eth, df_poly, on="HOUR")
+st.write(merged_df)
+def gen_report(df):
+
+        pr = gen_profile_report(df, explorative=True)
+
+        st.write(df)
+
+        with st.expander("REPORT", expanded=True):
+            st_profile_report(pr)
 
 
-def get_query_results(token):
-    r = requests.get(
-        'https://node-api.flipsidecrypto.com/queries/' + token, 
-        headers={"Accept": "application/json", "Content-Type": "application/json", "x-api-key": API_KEY}
-    )
-    if r.status_code != 200:
-        raise Exception("Error getting query results, got response: " + r.text + "with status code: " + str(r.status_code))
-    
-    data = json.loads(r.text)
-    if data['status'] == 'running':
-        time.sleep(10)
-        return get_query_results(token)
+@st.cache(allow_output_mutation=True)
+def gen_profile_report(df, *report_args, **report_kwargs):
+    return df.profile_report(*report_args, **report_kwargs)
+gen_report_click = st.checkbox("Generate report", False)
+if gen_report_click:
+    gen_report(df=merged_df)
 
-    return data
-# run_query = st.button("Run query")
-# if run_query:
-
-query = create_query()
-token = query.get('token')
-data = get_query_results(token)
-
-# print(data['columnLabels'])
-# for row in data['results']:
-#     print(row)
-# return data
-# placeholder = st.empty()
 # with placeholder:
-df = pd.DataFrame(data['results'], columns=data['columnLabels'])
+df=merged_df
 st.write(df.columns)
 st.write(df.head())
 # df = df.fillna('null')
@@ -105,21 +91,27 @@ number_of_y_axis = st.number_input("Number of y values to plot", value=1, min_va
 color = st.checkbox("Color sort?")
 if number_of_y_axis == 1:
     x = st.selectbox("X axis", df.columns, index = 0)
-    y = st.selectbox("Y axis", df.columns, index = 16)
+    y = st.selectbox("Y axis", df.columns, index = 3)
     if color:
         color_sort = st.selectbox("Color by", df.columns)
         if chart_type == "line":
+            st.code(f'st.plotly_chart(px.line(df, y ="{y}", x ="{x}", color="{color_sort}"), use_container_width=True)')
             st.plotly_chart(px.line(df, y =y, x =x, color=color_sort), use_container_width=True)
         if chart_type == "bar":
+            st.code(f'st.plotly_chart(px.bar(df, y ="{y}", x ="{x}", color="{color_sort}"), use_container_width=True)')
             st.plotly_chart(px.bar(df, y =y, x =x, color=color_sort), use_container_width=True)
         if chart_type == "scatter":
+            st.code(f'st.plotly_chart(px.scatter(df, y ="{y}", x ="{x}", color="{color_sort}"), use_container_width=True)')
             st.plotly_chart(px.scatter(df, y =y, x =x, color=color_sort), use_container_width=True)
     else:
         if chart_type == "line":
+            st.code(f'st.plotly_chart(px.line(df, y ="{y}", x ="{x}"), use_container_width=True)')
             st.plotly_chart(px.line(df, y =y, x =x), use_container_width=True)
         if chart_type == "bar":
+            st.code(f'st.plotly_chart(px.bar(df, y ="{y}", x ="{x}"), use_container_width=True)')
             st.plotly_chart(px.bar(df, y =y, x =x), use_container_width=True)
         if chart_type == "scatter":
+            st.code(f'st.plotly_chart(px.scatter(df, y ="{y}", x ="{x}"), use_container_width=True)')
             st.plotly_chart(px.scatter(df, y =y, x =x), use_container_width=True)
 if number_of_y_axis == 2:
     x = st.selectbox("X axis", df.columns)
@@ -161,17 +153,5 @@ if number_of_y_axis == 3:
         if chart_type == "scatter":
             st.plotly_chart(px.scatter(df, y =[y1, y2, y3], x =x), use_container_width=True)
 
-
-i
-# names_lending = 'BTC/USD'
-# df2 = requests.get(f"https://ftx.com/api/markets/{names_lending}/orderbook?depth=100").json()
-# # st.write(df2)
-# df2 = pd.DataFrame(df2)
-# df2 = df2['result']
-# asks = df2['asks']
-# bids = df2['bids']
-# asks = pd.DataFrame(asks)
-# bids = pd.DataFrame(bids)
-# asks = asks.rename(columns={0: "price", 1: "size"})
-# bids = bids.rename(columns={0: "price", 1: "size"})
-# st.write(bids, asks)
+    # pip install pandas_profiling --user
+    # pip install streamlit_pandas_profiling --user
