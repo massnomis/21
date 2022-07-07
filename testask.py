@@ -146,7 +146,7 @@ if number_of_y_axis == 2:
     x = st.selectbox("X-axis", df.columns)
     y1 = st.selectbox("Y-axis 1", df.columns)
     y2 = st.selectbox("Y-axis 2", df.columns)
-    if color_sort:
+    if color:
         color_sort = st.selectbox("Color", df.columns)
         if chart_type == "line":
             if log_y:
@@ -220,7 +220,7 @@ if number_of_y_axis == 3:
     y1 = st.selectbox("Y-axis 1", df.columns)
     y2 = st.selectbox("Y-axis 2", df.columns)
     y3 = st.selectbox("Y-axis 3", df.columns)
-    if color_sort:
+    if color:
         color_sort = st.selectbox("Color", df.columns)
         if chart_type == "line":
             if log_y:
