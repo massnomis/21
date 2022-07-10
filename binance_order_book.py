@@ -71,7 +71,7 @@ def on_message(ws, message):
             asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
             # st.write("pomg")
             asks.dropna(inplace=True)
-
+            asks= asks[asks['size_ask'] != 0]
             asks = asks.append(asks_update, ignore_index=True)
             asks = asks.drop_duplicates(subset=['price_ask'], keep='first')
             asks.sort_values(by=['price_ask'], inplace=True)
@@ -96,6 +96,7 @@ def on_message(ws, message):
             # bids.append(bids_update.loc[i])
             bids.loc[bids["price_bid"] == bids_update.loc[i]["price_bid"], "size_bid"] = bids_update.loc[i]["size_bid"]
             bids.dropna(inplace=True)
+            bids= bids[bids['size_bid'] != 0]
             bids = bids.append(bids_update, ignore_index=True)
             bids = bids.drop_duplicates(subset=['price_bid'], keep='first')
             bids.sort_values(by=['price_bid'], inplace=True, ascending=False)
@@ -128,11 +129,11 @@ def on_message(ws, message):
         fig.update_layout(title_text="orderbook")
         st.plotly_chart(fig, use_container_width=True)
 
-        fig = make_subplots(specs=[[{"secondary_y": True}]])
-        fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
-        fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
-        fig.update_layout(title_text="orderbook")
-        st.plotly_chart(fig, use_container_width=True)
+        # fig = make_subplots(specs=[[{"secondary_y": True}]])
+        # fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
+        # fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
+        # fig.update_layout(title_text="orderbook")
+        # st.plotly_chart(fig, use_container_width=True)
         
         fig = make_subplots(specs=[[{"secondary_y": True}]])
         fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)

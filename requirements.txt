@@ -16,3 +16,4 @@ websockets==9.1
 streamlit-aggrid
 Jinja2
 websocket_client
+requests
