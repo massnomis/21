@@ -37,7 +37,9 @@ def on_message(ws, message):
         df['s'] = df['s'].astype(str)
         df['p'] = df['p'].astype(float)
         df['q'] = df['q'].astype(float)
-        df['T']
+        # df['T'] = df['T'].astype(float)
+
+        # df['T'] = pd.to_datetime['T']
         st.write(df)
         st.plotly_chart(px.scatter(df, x="E", y="p", color="maker", size='q'),use_container_width=True)
 
