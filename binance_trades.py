@@ -32,7 +32,7 @@ def on_message(ws, message):
         df = df.append(df1, ignore_index=False)
         # m = df['m']
         df['m'] = df['m'].astype(str)
-        df['maker'] = df['m']
+        df['buy'] = df['m']
         df['M'] = df['M'].astype(str)
         df['E'] = df['E'].astype(float)
         df['s'] = df['s'].astype(str)
@@ -41,7 +41,7 @@ def on_message(ws, message):
         df['T'] = df['T'].astype(str)
         # df['sum'] = df.cumsum(['q'])
         # df['T'] = pd.to_datetime['T']
-        st.write(df)
+        # st.write(df)
         st.plotly_chart(px.scatter(df, x="E", y="p", color="maker", size='q'),use_container_width=True)
 
 def on_error(ws, error):
