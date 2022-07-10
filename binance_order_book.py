@@ -93,7 +93,6 @@ def on_message(ws, message):
         fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
         fig.update_layout(title_text="orderbook")
         st.plotly_chart(fig, use_container_width=True)
-        st.plotly_chart(px.bar(bids, x="price_bid", y="size_bid", title="bids"), use_container_width=True)
         fig = make_subplots(specs=[[{"secondary_y": True}]])
         fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
         fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
