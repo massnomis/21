@@ -42,7 +42,7 @@ def on_message(ws, message):
         # df['sum'] = df.cumsum(['q'])
         # df['T'] = pd.to_datetime['T']
         # st.write(df)
-        st.plotly_chart(px.scatter(df, x="E", y="p", color="maker", size='q'),use_container_width=True)
+        st.plotly_chart(px.scatter(df, x="E", y="p", color="buy", size='q'),use_container_width=True)
 
 def on_error(ws, error):
     print(error)
