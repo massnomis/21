@@ -89,6 +89,14 @@ def on_message(ws, message):
         fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
         fig.update_layout(title_text="orderbook")
         st.plotly_chart(fig, use_container_width=True)
+
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
+        fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
+        fig.update_layout(title_text="orderbook")
+        # fig.update_traces(width=10)
+
+        st.plotly_chart(fig, use_container_width=True)
         
         fig = make_subplots(specs=[[{"secondary_y": True}]])
         fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
@@ -122,7 +130,7 @@ def streamTrades(currency):
 
 def Partial_Book_Depth_Streams(currency):
     # websocket.enableTrace(False)
-    socket = f'wss://stream.binance.com:9443/ws/{currency}@depth'
+    socket = f'wss://stream.binance.com:9443/ws/{currency}@depth@100ms'
     ws = websocket.WebSocketApp(socket,
                                 on_message=on_message,
                                 on_error=on_error,

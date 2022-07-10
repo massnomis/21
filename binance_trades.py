@@ -45,7 +45,7 @@ def on_message(ws, message):
  
         df['sum'] = df['Quantity'].cumsum()
         # st.write(df)
-        st.plotly_chart(px.scatter(df, x="Event_time", y="Price", color="Is_the_buyer_the_market_maker", size='Quantity',marginal_y="histogram", marginal_x="rug"),use_container_width=True)
+        st.plotly_chart(px.scatter(df, x="Event_time", y="Price", color="Is_the_buyer_the_market_maker", size='Quantity',marginal_y="violin", marginal_x="rug"),use_container_width=True)
         st.plotly_chart(px.line(df, x="Event_time", y="sum"),use_container_width=True)
 
         # st.plotly_chart(px.scatter(df2, x="E", y="q"),use_container_width=True)
