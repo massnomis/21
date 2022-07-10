@@ -46,7 +46,7 @@ def on_message(ws, message):
         df['sum'] = df['q'].cumsum()
         st.write(df)
         st.plotly_chart(px.scatter(df, x="E", y="p", color="buy", size='q'),use_container_width=True)
-        st.plotly_chart(px.line(df, x="E", y="sum", color="buy"),use_container_width=True)
+        st.plotly_chart(px.line(df, x="E", y="sum"),use_container_width=True)
 
         # st.plotly_chart(px.scatter(df2, x="E", y="q"),use_container_width=True)
 

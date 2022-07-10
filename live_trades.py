@@ -68,8 +68,11 @@ async def consumer() -> None:
                     # st.write(size)
                     # size = df["size"][0]
                     # df['size_new'] = size
+                    df['sum'] = df['size_new'].cumsum()
 
                     st.plotly_chart(px.scatter(df, x="time", y="price", color="side", size='size_new'),use_container_width=True)
+                    st.plotly_chart(px.line(df, x="time", y="sum"),use_container_width=True)
+
                     # st.write(size)
                         # st.write(df)
     # await asyncio.sleep(30)
