@@ -13,7 +13,6 @@ from plotly.subplots import make_subplots
 
 st.set_page_config(layout="wide")
 placeholder1 = st.empty()
-
 # import websocket-client
 def on_message(ws, message):
     # print()
