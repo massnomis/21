@@ -76,14 +76,13 @@ def on_message(ws, message):
         for i in range(1, 2):
             cols = st.columns(2)
             cols[0].subheader("bids")
-            cols[0].write(bids['price_bid'].max())
 
             cols[0].write(bids)
+
             cols[1].subheader("asks")
-            cols[1].write(asks['price_ask'].min())
 
             cols[1].write(asks)
-        st.write((asks['price_ask'].min())-(bids['price_bid'].max()),((asks['price_ask'].min())-(bids['price_bid'].max()))/(asks['price_ask'].min())*1000)
+
         fig = make_subplots(specs=[[{"secondary_y": True}]])
         fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
         fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
@@ -94,7 +93,6 @@ def on_message(ws, message):
         fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
         fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
         fig.update_layout(title_text="orderbook")
-        # fig.update_traces(width=1)
         st.plotly_chart(fig, use_container_width=True)
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])

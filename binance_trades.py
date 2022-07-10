@@ -27,26 +27,26 @@ def on_message(ws, message):
     with placeholder1.container():
 
         df1 = pd.DataFrame.from_dict([message])
-        df1['E'] = df1['E'].astype(float)
+        df1['Event_time'] = df1['E'].astype(float)
 
-        df1['E'] = pd.to_datetime(df1['E'], unit='ms')
+        df1['Event_time'] = pd.to_datetime(df1['E'], unit='ms')
         # st.write(df1)
         df = df.append(df1, ignore_index=False)
         # m = df['m']
         df['m'] = df['m'].astype(str)
-        df['buy'] = df['m']
-        df['M'] = df['M'].astype(str)
+        df['Is_the_buyer_the_market_maker'] = df['m']
+        df['Ignore'] = df['M'].astype(str)
         
         # df['E'] = df['E'].astype(float)
-        df['s'] = df['s'].astype(str)
-        df['p'] = df['p'].astype(float)
-        df['q'] = df['q'].astype(float)
-        df['T'] = df['T'].astype(str)
+        df['Symbol'] = df['s'].astype(str)
+        df['Price'] = df['p'].astype(float)
+        df['Quantity'] = df['q'].astype(float)
+        df['Trade_ID'] = df['T'].astype(str)
  
-        df['sum'] = df['q'].cumsum()
-        st.write(df)
-        st.plotly_chart(px.scatter(df, x="E", y="p", color="buy", size='q'),use_container_width=True)
-        st.plotly_chart(px.line(df, x="E", y="sum"),use_container_width=True)
+        df['sum'] = df['Quantity'].cumsum()
+        # st.write(df)
+        st.plotly_chart(px.scatter(df, x="Event_time", y="Price", color="Is_the_buyer_the_market_maker", size='Quantity'),use_container_width=True)
+        st.plotly_chart(px.line(df, x="Event_time", y="sum"),use_container_width=True)
 
         # st.plotly_chart(px.scatter(df2, x="E", y="q"),use_container_width=True)
 
