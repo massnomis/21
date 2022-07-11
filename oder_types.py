@@ -194,6 +194,21 @@ st.write(order_init)
 
 
 
+#   // camelCaseNotation
+#   exchange.createMarketSellOrder (symbol, amount, params)
+#   exchange.createMarketBuyOrder (symbol, amount, params)
+
+#   // underscore_notation
+#   exchange.create_market_sell_order (symbol, amount, params)
+#   exchange.create_market_buy_order (symbol, amount, params)
+
+#   // using general createMarketOrder and side = 'buy' or 'sell'
+#   exchange.createMarketOrder (symbol, side, amount, params)
+#   exchange.create_market_order (symbol, side, amount, params)
+
+#   // using general createOrder, type = 'market' and side = 'buy' or 'sell'
+#   exchange.createOrder (symbol, 'market', side, amount, ...)
+#   exchange.create_order (symbol, 'market', side, amount, ...)
 
 
 #  limit
