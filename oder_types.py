@@ -9,31 +9,60 @@ if 'test' in exchange.urls:
     exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
 
 
+for i in range(1, 2):
+    colz = st.columns(2)
+    # colz[0].write(pd.DataFrame(exchange.fetchCurrencies()).columns)
 
-exchange.fetchTickers = exchange.fetchTickers()
+    colz[1].write(pd.DataFrame(exchange.load_markets()).columns)
+
+    colz[0].write(pd.DataFrame(exchange.fetchCurrencies()).columns)
+
+# st.write(pd.DataFrame(exchange.load_markets()).columns)
+# st.write(pd.DataFrame(exchange.fetchCurrencies()).columns)
+# st.write(pd.DataFrame(exchange.fetchTickers()).columns)
+
+
 exchange_tickers_check = st.checkbox('Show all tickers')
 if exchange_tickers_check:
+    exchange.fetchTickers = exchange.fetchTickers()
+
     st.write(exchange.fetchTickers)
+symbol = st.selectbox("pair", (pd.DataFrame(exchange.load_markets()).columns), index = 494 )
+data = (exchange.fetchOrderBook(symbol)) 
 
+bids = data["bids"]
+bids = pd.DataFrame(bids)
+bids = bids.rename(columns={0: "price_bid", 1: "size_bid"})
 
+asks = data["asks"]
+asks = pd.DataFrame(asks)
+asks.reset_index(drop=True, inplace=False)
+bids.reset_index(drop = True, inplace=False)
 
-exchange.fetchCurrencies  = exchange.fetchCurrencies()
+asks = asks.rename(columns={0: "price_ask", 1: "size_ask"})
+
+st.write(bids, asks)
 exchange_currencies_check = st.checkbox('Show all currencies')
+exchange.fetchCurrencies = exchange.fetchCurrencies()
+
 if exchange_currencies_check:
+
     st.write(exchange.fetchCurrencies)
 
 
 
-exchange.markets = exchange.load_markets()
 exchange_markets_check = st.checkbox('Show exchange markets')
 if exchange_markets_check:
+    exchange.markets = exchange.load_markets()
+
     st.write(exchange.markets)
 
 
-account_info = (exchange.fetch_balance())
-account_info = pd.DataFrame(account_info['info'])
+
 account_info_check =st.checkbox('Show account info')
 if account_info_check:
+    account_info = (exchange.fetch_balance())
+    account_info = pd.DataFrame(account_info['info'])
     account_info_specific = st.selectbox('Select account', account_info['currency'])
     st.write(account_info)
     st.write(account_info[account_info['currency'] == account_info_specific])
@@ -41,19 +70,9 @@ if account_info_check:
 
 
 
-
-
-
-
-
-
-
-
-
-
-exchange.fetchStatus = exchange.fetchStatus()
 fetch_status_check = st.checkbox('Show status')
 if fetch_status_check:
+    exchange.fetchStatus = exchange.fetchStatus()
     st.write(exchange.fetchStatus)
 
 
