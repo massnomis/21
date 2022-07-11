@@ -49,10 +49,6 @@ if account_info_check:
 
 
 
-exchange.fetchTrades = exchange.fetchTrades()
-fetch_trades_check = st.checkbox('Show trades')
-if fetch_trades_check:
-    st.write(exchange.fetchTrades)
 
 
 
@@ -73,6 +69,23 @@ exchange.fetchStatus = exchange.fetchStatus()
 fetch_status_check = st.checkbox('Show status')
 if fetch_status_check:
     st.write(exchange.fetchStatus)
+
+
+
+
+
+
+
+
+
+
+# NEEDS SYMBOL POSITIONAL ARG
+# exchange.fetchTrades = exchange.fetchTrades()
+# fetch_trades_check = st.checkbox('Show trades')
+# if fetch_trades_check:
+#     st.write(exchange.fetchTrades)
+
+
 
 
 # NEEDS SYMBOL POSITIONAL ARG
