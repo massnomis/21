@@ -48,16 +48,6 @@ if account_info_check:
 
 
 
-exchange.fetchOrderBook = exchange.fetchOrderBook()
-fetch_order_book_check = st.checkbox('Show order book')
-if fetch_order_book_check:
-    st.write(exchange.fetchOrderBook)
-
-
-exchange.fetchOHLCV = exchange.fetchOHLCV()
-fetch_ohlcv_check = st.checkbox('Show ohlcv')
-if fetch_ohlcv_check:
-    st.write(exchange.fetchOHLCV)
 
 
 
@@ -94,7 +84,17 @@ if fetch_status_check:
 # if fetch_trades_check:
 #     st.write(exchange.fetchMyTrades)
 
+# NEEDS SYMBOL POSITIONAL ARG
+# exchange.fetchOrderBook = exchange.fetchOrderBook()
+# fetch_order_book_check = st.checkbox('Show order book')
+# if fetch_order_book_check:
+#     st.write(exchange.fetchOrderBook)
 
+# # NEEDS SYMBOL POSITIONAL ARG
+# exchange.fetchOHLCV = exchange.fetchOHLCV()
+# fetch_ohlcv_check = st.checkbox('Show ohlcv')
+# if fetch_ohlcv_check:
+#     st.write(exchange.fetchOHLCV)
 
 
 
