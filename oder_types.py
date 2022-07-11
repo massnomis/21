@@ -107,7 +107,19 @@ if fetch_status_check:
 
 
 
+def fetchTrades_into_df(symbol):
+    exchange.fetchTrades = exchange.fetchTrades(symbol=symbol)
+    fetchTrades = (exchange.fetchTrades)
+    fetchTrades_df = pd.DataFrame(fetchTrades)
+    trade_info = pd.DataFrame()
+    fixed_df = pd.DataFrame()
+    for index, row in fetchTrades_df.iterrows():
+        trade_info = trade_info.append(row['info'],ignore_index=True)
+    fixed_df = pd.merge(fetchTrades_df, trade_info, left_index=True, right_index=True)
+    fixed_df = fixed_df.drop(columns=['info'])
+    st.write(fixed_df)
 
+fetchTrades_into_df(symbol='XBTUSD')
 
 
 
