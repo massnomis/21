@@ -123,6 +123,26 @@ fetchTrades_into_df(symbol='XBTUSD')
 
 
 
+
+
+
+def fetch_my_Trades_into_df(symbol):
+    exchange.fetchMyTrades = exchange.fetchMyTrades(symbol=symbol)
+    fetchMyTrades = (exchange.fetchMyTrades)
+    fetchMyTrades_df = pd.DataFrame(fetchMyTrades)
+    trade_info = pd.DataFrame()
+    fixed_df = pd.DataFrame()
+    for index, row in fetchMyTrades_df.iterrows():
+        trade_info = trade_info.append(row['info'],ignore_index=True)
+    fixed_df = pd.merge(fetchMyTrades_df, trade_info, left_index=True, right_index=True)
+    fixed_df = fixed_df.drop(columns=['info'])
+    st.write(fixed_df)
+
+fetch_my_Trades_into_df(symbol='XBTUSD')
+
+
+
+
    # LoadMarkets            .           fetchBalance       |
 # |       fetchMarkets           .            createOrder       |
 # |       fetchCurrencies        .            cancelOrder       |
