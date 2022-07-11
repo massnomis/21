@@ -78,6 +78,7 @@
 # OHLCV_to_df(symbol='XBTUSD')
 from re import M
 import plotly
+import random
 import plotly.express as px
 import ccxt
 import json
@@ -101,31 +102,89 @@ if 'test' in exchange.urls:
 # price = st.number_input('Price', 20000)
 # order_type = st.selectbox('Order Type', ['createMarketSellOrder', 'createMarketBuyOrder', 'createLimitSellOrder', 'createLimitBuyOrder'])
 
-tick = 1
-sample_mid_price = 100
-sample_max_bid = 99
-# sample_min_ask = 101
-x = [97, 98, 99, 100, 101]
+# tick = 1
+# sample_mid_price = 100
+# sample_max_bid = 99
+# # sample_min_ask = 101
+# x = [97, 98, 99, 100, 101]
 
-y = [1, 1, .5, 0, 0]
-st.plotly_chart(px.bar(x=x, y=y))
+# y = [1, 1, .5, 0, 0]
+# st.plotly_chart(px.bar(x=x, y=y))
 
-st.write(len(x))
-st.write(len(y))
+# st.write(len(x))
+# st.write(len(y))
 
-def get_x2(y):
-    ticks_to_fill = len(y)
-    x_2 = [((sample_mid_price) ** -1) + ((sample_max_bid + sample_mid_price)/2) * i / ticks_to_fill for i in range(ticks_to_fill)]
-    if len(x_2) == len(y):
+
+# list_len = st.number_input("lengeth", 1)
+# x = [0] * list_len
+# st.write(x)
+# carry = len(x)
+# fix_len = st.number_input("which to fix", 0)
+# x[fix_len] = st.number_input("set input", 0)
+# st.write(x)
+
+import streamlit as st
+import numpy as np
+import pandas as pd
+
+# Randomly fill a dataframe and cache it
+# multiple_orders = st.button('Multiple Orders')
+# if multiple_orders:
+order_number = st.number_input('Order Number', 1)
+st.write(order_number)
+x = order_number
+@st.cache(allow_output_mutation=True)
+def get_dataframe():
+    return pd.DataFrame(
+        np.random.randint(x, size=(2, x)),
+        columns=('order %d' % i for i in range(x)),
+        index = ["order", "size"]
+        
+        )
+
+
+df = get_dataframe()
+
+# Create row, column, and value inputs
+# row = st.number_input('row', max_value=df.shape[0])
+# col = st.number_input('column', max_value=df.shape[1])
+
+y = st.selectbox('column', df.columns)
+x = st.selectbox('row', df.index)
+
+col_num = df.columns.get_loc(y)
+# st.write(col_num)
+row_num = df.index.get_loc(x)
+# st.write(row_num)
+# row_num = iloc[x]
+# col_num
+
+val_check = st.checkbox("change_value")
+if val_check:
+    value = st.number_input('value')
+
+# Change the entry at (row, col) to the given value
+    df.values[row_num][col_num] = value
+
+# And display the result!
+st.dataframe(df)
+st.write(df[y].tolist())
+# for row, index in df:
+#     st.write()
+
+
+# def get_x2(y):
+#     ticks_to_fill = len(y)
+#     x_2 = [((sample_mid_price) ** -1) + ((sample_max_bid + sample_mid_price)/2) * i / ticks_to_fill for i in range(ticks_to_fill)]
+#     if len(x_2) == len(y):
     
-        st.plotly_chart(px.bar(x=x_2, y=y))
-    return x_2
-get_x2(y)
+#         st.plotly_chart(px.bar(x=x_2, y=y))
+#     return x_2
+# get_x2(y)
 
 
 
 accesding = st.button('Accessing')
-multiple_orders = st.button('Multiple Orders')
 skewed_orders = st.button('Skewed Orders')
 
 
@@ -133,9 +192,8 @@ if skewed_orders:
     st.write("bids")
     st.write("asks")
 
-if multiple_orders:
-    order_number = st.number_input('Order Number', 2)
-    st.write(order_number)
+
+
 
 
 
