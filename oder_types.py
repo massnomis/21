@@ -1,21 +1,3 @@
-#  limit
-# limit limit
-# limit stop
-# limit click
-# limit chase
-# limit scale
-
-# market
-# market market
-# market stop
-# market swarm
-# market TWAP
-
-# reduce
-
-# POST/IOC
-# margin
-
 import ccxt
 import streamlit as st
 import pandas as pd
@@ -33,6 +15,10 @@ exchange_tickers_check = st.checkbox('Show all tickers')
 if exchange_tickers_check:
     st.write(exchange.fetchTickers)
 
+exchange.fetchTicker = exchange.fetchTicker()
+exchange_ticker_check = st.checkbox('Show ticker')
+if exchange_ticker_check:
+    st.write(exchange.fetchTicker)
 
 
 exchange.fetchCurrencies  = exchange.fetchCurrencies()
@@ -57,10 +43,11 @@ if account_info_check:
     st.write(account_info[account_info['currency'] == account_info_specific])
 
 
-exchange.fetchMyTrades = exchange.fetchMyTrades()
-fetch_trades_check = st.checkbox('Show my trades')
-if fetch_trades_check:
-    st.write(exchange.fetchMyTrades)
+
+
+
+
+
 
 exchange.fetchTrades = exchange.fetchTrades()
 fetch_trades_check = st.checkbox('Show trades')
@@ -88,6 +75,11 @@ if fetch_status_check:
     st.write(exchange.fetchStatus)
 
 
+# NEEDS SYMBOL POSITIONAL ARG
+# exchange.fetchMyTrades = exchange.fetchMyTrades()
+# fetch_trades_check = st.checkbox('Show my trades')
+# if fetch_trades_check:
+#     st.write(exchange.fetchMyTrades)
 
 
 
@@ -117,3 +109,30 @@ if fetch_status_check:
 # |       fetchTrades            .                deposit       |
 # |                              .               withdraw    
 
+
+
+
+
+
+
+
+
+
+
+#  limit
+# limit limit
+# limit stop
+# limit click
+# limit chase
+# limit scale
+
+# market
+# market market
+# market stop
+# market swarm
+# market TWAP
+
+# reduce
+
+# POST/IOC
+# margin
