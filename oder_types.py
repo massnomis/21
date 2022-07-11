@@ -16,17 +16,6 @@
 # POST/IOC
 # margin
 
-
-# LoadMarkets            .           fetchBalance       |
-# |       fetchMarkets           .            createOrder       |
-# |       fetchCurrencies        .            cancelOrder       |
-# |       fetchTicker            .             fetchOrder       |
-# |       fetchTickers           .            fetchOrders       |
-# |       fetchOrderBook         .        fetchOpenOrders       |
-# |       fetchOHLCV             .      fetchClosedOrders       |
-# |       fetchStatus            .          fetchMyTrades       |
-# |       fetchTrades            .                deposit       |
-# |                              .               withdraw   
 import ccxt
 import streamlit as st
 import pandas as pd
@@ -53,7 +42,6 @@ if exchange_currencies_check:
 
 
 
-
 exchange.markets = exchange.load_markets()
 exchange_markets_check = st.checkbox('Show exchange markets')
 if exchange_markets_check:
@@ -68,4 +56,64 @@ if account_info_check:
     st.write(account_info)
     st.write(account_info[account_info['currency'] == account_info_specific])
 
+
+exchange.fetchMyTrades = exchange.fetchMyTrades()
+fetch_trades_check = st.checkbox('Show my trades')
+if fetch_trades_check:
+    st.write(exchange.fetchMyTrades)
+
+exchange.fetchTrades = exchange.fetchTrades()
+fetch_trades_check = st.checkbox('Show trades')
+if fetch_trades_check:
+    st.write(exchange.fetchTrades)
+
+
+
+exchange.fetchOrderBook = exchange.fetchOrderBook()
+fetch_order_book_check = st.checkbox('Show order book')
+if fetch_order_book_check:
+    st.write(exchange.fetchOrderBook)
+
+
+exchange.fetchOHLCV = exchange.fetchOHLCV()
+fetch_ohlcv_check = st.checkbox('Show ohlcv')
+if fetch_ohlcv_check:
+    st.write(exchange.fetchOHLCV)
+
+
+
+exchange.fetchStatus = exchange.fetchStatus()
+fetch_status_check = st.checkbox('Show status')
+if fetch_status_check:
+    st.write(exchange.fetchStatus)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   # LoadMarkets            .           fetchBalance       |
+# |       fetchMarkets           .            createOrder       |
+# |       fetchCurrencies        .            cancelOrder       |
+# |       fetchTicker            .             fetchOrder       |
+# |       fetchTickers           .            fetchOrders       |
+# |       fetchOrderBook         .        fetchOpenOrders       |
+# |       fetchOHLCV             .      fetchClosedOrders       |
+# |       fetchStatus            .          fetchMyTrades       |
+# |       fetchTrades            .                deposit       |
+# |                              .               withdraw    
 
