@@ -181,8 +181,8 @@ st.write("price",df[y].tolist()[0],"size",df[y].tolist()[1])
 #         st.plotly_chart(px.bar(x=x_2, y=y))
 #     return x_2
 # get_x2(y)
-
-
+# qqq = np.random.randint(1, size=(1, 10))
+# st.write(qqq)
 
 accesding = st.button('Accessing')
 skewed_orders = st.button('Skewed Orders')

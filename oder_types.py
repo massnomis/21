@@ -118,8 +118,10 @@ def fetchTrades_into_df(symbol):
     fixed_df = pd.merge(fetchTrades_df, trade_info, left_index=True, right_index=True)
     fixed_df = fixed_df.drop(columns=['info'])
     st.write(fixed_df)
-
-fetchTrades_into_df(symbol='XBTUSD')
+fetchTrades_into_df_q = st.checkbox("fetchTrades_into_df_q?")
+if fetchTrades_into_df_q:
+    fetchTrades_into_df(symbol='XBTUSD')
+# fetchTrades_into_df(symbol='XBTUSD')
 
 
 
@@ -137,8 +139,9 @@ def fetch_my_Trades_into_df(symbol):
     fixed_df = pd.merge(fetchMyTrades_df, trade_info, left_index=True, right_index=True)
     fixed_df = fixed_df.drop(columns=['info'])
     st.write(fixed_df)
-
-fetch_my_Trades_into_df(symbol='XBTUSD')
+fetch_my_Trades_into_df_q = st.checkbox("fetch_my_Trades_into_df?")
+if fetch_my_Trades_into_df_q:
+    fetch_my_Trades_into_df(symbol='XBTUSD')
 
 
 
@@ -172,7 +175,9 @@ def OHLCV_to_df(symbol):
     df['Time'] = [datetime.fromtimestamp(float(time)/1000) for time in df['Time']]
     df.set_index('Time', inplace=True)
     st.write(df)
-OHLCV_to_df(symbol='XBTUSD')
+OLHC_q = st.checkbox("OLHC?")
+if OLHC_q:
+    OHLCV_to_df(symbol='XBTUSD')
 
 
     
@@ -182,7 +187,7 @@ side = 'buy'
 amount = 100
 # price = null
 # params = {}
-
+order_type = st.selectbox("order_ype", ['createMarketSellOrder', 'createMarketBuyOrder', 'createLimitSellOrder', 'createLimitBuyOrder'])
 
 if order_type == 'createMarketSellOrder':
     order_check = st.checkbox('Create Market Sell Order')
