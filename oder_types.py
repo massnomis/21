@@ -182,8 +182,28 @@ side = 'buy'
 amount = 100
 # price = null
 # params = {}
-order_init = exchange.createOrder(symbol=symbol,type=type,side=side,amount=amount)
-st.write(order_init)
+
+
+if order_type == 'createMarketSellOrder':
+    order_check = st.checkbox('Create Market Sell Order')
+    if order_check:
+        order_init = exchange.create_market_sell_order(symbol=symbol, amount=amount)
+        st.write(order_init)
+if order_type == 'createMarketBuyOrder':
+    order_check = st.checkbox('Order Check')
+    if order_check:
+        order_init = exchange.createMarketBuyOrder(symbol=symbol,amount=amount)
+        st.write(order_init)
+if order_type == 'createLimitSellOrder':
+    order_check = st.checkbox('Order Check')
+    if order_check:
+        order_init = exchange.createLimitSellOrder(symbol=symbol,price=price,amount=amount)
+        st.write(order_init)
+if order_type == 'createLimitBuyOrder':
+    order_check = st.checkbox('Order Check')
+    if order_check:
+        order_init = exchange.createLimitBuyOrder(symbol=symbol,price=price,amount=amount)
+        st.write(order_init)
 # CCXT - required Unified CCXT market symbol (e.g. 'BTC/USD')
 # type
 # market, limit
