@@ -139,11 +139,19 @@ def on_message(ws, message):
         fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
         fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
         fig.update_layout(title_text="orderbook")
+
         st.plotly_chart(fig, use_container_width=True)
 
+
+
+
+
+
+
+
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
-        fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
+        fig.add_trace(go.Line(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
+        fig.add_trace(go.Line(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
         fig.update_layout(title_text="cash_equivelant")
         st.plotly_chart(fig, use_container_width=True)
 
