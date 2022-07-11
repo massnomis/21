@@ -138,7 +138,7 @@ def get_dataframe():
     return pd.DataFrame(
         np.random.randint(x, size=(2, x)),
         columns=('order %d' % i for i in range(x)),
-        index = ["order", "size"]
+        index = ["price", "size"]
         
         )
 
@@ -168,7 +168,7 @@ if val_check:
 
 # And display the result!
 st.dataframe(df)
-st.write(df[y].tolist())
+st.write("price",df[y].tolist()[0],"size",df[y].tolist()[1])
 # for row, index in df:
 #     st.write()
 
