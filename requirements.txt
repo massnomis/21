@@ -17,3 +17,4 @@ streamlit-aggrid
 Jinja2
 websocket_client
 requests
+ccxt
