@@ -158,7 +158,39 @@ fetch_my_Trades_into_df(symbol='XBTUSD')
 
 
 
+from datetime import datetime
+import calendar
 
+def OHLCV_to_df(symbol):
+    now = datetime.utcnow()
+    unixtime = calendar.timegm(now.utctimetuple())
+    since = (unixtime - 60*60) * 1000 # UTC timestamp in milliseconds
+    ohlcv = exchange.fetch_ohlcv(symbol=symbol, timeframe='5m', since=since, limit=12)
+    start_dt = datetime.fromtimestamp(ohlcv[0][0]/1000)
+    end_dt = datetime.fromtimestamp(ohlcv[-1][0]/1000)
+    df = pd.DataFrame(ohlcv, columns = ['Time', 'Open', 'High', 'Low', 'Close', 'Volume'])
+    df['Time'] = [datetime.fromtimestamp(float(time)/1000) for time in df['Time']]
+    df.set_index('Time', inplace=True)
+    st.write(df)
+OHLCV_to_df(symbol='XBTUSD')
+
+
+    
+symbol = 'XBTUSD'
+type = 'market'
+side = 'buy'
+amount = 100
+# price = null
+# params = {}
+order_init = exchange.createOrder(symbol=symbol,type=type,side=side,amount=amount)
+st.write(order_init)
+# CCXT - required Unified CCXT market symbol (e.g. 'BTC/USD')
+# type
+# market, limit
+# side
+# buy, sell
+# amount
+# price
 
 
 
