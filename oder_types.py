@@ -15,10 +15,6 @@ exchange_tickers_check = st.checkbox('Show all tickers')
 if exchange_tickers_check:
     st.write(exchange.fetchTickers)
 
-exchange.fetchTicker = exchange.fetchTicker()
-exchange_ticker_check = st.checkbox('Show ticker')
-if exchange_ticker_check:
-    st.write(exchange.fetchTicker)
 
 
 exchange.fetchCurrencies  = exchange.fetchCurrencies()
@@ -75,7 +71,11 @@ if fetch_status_check:
 
 
 
-
+# NEEDS SYMBOL POSITIONAL ARG
+# exchange.fetchTicker = exchange.fetchTicker()
+# exchange_ticker_check = st.checkbox('Show ticker')
+# if exchange_ticker_check:
+#     st.write(exchange.fetchTicker)
 
 
 
