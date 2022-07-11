@@ -7,8 +7,35 @@ exchange = ccxt.bitmex({
 })
 if 'test' in exchange.urls:
     exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
+x = pd.DataFrame(exchange.load_markets())
+symbol = st.selectbox("pair", (pd.DataFrame(exchange.load_markets()).columns), index = 494 )
 
+st.write(x.astype(str))
+precision = (x[symbol]['precision'])
+precision_amount = precision['amount']
+st.write(precision)
+st.write(precision_amount)
+# info = (x[symbol]['info'])
+# info = pd.DataFrame(info)
+# st.write(info)
+data = (exchange.fetchOrderBook(symbol)) 
 
+bids = data["bids"]
+bids = pd.DataFrame(bids)
+bids = bids.rename(columns={0: "price_bid", 1: "size_bid"})
+asks = data["asks"]
+asks = pd.DataFrame(asks)
+asks.reset_index(drop=True, inplace=False)
+bids.reset_index(drop = True, inplace=False)
+asks = asks.rename(columns={0: "price_ask", 1: "size_ask"})
+
+asks['fixed_size_ask'] = asks['size_ask']/precision_amount
+bids['fixed_size_bid'] = bids['size_bid']/precision_amount
+
+asks = asks.drop(columns=['size_ask'])
+bids = bids.drop(columns=['size_bid'])
+
+st.write(asks, bids)
 for i in range(1, 2):
     colz = st.columns(2)
     # colz[0].write(pd.DataFrame(exchange.fetchCurrencies()).columns)
@@ -28,20 +55,7 @@ if exchange_tickers_check:
 
     st.write(exchange.fetchTickers)
 symbol = st.selectbox("pair", (pd.DataFrame(exchange.load_markets()).columns), index = 494 )
-data = (exchange.fetchOrderBook(symbol)) 
 
-bids = data["bids"]
-bids = pd.DataFrame(bids)
-bids = bids.rename(columns={0: "price_bid", 1: "size_bid"})
-
-asks = data["asks"]
-asks = pd.DataFrame(asks)
-asks.reset_index(drop=True, inplace=False)
-bids.reset_index(drop = True, inplace=False)
-
-asks = asks.rename(columns={0: "price_ask", 1: "size_ask"})
-
-st.write(bids, asks)
 exchange_currencies_check = st.checkbox('Show all currencies')
 exchange.fetchCurrencies = exchange.fetchCurrencies()
 
