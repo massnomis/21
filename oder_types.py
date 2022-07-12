@@ -65,7 +65,8 @@ for i in range(1, 2):
     cols[1].write(asks)
 # st.write(asks,bids, use_container_width=True)
 # st.write(asks_update,bids_update, use_container_width=True)
-
+print(asks)
+print(bids)
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
 fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
