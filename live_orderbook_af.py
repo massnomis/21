@@ -24,10 +24,10 @@ b = "fat d8ta"
 dict_dumps = {
   "op": "subscribe",
   "channel": "orderbook",
-  "market": "BTC-PERP"
+  "market": "SPY/USD"
 }
 
-name = st.text_input("market name", "BTC-PERP")
+name = st.text_input("market name", "SPY/USD")
 dict_dumps["market"] = name
 
 placeholder1 = st.empty()
