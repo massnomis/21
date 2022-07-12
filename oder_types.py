@@ -1,6 +1,13 @@
 import ccxt
 import streamlit as st
 import pandas as pd
+from itertools import accumulate
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from itertools import chain
+import numpy as np
+import plotly.express as px
+from datetime import datetime, timedelta
 exchange = ccxt.bitmex({
     'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
     'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',

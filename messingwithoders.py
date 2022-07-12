@@ -96,11 +96,11 @@ if 'test' in exchange.urls:
 
 
     
-# symbol = st.text_input('Symbol', 'XBTUSD')
-# side = st.text_input('Side', 'buy')
-# amount = st.number_input('Amount', 100)
-# price = st.number_input('Price', 20000)
-# order_type = st.selectbox('Order Type', ['createMarketSellOrder', 'createMarketBuyOrder', 'createLimitSellOrder', 'createLimitBuyOrder'])
+symbol = st.text_input('Symbol', 'XBTUSD')
+side = st.text_input('Side', 'buy')
+amount = st.number_input('Amount', 100)
+price = st.number_input('Price', 20000)
+order_type = st.selectbox('Order Type', ['createMarketSellOrder', 'createMarketBuyOrder', 'createLimitSellOrder', 'createLimitBuyOrder'])
 
 # tick = 1
 # sample_mid_price = 100
@@ -201,23 +201,23 @@ if skewed_orders:
 
 
 
-# if order_type == 'createMarketSellOrder':
-#     order_check = st.checkbox('Create Market Sell Order')
-#     if order_check:
-#         order_init = exchange.create_market_sell_order(symbol=symbol, amount=amount)
-#         st.write(order_init)
-# if order_type == 'createMarketBuyOrder':
-#     order_check = st.checkbox('Order Check')
-#     if order_check:
-#         order_init = exchange.createMarketBuyOrder(symbol=symbol,amount=amount)
-#         st.write(order_init)
-# if order_type == 'createLimitSellOrder':
-#     order_check = st.checkbox('Order Check')
-#     if order_check:
-#         order_init = exchange.createLimitSellOrder(symbol=symbol,price=price,amount=amount)
-#         st.write(order_init)
-# if order_type == 'createLimitBuyOrder':
-#     order_check = st.checkbox('Order Check')
-#     if order_check:
-#         order_init = exchange.createLimitBuyOrder(symbol=symbol,price=price,amount=amount)
-#         st.write(order_init)
+if order_type == 'createMarketSellOrder':
+    order_check = st.checkbox('Create Market Sell Order')
+    if order_check:
+        order_init = exchange.create_market_sell_order(symbol=symbol, amount=amount)
+        st.write(order_init)
+if order_type == 'createMarketBuyOrder':
+    order_check = st.checkbox('Order Check')
+    if order_check:
+        order_init = exchange.createMarketBuyOrder(symbol=symbol,amount=amount)
+        st.write(order_init)
+if order_type == 'createLimitSellOrder':
+    order_check = st.checkbox('Order Check')
+    if order_check:
+        order_init = exchange.createLimitSellOrder(symbol=symbol,price=price,amount=amount)
+        st.write(order_init)
+if order_type == 'createLimitBuyOrder':
+    order_check = st.checkbox('Order Check')
+    if order_check:
+        order_init = exchange.createLimitBuyOrder(symbol=symbol,price=price,amount=amount)
+        st.write(order_init)
