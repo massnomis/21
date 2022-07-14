@@ -58,7 +58,7 @@ latest_rateAPY_quote = 0.0020
 alpha = 0
 apy_to_beat = (((1+latest_rateAPY_quote)*(1+latest_rateAPY_spot)))+alpha-1
 
-stink_save_bid_drawdown = 0.95
+stink_save_bid_drawdown = 0.98
 stink_save_ask_drawup = 1.05
 
 precision_load = pd.DataFrame(exchange.load_markets())
