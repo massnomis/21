@@ -52,12 +52,12 @@ load_makets_for_data = pd.DataFrame(exchange.load_markets()).astype(str)
 symbol = "LINK_USDT"
 # st.write(load_makets_for_data.columns)
 
-pct_expiry_dated = 0.25
-latest_rateAPY_spot = 0.0088
-latest_rateAPY_quote = 0.0020
-alpha = 0
-apy_to_beat = (((1+latest_rateAPY_quote)*(1+latest_rateAPY_spot)))+alpha-1
-
+# pct_expiry_dated = 0.25
+# latest_rateAPY_spot = 0.0088
+# latest_rateAPY_quote = 0.0020
+# alpha = 0
+# apy_to_beat = (((1+latest_rateAPY_quote)*(1+latest_rateAPY_spot)))+alpha-1
+orders_to_place_a_side = 5 
 stink_save_bid_drawdown = 0.98
 stink_save_ask_drawup = 1.05
 
@@ -66,7 +66,7 @@ precision = (precision_load[symbol]['precision'])
 # st.write(precision)
 precision_amount = precision['amount']
 precision_price = precision['price']
-# st.write(precision_amount, precision_price)
+st.write(precision_amount, precision_price)
 data = (exchange.fetchOrderBook(symbol)) 
 
 
@@ -96,11 +96,11 @@ bids['accumulated']  = (list(accumulate(bids['fixed_size_bid'])))
 bids['accumulated_price']  = (bids['price_bid']) * bids['fixed_size_bid']
 bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
 bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']     
-# st.write(bids, asks)
+st.write(bids, asks)
 
 bid_new = pd.DataFrame(bids)
-bid_new['mm_bid_price']  = round(round(bids['price_bid'] * ((1-((1*((1-(latest_rateAPY_spot*pct_expiry_dated))))*apy_to_beat))*(1*((1-(latest_rateAPY_spot*pct_expiry_dated))))) / precision_price) * precision_price, -int(math.floor(math.log10(precision_price))))
-bid_new['mm_bid_size'] = bids['fixed_size_bid'] * precision_amount 
+bid_new['mm_bid_price']  = bids['price_bid'].max() + precision_price
+bid_new['mm_bid_size'] = precision_amount
 bid_new = bid_new.drop(columns=['accumulated', 'accumulated_price', 'accumulated_avg_price','cash_equivelant','price_bid','fixed_size_bid'])
 # st.write(bid_new)
 stink_save_bid = bid_new['mm_bid_price'].max()*stink_save_bid_drawdown
@@ -108,12 +108,28 @@ bid_new = bid_new[bid_new.mm_bid_price > stink_save_bid]
 # st.write(bid_new)
 
 order_df_bid = pd.DataFrame()
+i = 0
+
+
+testing_bids = pd.DataFrame(columns=['price_bid', 'size_bid'], index=range(0, orders_to_place_a_side))
+testing_bids.loc[-1] = [bid_new['mm_bid_price'].max(), precision_amount]  # adding a row
+testing_bids.index = testing_bids.index + 1  # shifting index
+testing_bids = testing_bids.sort_index() 
+
+st.write(testing_bids)
+
+st.write(bid_new)
+
+
 for col_name, data in bid_new.iterrows():
-    mm_bid_price = (data['mm_bid_price'])
-    mm_bid_size = (data['mm_bid_size'])
-    order_init = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
-    order_df_bid = order_df_bid.append(order_init, ignore_index=True)
-# st.write(order_df_bid)
+    while i < orders_to_place_a_side:
+
+        mm_bid_price = (data['mm_bid_price']) + (precision_price * i)
+        mm_bid_size = (data['mm_bid_size'])
+        order_init = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
+        order_df_bid = order_df_bid.append(order_init, ignore_index=True)
+        i += 1
+st.write(order_df_bid)
 bid_new['mm_bid_size'] = bid_new['mm_bid_size']/precision_amount
 bid_new['accumulated']  = (list(accumulate(bid_new['mm_bid_size'])))
 bid_new['accumulated_price']  = (bid_new['mm_bid_price']) * bid_new['mm_bid_size']
@@ -133,7 +149,8 @@ bid_new['cash_equivelant'] = bid_new['accumulated'] * bid_new['accumulated_avg_p
 
 
 
-
+steps = (asks['price_ask'].min() - bids['price_bid'].max()) / precision_price
+st.write(steps)
 
 
 
@@ -143,32 +160,43 @@ bid_new['cash_equivelant'] = bid_new['accumulated'] * bid_new['accumulated_avg_p
 
 
 ask_new = pd.DataFrame(asks)
-ask_new['mm_ask_price']  = round(round(asks['price_ask'] * ((1-((1*((1-(latest_rateAPY_spot*pct_expiry_dated))))*apy_to_beat))*(1*((1-(latest_rateAPY_spot*pct_expiry_dated))))) / precision_price) * precision_price, -int(math.floor(math.log10(precision_price)))) 
+ask_new['mm_ask_price']  = asks['price_ask'].min() - precision_price
 # + 400
-ask_new['mm_ask_size'] = asks['fixed_size_ask'] * precision_amount
+ask_new['mm_ask_size'] = precision_amount
 ask_new = ask_new.drop(columns=['accumulated', 'accumulated_price', 'accumulated_avg_price','cash_equivelant','price_ask','fixed_size_ask'])
 # st.write(ask_new)
 stink_save_ask = ask_new['mm_ask_price'].min()*stink_save_ask_drawup
 # st.write(stink_save_ask)
 ask_new = ask_new[ask_new.mm_ask_price < stink_save_ask]
-# st.write(ask_new)
+st.write(ask_new)
+
+
 order_df_ask = pd.DataFrame()
+
+ref_ask = asks['price_ask'].min() - precision_price
+ref_ask_size = precision_amount
+
+testing_asks = pd.DataFrame(columns=['price_ask', 'size_ask'])
+st.write(testing_asks)
+ii = 0
+
+
 for col_name, data in ask_new.iterrows():
-    mm_ask_price = (data['mm_ask_price'])
-    mm_ask_size = (data['mm_ask_size'])
-    order_init = exchange.createLimitSellOrder(symbol=symbol,price=mm_ask_price,amount=mm_ask_size)
-    order_df_ask = order_df_ask.append(order_init, ignore_index=True)
-# st.write(order_df_ask)
+    while i < orders_to_place_a_side:
+
+        mm_ask_price = (data['mm_ask_price']) - (precision_price * i)
+        mm_ask_size = (data['mm_ask_size'])
+        order_init = exchange.createLimitSellOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
+        order_df_ask = order_df_bid.append(order_init, ignore_index=True)
+        ii += 1
+
+st.write(order_df_ask)
+
 ask_new['mm_ask_size'] = ask_new['mm_ask_size']/precision_amount
 ask_new['accumulated']  = (list(accumulate(ask_new['mm_ask_size'])))
 ask_new['accumulated_price']  = (ask_new['mm_ask_price']) * ask_new['mm_ask_size']
 ask_new['accumulated_avg_price'] = (list(accumulate(ask_new['accumulated_price'])))  / ask_new['accumulated']
 ask_new['cash_equivelant'] = ask_new['accumulated'] * ask_new['accumulated_avg_price']      
-# st.write(ask_new)
-# st.plotly_chart(px.bar(ask_new,y=ask_new['mm_ask_size'], x=ask_new['mm_ask_price']))
-# st.plotly_chart(px.line(ask_new,y=ask_new['accumulated'], x=ask_new['mm_ask_price']))
-# st.plotly_chart(px.line(ask_new,y=ask_new['cash_equivelant'], x=ask_new['mm_ask_price']))
-
 
 
 
