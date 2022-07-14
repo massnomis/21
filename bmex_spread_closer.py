@@ -126,7 +126,7 @@ st.write(np.random.randint(5))
 for col_name, data in bid_new.iterrows():
     while i < orders_to_place_a_side:
 
-        mm_bid_price = (data['mm_bid_price']) - (precision_price * np.random.randint(5) *i)
+        mm_bid_price = (data['mm_bid_price']) - (precision_price * np.random.randint(3) *i)
         mm_bid_size = (data['mm_bid_size']) 
         order_init_bid = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
         order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
@@ -134,9 +134,9 @@ for col_name, data in bid_new.iterrows():
 
 order_df_bid = order_df_bid[['price','remaining']]
 # st.write(order_df_bid)
+order_df_bid = order_df_bid.sort_values(by=['price'], inplace=False, ascending=False)
 
-
-
+order_df_bid = order_df_bid.reset_index()
 
 order_df_bid['mm_bid_size'] = order_df_bid['remaining']/precision_amount
 order_df_bid['accumulated']  = (list(accumulate(order_df_bid['mm_bid_size'])))
@@ -159,7 +159,7 @@ st.write(order_df_bid)
 
 
 mid_ish = ((asks['price_ask'].min() + bids['price_bid'].max())) / 2
-steps = mid_ish/ precision_price
+steps = round(mid_ish/precision_price)
 st.write(mid_ish, steps)
 
 
@@ -193,7 +193,7 @@ ii = 0
 for col_name, data in ask_new.iterrows():
     while ii < orders_to_place_a_side:
 
-        mm_ask_price = (data['mm_ask_price']) + (precision_price * np.random.randint(5)*ii)
+        mm_ask_price = (data['mm_ask_price']) + (precision_price * np.random.randint(3)*ii)
         mm_ask_size = (data['mm_ask_size']) 
         order_init_ask = exchange.createLimitSellOrder(symbol=symbol,price=mm_ask_price,amount=mm_ask_size)
         order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
@@ -202,6 +202,9 @@ for col_name, data in ask_new.iterrows():
 # st.write(order_df_ask)
 order_df_ask = order_df_ask[['price','remaining']]
 # st.write(order_df_ask)
+order_df_ask = order_df_ask.sort_values(by=['price'], inplace=False)
+
+order_df_ask = order_df_ask.reset_index()
 
 order_df_ask['mm_ask_size'] = order_df_ask['remaining']/precision_amount
 order_df_ask['accumulated']  = (list(accumulate(order_df_ask['mm_ask_size'])))
