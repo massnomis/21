@@ -5,8 +5,6 @@ def on_read(payload):
     print(payload)
 
 
-os.environ['API'] = '6lPPRFX1r4x_6ENY6GnhgYr3AdPv34x8Bc-MRH_V'
-os.environ['SECRET'] = 'OnQqs_nox4NS2OYm5z8ulXJ9rMkbOo5_nNwGe53V' 
 
 # st.write(os.environ["API"])
 # st.write(os.environ["SECRET"])
