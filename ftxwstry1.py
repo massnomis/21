@@ -1,31 +1,51 @@
-from ftx import ThreadedWebsocketManager
-import os
-import streamlit as st
-def on_read(payload):
-    print(payload)
-
 
 
 # st.write(os.environ["API"])
 # st.write(os.environ["SECRET"])
 
-API = os.environ["API"]
-SECRET = os.environ["SECRET"]
 
-wsm = ThreadedWebsocketManager(API, SECRET)
-wsm.start()
 
-# Un-auth subscribe
-# name = 'market_connection'
-# wsm.start_socket(on_read, socket_name=name)
-# wsm.subscribe(name, channel="ticker", op="subscribe", market="BTC/USDT")
+import asyncio
+import websockets
+import json
+import time
+# import auth
+import hmac 
+import streamlit as st
+import pprint
+import os
 
-# Auth subscribe
-name = 'private_connection'
-wsm.start_socket(on_read, socket_name=name)
-wsm.login(socket_name=name)
-wsm.subscribe(
-    name,
-    channel="orders",
-    op="subscribe",
-)
+API = os.environ["API"] = 
+SECRET = os.environ["SECRET"] =  
+
+api_key = API
+secret_key = SECRET
+placeholder = st.empty()
+async def handler():
+    async with websockets.connect('wss://ftx.com/ws/') as ws:
+        
+        
+        ts = int(time.time() * 1000)
+        signature = hmac.new(secret_key.encode(), f'{ts}websocket_login'.encode(), 'sha256').hexdigest()
+        auth = {'op': 'login', 'args': {'key': api_key,
+                                    'sign': signature, 
+                                    'time': ts
+                                    }}
+        await ws.send(json.dumps(auth))
+        data = {'op': 'subscribe', 'channel': 'fills'}
+        await ws.send(json.dumps(data))
+        
+
+        async for message in ws:
+            
+            data = json.loads(message)
+            with placeholder:
+                if data['type'] == 'update':
+                    st.write(data)
+            
+    return await data
+# asyncio.run(handler())
+
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+loop.run_until_complete(handler())
