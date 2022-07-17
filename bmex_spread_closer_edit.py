@@ -1,3 +1,4 @@
+from http.client import BAD_REQUEST
 import ccxt
 import streamlit as st
 import pandas as pd
@@ -37,20 +38,24 @@ placeholder15 = st.empty()
 # orders_hist = exchange.fetchOpenOrders()
 # st.write(orders_hist)
 while True:
-    orders_hist = exchange.fetchOpenOrders()
-    orders_hist = pd.DataFrame(orders_hist)
+    orders_hist_bids = exchange.fetchOpenOrders()
+    orders_hist_asks = exchange.fetchOpenOrders()
+
+    orders_hist_bids = pd.DataFrame(orders_hist_bids)
+    orders_hist_asks = pd.DataFrame(orders_hist_asks)
+
     with placeholder1:
-        st.write(orders_hist)
+        st.write(orders_hist_asks,orders_hist_bids)
     # with placeholder:
     #     if orders_hist.empty:
     #         st.write('no open orders')
     #     else:
     #         st.write(orders_hist)
-    orders_hist_bids = orders_hist[orders_hist.side == 'buy']
+    orders_hist_bids = orders_hist_bids[orders_hist_bids.side == 'buy']
 
     orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
 
-    orders_hist_asks = orders_hist[orders_hist.side == 'sell']
+    orders_hist_asks = orders_hist_asks[orders_hist_asks.side == 'sell']
     orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
 
     #         # st.write(orders_hist)
@@ -162,7 +167,7 @@ while True:
         for col_name, data in orders_hist_bids_id_df.iterrows():
             for col_name, data in bid_new.iterrows():
                 while i < orders_to_place_a_side:
-                    orders_hist_bids = orders_hist[orders_hist.status == 'open']
+                    orders_hist_bids = orders_hist_bids[orders_hist_bids.status == 'open']
                     orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
 
                     id_bids = orders_hist_bids_id_df
@@ -238,7 +243,7 @@ while True:
     # st.write(ask_new)
 
 
-    order_df_ask = pd.DataFrame()
+    order_df_ask = pd.DataFrame(columns=['price','remaining'])
 
     ref_ask = asks['price_ask'].min() - precision_price
     ref_ask_size = precision_amount
@@ -263,7 +268,7 @@ while True:
         for col_name, data in orders_hist_asks_id_df.iterrows():
             for col_name, data in ask_new.iterrows():
                 while ii < orders_to_place_a_side:
-                    orders_hist_bids = orders_hist[orders_hist.status == 'open']
+                    orders_hist_asks = orders_hist_asks[orders_hist_asks.status == 'open']
                     orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
 
                     id_ask = (orders_hist_asks_id_df['id'])
@@ -274,10 +279,10 @@ while True:
                     mm_ask_price =  mm_ask_price.iloc[0] - (precision_price * np.random.randint(30) *ii)
                     mm_ask_size = ask_new['mm_ask_size']
                     mm_ask_size = mm_ask_size.iloc[0]
-                    side = 'sell'
-                    type = 'limit'
-
-                    order_init_ask = exchange.editOrder(id=id_ask,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
+                    try:
+                        order_init_ask = exchange.editOrder(id=id_ask,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
+                    except BAD_REQUEST:
+                        pass
                     order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                     ii += 1
 
