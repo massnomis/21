@@ -51,8 +51,8 @@ while True:
     orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
 
     orders_hist_asks = orders_hist[orders_hist.side == 'sell']
-
     orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
+
     #         # st.write(orders_hist)
     #         id = orders_hist_id_df
     #         order_cancel_df = pd.DataFrame()
@@ -163,6 +163,7 @@ while True:
             for col_name, data in bid_new.iterrows():
                 while i < orders_to_place_a_side:
                     orders_hist_bids = orders_hist[orders_hist.status == 'open']
+                    orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
 
                     id_bids = orders_hist_bids_id_df
                     id_bids = (orders_hist_bids_id_df['id'])
@@ -263,6 +264,7 @@ while True:
             for col_name, data in ask_new.iterrows():
                 while ii < orders_to_place_a_side:
                     orders_hist_bids = orders_hist[orders_hist.status == 'open']
+                    orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
 
                     id_ask = (orders_hist_asks_id_df['id'])
                     id_ask = id_ask.iloc[0]
