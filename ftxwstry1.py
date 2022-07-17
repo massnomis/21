@@ -14,9 +14,16 @@ import hmac
 import streamlit as st
 import pprint
 import os
+from decouple import config
+import streamlit as st
+import pandas as pd
+placeholder = st.empty()
+data_pd = pd.DataFrame()
+sum_data = pd.DataFrame()
 
-API = os.environ["API"] = 
-SECRET = os.environ["SECRET"] =  
+df = pd.DataFrame()
+API = config("API")
+SECRET = config("SECRET")
 
 api_key = API
 secret_key = SECRET
@@ -40,11 +47,22 @@ async def handler():
             
             data = json.loads(message)
             with placeholder:
+                global data_pd
+                global df
+                global sum_data
                 if data['type'] == 'update':
                     st.write(data)
-            
+                    data_pd = data['data']
+                    data_pd = pd.DataFrame(data_pd, index=[0])
+                    st.write(data_pd)
+                    df = df.append(data_pd, ignore_index=False)
+                    sum_data = df['size'].sum()
+                    st.write(data,df,sum_data)
+
     return await data
-# asyncio.run(handler())
+
+
+# st.write(sum_data)
 
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
