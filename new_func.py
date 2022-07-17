@@ -74,7 +74,7 @@ def ace():
         gen_report(df=df)
 
 
-    chart_type = st.selectbox("Chart type", ["line", "bar", "scatter", "violin"])
+    chart_type = st.selectbox("Chart type", ["line", "bar", "scatter", "violin", "box", "area"])
 
 
     number_of_y_axis = st.number_input("Number of y values to plot", value=1, min_value=1, max_value=3)
@@ -132,6 +132,28 @@ def ace():
                 else:
                     st.code(f'st.plotly_chart(px.violin(df, y ="{y}", x ="{x}", color="{color_sort}", box=True, hover_data=df.columns), use_container_width=True)')
                     st.plotly_chart(px.violin(df, y =y, x =x, color=color_sort, box=True, hover_data=df.columns), use_container_width=True)
+            if chart_type == "box":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.box(df, y ="{y}", x ="{x}", color="{color_sort}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =y, x =x, color=color_sort, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.box(df, y ="{y}", x ="{x}", color="{color_sort}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =y, x =x, color=color_sort, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.box(df, y ="{y}", x ="{x}", color="{color_sort}"), use_container_width=True)')
+                    st.plotly_chart(px.box(df, y =y, x =x, color=color_sort), use_container_width=True)
+            if chart_type == "area":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.area(df, y ="{y}", x ="{x}", color="{color_sort}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =y, x =x, color=color_sort, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.area(df, y ="{y}", x ="{x}", color="{color_sort}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =y, x =x, color=color_sort, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.area(df, y ="{y}", x ="{x}", color="{color_sort}"), use_container_width=True)')
+                    st.plotly_chart(px.area(df, y =y, x =x, color=color_sort), use_container_width=True)
         else:
             if chart_type == "line":
                 if log_y:
@@ -177,6 +199,28 @@ def ace():
                 else:
                     st.code(f'st.plotly_chart(px.violin(df, y ="{y}", x ="{x}", box=True, hover_data=df.columns), use_container_width=True)')
                     st.plotly_chart(px.violin(df, y =y, x =x, box=True, hover_data=df.columns), use_container_width=True)
+            if chart_type == "box":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.box(df, y ="{y}", x ="{x}", log_y=True, log_x=True, hover_data=df.columns), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =y, x =x, log_y=True, log_x=True, hover_data=df.columns), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.box(df, y ="{y}", x ="{x}", log_y=True, hover_data=df.columns), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =y, x =x, log_y=True, hover_data=df.columns), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.box(df, y ="{y}", x ="{x}", hover_data=df.columns), use_container_width=True)')
+                    st.plotly_chart(px.box(df, y =y, x =x, hover_data=df.columns), use_container_width=True)
+            if chart_type == "area":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.area(df, y ="{y}", x ="{x}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =y, x =x, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.area(df, y ="{y}", x ="{x}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =y, x =x, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.area(df, y ="{y}", x ="{x}"), use_container_width=True)')
+                    st.plotly_chart(px.area(df, y =y, x =x), use_container_width=True)
     if number_of_y_axis == 2:
         x = st.selectbox("X-axis", df.columns)
         y1 = st.selectbox("Y-axis 1", df.columns)
@@ -227,6 +271,28 @@ def ace():
                 else:
                     st.code(f'st.plotly_chart(px.violin(df, y =["{y1}", "{y2}"], x ="{x}", color="{color_sort}", box=True, hover_data=df.columns), use_container_width=True)')
                     st.plotly_chart(px.violin(df, y =[y1, y2], x =x, color=color_sort, box=True, hover_data=df.columns), use_container_width=True)
+            if chart_type == "box":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}"], x ="{x}", color="{color_sort}", log_y=True, log_x=True, box=True, hover_data=df.columns), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2], x =x, color=color_sort, log_y=True, log_x=True, box=True, hover_data=df.columns), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}"], x ="{x}", color="{color_sort}", log_y=True, box=True, hover_data=df.columns), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2], x =x, color=color_sort, log_y=True, box=True, hover_data=df.columns), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}"], x ="{x}", color="{color_sort}", box=True, hover_data=df.columns), use_container_width=True)')
+                    st.plotly_chart(px.box(df, y =[y1, y2], x =x, color=color_sort, box=True, hover_data=df.columns), use_container_width=True)
+            if chart_type == "area":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}"], x ="{x}", color="{color_sort}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2], x =x, color=color_sort, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}"], x ="{x}", color="{color_sort}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2], x =x, color=color_sort, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}"], x ="{x}", color="{color_sort}"), use_container_width=True)')
+                    st.plotly_chart(px.area(df, y =[y1, y2], x =x, color=color_sort), use_container_width=True)
         else:
             if chart_type == "line":
                 if log_y:
@@ -272,6 +338,28 @@ def ace():
                 else:
                     st.code(f'st.plotly_chart(px.violin(df, y =["{y1}", "{y2}"], x ="{x}", box=True, hover_data=df.columns), use_container_width=True)')
                     st.plotly_chart(px.violin(df, y =[y1, y2], x =x, box=True, hover_data=df.columns), use_container_width=True)
+            if chart_type == "area":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}"], x ="{x}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2], x =x, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}"], x ="{x}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2], x =x, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}"], x ="{x}"), use_container_width=True)')
+                    st.plotly_chart(px.area(df, y =[y1, y2], x =x), use_container_width=True)
+            if chart_type == "box":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}"], x ="{x}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2], x =x, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}"], x ="{x}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2], x =x, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}"], x ="{x}"), use_container_width=True)')
+                    st.plotly_chart(px.box(df, y =[y1, y2], x =x), use_container_width=True)
     if number_of_y_axis == 3:
         x = st.selectbox("X-axis", df.columns)
         y1 = st.selectbox("Y-axis 1", df.columns)
@@ -323,6 +411,28 @@ def ace():
                 else:
                     st.code(f'st.plotly_chart(px.violin(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}", box=True, hover_data=df.columns), use_container_width=True)')
                     st.plotly_chart(px.violin(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True, box=True, hover_data=df.columns)
+            if chart_type == "area":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2, y3], x =x, color=color_sort, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2, y3], x =x, color=color_sort, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}"), use_container_width=True)')
+                    st.plotly_chart(px.area(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
+            if chart_type == "box":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2, y3], x =x, color=color_sort, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2, y3], x =x, color=color_sort, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}"), use_container_width=True)')
+                    st.plotly_chart(px.box(df, y =[y1, y2, y3], x =x, color=color_sort), use_container_width=True)
         else:
             if chart_type == "line":
                 if log_y:
@@ -368,7 +478,28 @@ def ace():
                 else:
                     st.code(f'st.plotly_chart(px.violin(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", color="{color_sort}", box=True, hover_data=df.columns), use_container_width=True)')
                     st.plotly_chart(px.violin(df, y =[y1, y2, y3], x =x, color=color_sort, box=True, hover_data=df.columns), use_container_width=True)
-
+            if chart_type == "area":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2, y3], x =x, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.area(df, y =[y1, y2, y3], x =x, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.area(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}"), use_container_width=True)')
+                    st.plotly_chart(px.area(df, y =[y1, y2, y3], x =x), use_container_width=True)
+            if chart_type == "box":
+                if log_y:
+                    if log_x:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", log_y=True, log_x=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2, y3], x =x, log_y=True, log_x=True), use_container_width=True)
+                    else:
+                        st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}", log_y=True), use_container_width=True)')
+                        st.plotly_chart(px.box(df, y =[y1, y2, y3], x =x, log_y=True), use_container_width=True)
+                else:
+                    st.code(f'st.plotly_chart(px.box(df, y =["{y1}", "{y2}", "{y3}"], x ="{x}"), use_container_width=True)')
+                    st.plotly_chart(px.box(df, y =[y1, y2, y3], x =x), use_container_width=True)
 
 ace()
 
