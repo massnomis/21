@@ -254,7 +254,7 @@ while True:
 
     with placeholder6:
         st.write(np.random.randint(5))
-        if len(orders_hist_bids_id_df) < orders_to_place_a_side/2:
+        if len(orders_hist_asks_id_df) < orders_to_place_a_side/2 or orders_hist_asks_id_df.empty:
             st.write("no orders to make")
             for col_name, data in ask_new.iterrows():
                 while ii < orders_to_place_a_side:
