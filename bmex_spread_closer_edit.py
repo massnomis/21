@@ -47,9 +47,11 @@ while True:
     #     else:
     #         st.write(orders_hist)
     orders_hist_bids = orders_hist[orders_hist.side == 'buy']
+
     orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
 
     orders_hist_asks = orders_hist[orders_hist.side == 'sell']
+
     orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
     #         # st.write(orders_hist)
     #         id = orders_hist_id_df
@@ -160,6 +162,8 @@ while True:
         for col_name, data in orders_hist_bids_id_df.iterrows():
             for col_name, data in bid_new.iterrows():
                 while i < orders_to_place_a_side:
+                    orders_hist_bids = orders_hist[orders_hist.status == 'open']
+
                     id_bids = orders_hist_bids_id_df
                     id_bids = (orders_hist_bids_id_df['id'])
                     id_bids = id_bids.iloc[0]
@@ -258,6 +262,8 @@ while True:
         for col_name, data in orders_hist_asks_id_df.iterrows():
             for col_name, data in ask_new.iterrows():
                 while ii < orders_to_place_a_side:
+                    orders_hist_bids = orders_hist[orders_hist.status == 'open']
+
                     id_ask = (orders_hist_asks_id_df['id'])
                     id_ask = id_ask.iloc[0]
                     type = 'limit'
@@ -268,6 +274,7 @@ while True:
                     mm_ask_size = mm_ask_size.iloc[0]
                     side = 'sell'
                     type = 'limit'
+
                     order_init_ask = exchange.editOrder(id=id_ask,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
                     order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                     ii += 1
