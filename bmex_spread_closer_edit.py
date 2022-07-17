@@ -186,6 +186,8 @@ while True:
                             order_init_bid = exchange.editOrder(id=id_bids,symbol=symbol,type=type,side=side,price=mm_bid_price,amount=mm_bid_size)
                         except ccxt.base.errors.BadRequest:
                             pass
+                        except AttributeError:
+                            pass
                         # st.write(order_df_bid)
                         order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
                         i += 1
@@ -288,6 +290,8 @@ while True:
                         try:
                             order_init_ask = exchange.editOrder(id=id_ask,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
                         except ccxt.base.errors.BadRequest:
+                            pass
+                        except AttributeError:
                             pass
                         order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                         ii += 1
