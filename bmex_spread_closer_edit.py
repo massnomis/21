@@ -38,7 +38,8 @@ placeholder15 = st.empty()
 while True:
     orders_hist = exchange.fetchOpenOrders()
     orders_hist = pd.DataFrame(orders_hist)
-    st.write(orders_hist)
+    with placeholder15:
+        st.write(orders_hist)
     # with placeholder:
     #     if orders_hist.empty:
     #         st.write('no open orders')
