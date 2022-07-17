@@ -160,12 +160,12 @@ while True:
             
                     id = (orders_hist_bids_id_df['id'])
                     id = id.iloc[i]
-                    # id = id.loc[i]
-                    # print(df_two['price_bid'])
                     type = 'limit'
                     side = 'buy'
-                    mm_bid_price = (bid_new['mm_bid_price'][0]) - (precision_price * np.random.randint(3) *i)
-                    mm_bid_size = (bid_new['mm_bid_size'][0]) 
+                    mm_bid_price = bid_new['mm_bid_price']
+                    mm_bid_price =  mm_bid_price.iloc[i] - (precision_price * np.random.randint(3) *i)
+                    mm_bid_size = bid_new['mm_bid_size']
+                    mm_bid_size = mm_bid_size.iloc[i]
                     order_init_bid = exchange.editOrder(id=id,symbol=symbol,type=type,side=side,price=mm_bid_price,amount=mm_bid_size)
                     # st.write(order_df_bid)
                     order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
@@ -252,15 +252,20 @@ while True:
                 order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                 ii += 1
     else:   
-        for col_name, data in orders_hist_bids_id_df.iterrows():
+        for col_name, data in orders_hist_asks_id_df.iterrows():
             for col_name, data in ask_new.iterrows():
                 while ii < orders_to_place_a_side:
-            
-                    id = (orders_hist_bids_id_df['id']) 
-                    # print(df_two['price_bid'])
-                    mm_ask_price = ask_new['mm_ask_price'] - (precision_price * np.random.randint(3) *i)
-                    mm_ask_size = ask_new['mm_ask_size'] 
-                    order_init_ask = exchange.editOrder(id=id,symbol=symbol,type="limit",side="sell",price=mm_ask_price,amount=mm_ask_size)
+                    id = (orders_hist_asks_id_df['id'])
+                    id = id.iloc[i]
+                    type = 'limit'
+                    side = 'sell'
+                    mm_ask_price = bid_new['mm_ask_price']
+                    mm_ask_price =  mm_ask_price.iloc[i] - (precision_price * np.random.randint(3) *i)
+                    mm_ask_size = bid_new['mm_ask_size']
+                    mm_ask_size = mm_ask_size.iloc[i]
+                    side = 'sell'
+                    type = 'limit'
+                    order_init_ask = exchange.editOrder(id=id,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
                     order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                     ii += 1
 
