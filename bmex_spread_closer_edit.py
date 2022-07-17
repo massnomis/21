@@ -38,25 +38,26 @@ placeholder15 = st.empty()
 while True:
     orders_hist = exchange.fetchOpenOrders()
     orders_hist = pd.DataFrame(orders_hist)
-    with placeholder:
-        if orders_hist.empty:
-            st.write('no open orders')
-        else:
-            st.write(orders_hist)
-            orders_hist = orders_hist[orders_hist.status != 'canceled']
-            orders_hist = orders_hist[orders_hist.status != 'closed']
-            orders_hist_id_df = pd.DataFrame(orders_hist['id'])
-            # st.write(orders_hist)
-            id = orders_hist_id_df
-            order_cancel_df = pd.DataFrame()
-            cancel_df = pd.DataFrame()
-            cancelAllOrders = exchange.cancelAllOrders()
-            # st.write(cancelAllOrders)
-            # for index, row in id.iterrows():
-            #     order_cancel = exchange.cancelOrder(id=row['id'])
-            #     order_cancel_df = order_cancel_df.append(order_cancel, ignore_index=True).astype(str)
-            st.write("canceled, yalla")
-            # st.write(order_cancel_df)
+    # with placeholder:
+    #     if orders_hist.empty:
+    #         st.write('no open orders')
+    #     else:
+    #         st.write(orders_hist)
+    orders_hist_bids = orders_hist[orders_hist.side == 'buy']
+    orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
+    orders_hist_asks = orders_hist[orders_hist.side == 'sell']
+    orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
+    #         # st.write(orders_hist)
+    #         id = orders_hist_id_df
+    #         order_cancel_df = pd.DataFrame()
+    #         cancel_df = pd.DataFrame()
+    #         cancelAllOrders = exchange.cancelAllOrders()
+    #         # st.write(cancelAllOrders)
+    #         # for index, row in id.iterrows():
+    #         #     order_cancel = exchange.cancelOrder(id=row['id'])
+    #         #     order_cancel_df = order_cancel_df.append(order_cancel, ignore_index=True).astype(str)
+    #         st.write("canceled, yalla")
+    #         # st.write(order_cancel_df)
 
 
 
@@ -140,16 +141,44 @@ while True:
     # st.write(bid_new)
     # order_init = exchange.createLimitBuyOrder(symbol=symbol,price=testing_bids['price_bid'],amount=testing_bids['size_bid'])
     # st.write(order_init)
+    order_df_bid = pd.DataFrame()
     with placeholder3:
         st.write(np.random.randint(5))
-    for col_name, data in bid_new.iterrows():
-        while i < orders_to_place_a_side:
+    if orders_hist_bids_id_df.empty:
+        st.write("no orders to make")
+        for col_name, data in bid_new.iterrows():
+            while i < orders_to_place_a_side:
+                mm_bid_price = (data['mm_bid_price']) - (precision_price * np.random.randint(3) *i)
+                mm_bid_size = (data['mm_bid_size']) 
+                order_init_bid = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
+                order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
+                i += 1
+    else:
+        for col_name, data in orders_hist_bids_id_df.iterrows():
+            for col_name, data in bid_new.iterrows():
+                while i < orders_to_place_a_side:
+            
+                    id = (orders_hist_bids_id_df['id'])
+                    id = id.iloc[i]
+                    # id = id.loc[i]
+                    # print(df_two['price_bid'])
+                    type = 'limit'
+                    side = 'buy'
+                    mm_bid_price = (bid_new['mm_bid_price'][0]) - (precision_price * np.random.randint(3) *i)
+                    mm_bid_size = (bid_new['mm_bid_size'][0]) 
+                    order_init_bid = exchange.editOrder(id=id,symbol=symbol,type=type,side=side,price=mm_bid_price,amount=mm_bid_size)
+                    # st.write(order_df_bid)
+                    order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
+                    i += 1
 
-            mm_bid_price = (data['mm_bid_price']) - (precision_price * np.random.randint(3) *i)
-            mm_bid_size = (data['mm_bid_size']) 
-            order_init_bid = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
-            order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
-            i += 1
+
+
+
+
+
+
+
+ 
 
     order_df_bid = order_df_bid[['price','remaining']]
     # st.write(order_df_bid)
@@ -210,14 +239,31 @@ while True:
     ii = 0
 
 
-    for col_name, data in ask_new.iterrows():
-        while ii < orders_to_place_a_side:
+    with placeholder5:
+        st.write(np.random.randint(5))
+    if orders_hist_bids_id_df.empty:
+        st.write("no orders to make")
+        for col_name, data in ask_new.iterrows():
+            while ii < orders_to_place_a_side:
 
-            mm_ask_price = (data['mm_ask_price']) + (precision_price * np.random.randint(3)*ii)
-            mm_ask_size = (data['mm_ask_size']) 
-            order_init_ask = exchange.createLimitSellOrder(symbol=symbol,price=mm_ask_price,amount=mm_ask_size)
-            order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
-            ii += 1
+                mm_ask_price = (data['mm_ask_price']) + (precision_price * np.random.randint(3)*ii)
+                mm_ask_size = (data['mm_ask_size']) 
+                order_init_ask = exchange.createLimitSellOrder(symbol=symbol,price=mm_ask_price,amount=mm_ask_size)
+                order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
+                ii += 1
+    else:   
+        for col_name, data in orders_hist_bids_id_df.iterrows():
+            for col_name, data in ask_new.iterrows():
+                while ii < orders_to_place_a_side:
+            
+                    id = (orders_hist_bids_id_df['id']) 
+                    # print(df_two['price_bid'])
+                    mm_ask_price = ask_new['mm_ask_price'] - (precision_price * np.random.randint(3) *i)
+                    mm_ask_size = ask_new['mm_ask_size'] 
+                    order_init_ask = exchange.editOrder(id=id,symbol=symbol,type="limit",side="sell",price=mm_ask_price,amount=mm_ask_size)
+                    order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
+                    ii += 1
+
 
     # st.write(order_df_ask)
     order_df_ask = order_df_ask[['price','remaining']]
