@@ -38,6 +38,7 @@ placeholder15 = st.empty()
 while True:
     orders_hist = exchange.fetchOpenOrders()
     orders_hist = pd.DataFrame(orders_hist)
+    st.write(orders_hist)
     # with placeholder:
     #     if orders_hist.empty:
     #         st.write('no open orders')
@@ -144,8 +145,7 @@ while True:
     order_df_bid = pd.DataFrame()
     with placeholder3:
         st.write(np.random.randint(5))
-    if orders_hist_bids_id_df.empty:
-        st.write("no orders to make")
+    if len(orders_hist_bids_id_df) < orders_to_place_a_side:
         for col_name, data in bid_new.iterrows():
             while i < orders_to_place_a_side:
                 mm_bid_price = (data['mm_bid_price']) - (precision_price * np.random.randint(3) *i)
@@ -158,15 +158,15 @@ while True:
             for col_name, data in bid_new.iterrows():
                 while i < orders_to_place_a_side:
             
-                    id = (orders_hist_bids_id_df['id'])
-                    id = id.iloc[i]
+                    id_bids = (orders_hist_bids_id_df['id'])
+                    id_bids = id_bids.iloc[0]
                     type = 'limit'
                     side = 'buy'
                     mm_bid_price = bid_new['mm_bid_price']
-                    mm_bid_price =  mm_bid_price.iloc[i] - (precision_price * np.random.randint(3) *i)
+                    mm_bid_price =  mm_bid_price.iloc[0] - (precision_price * np.random.randint(3) *i)
                     mm_bid_size = bid_new['mm_bid_size']
-                    mm_bid_size = mm_bid_size.iloc[i]
-                    order_init_bid = exchange.editOrder(id=id,symbol=symbol,type=type,side=side,price=mm_bid_price,amount=mm_bid_size)
+                    mm_bid_size = mm_bid_size.iloc[0] * np.random.randint(3) *i
+                    order_init_bid = exchange.editOrder(id=id_bids,symbol=symbol,type=type,side=side,price=mm_bid_price,amount=mm_bid_size)
                     # st.write(order_df_bid)
                     order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
                     i += 1
@@ -241,7 +241,7 @@ while True:
 
     with placeholder5:
         st.write(np.random.randint(5))
-    if orders_hist_bids_id_df.empty:
+    if len(orders_hist_bids_id_df) < orders_to_place_a_side:
         st.write("no orders to make")
         for col_name, data in ask_new.iterrows():
             while ii < orders_to_place_a_side:
@@ -255,17 +255,17 @@ while True:
         for col_name, data in orders_hist_asks_id_df.iterrows():
             for col_name, data in ask_new.iterrows():
                 while ii < orders_to_place_a_side:
-                    id = (orders_hist_asks_id_df['id'])
-                    id = id.iloc[i]
+                    id_ask = (orders_hist_asks_id_df['id'])
+                    id_ask = id_ask.iloc[0]
                     type = 'limit'
                     side = 'sell'
                     mm_ask_price = bid_new['mm_ask_price']
-                    mm_ask_price =  mm_ask_price.iloc[i] - (precision_price * np.random.randint(3) *i)
+                    mm_ask_price =  mm_ask_price.iloc[0] - (precision_price * np.random.randint(3) *ii)
                     mm_ask_size = bid_new['mm_ask_size']
-                    mm_ask_size = mm_ask_size.iloc[i]
+                    mm_ask_size = mm_ask_size.iloc[0]
                     side = 'sell'
                     type = 'limit'
-                    order_init_ask = exchange.editOrder(id=id,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
+                    order_init_ask = exchange.editOrder(id=id_ask,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
                     order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                     ii += 1
 
