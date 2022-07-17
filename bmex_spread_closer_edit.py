@@ -11,6 +11,7 @@ import plotly.express as px
 from datetime import datetime, timedelta
 import math
 import werkzeug
+import ccxt.base.errors
 from werkzeug.exceptions import BadRequest
 import requests.exceptions
 st.set_page_config(layout="wide")
