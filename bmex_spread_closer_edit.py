@@ -10,6 +10,7 @@ import numpy as np
 import plotly.express as px
 from datetime import datetime, timedelta
 import math
+import werkzeug
 from werkzeug.exceptions import BadRequest
 import requests.exceptions
 st.set_page_config(layout="wide")
@@ -183,7 +184,7 @@ while True:
                         mm_bid_size = mm_bid_size.iloc[0] 
                         try:
                             order_init_bid = exchange.editOrder(id=id_bids,symbol=symbol,type=type,side=side,price=mm_bid_price,amount=mm_bid_size)
-                        except requests.exceptions.BadRequest as e:
+                        except ccxt.base.errors.BadRequest:
                             pass
                         # st.write(order_df_bid)
                         order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
@@ -286,7 +287,7 @@ while True:
                         mm_ask_size = mm_ask_size.iloc[0]
                         try:
                             order_init_ask = exchange.editOrder(id=id_ask,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
-                        except requests.exceptions.BadRequest as e:
+                        except ccxt.base.errors.BadRequest:
                             pass
                         order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                         ii += 1
