@@ -1,3 +1,5 @@
+from logging import PlaceHolder
+from tkinter import Place
 import pandas as pd
 import plotly.express as px
 import requests
@@ -5,7 +7,15 @@ import streamlit as st
 import math
 import json
 st.set_page_config(layout="wide")
-
+PlaceHolder = st.empty()
+PlaceHolder1 = st.empty()
+PlaceHolder2 = st.empty()
+PlaceHolder3 = st.empty()
+PlaceHolder4 = st.empty()
+PlaceHolder5 = st.empty()
+PlaceHolder6 = st.empty()
+PlaceHolder7 = st.empty()
+PlaceHolder8 = st.empty()
 chainID_dict = { "Ethereum": 1, "Binance Smart Chain": 56, "Polygon": 137, "Optimism": 10, "Arbitrum": 42161, "Gnosis Chain": 100, "Avalanche": 43114, "Fantom": 250 }
 # chainId_choice = "Ethereum"
 chainId_choice_st = st.selectbox("Select Chain ID", list(chainID_dict.keys()))
@@ -136,14 +146,16 @@ try:
     fixed_df['fixed_maker_balance'] = (fixed_df['makerBalance']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
     fixed_df = fixed_df.drop(columns=["remainingMakerAmount", "makerBalance"])
     st.write(fixed_df)
-    stink_save_bid_drawdown = 0.8
-    stink_save_ask_drawup = 1.2
+    stink_save_bid_drawdown = .5
+    stink_save_ask_drawup = 2
     stink_save_d = fixed_df['makerRate'].median()*stink_save_bid_drawdown
     stink_save_u = fixed_df['makerRate'].median()*stink_save_ask_drawup
 
     fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) < stink_save_u]
     fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) > stink_save_d]
+    # with PlaceHolder:
+    st.plotly_chart(px.bar(fixed_df, x="makerRate", y="fixed_remaining_maker_amount"), use_container_width=True)
+    st.plotly_chart(px.scatter(fixed_df, x="makerRate", y="takerRate", size = "fixed_remaining_maker_amount"), use_container_width=True)
 
-    st.plotly_chart(px.bar(fixed_df, x="makerRate", y="fixed_remaining_maker_amount"))
 except KeyError:
     st.write("No data found") 
