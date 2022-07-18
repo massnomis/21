@@ -44,7 +44,7 @@ while True:
         else:
             st.write(orders_hist)
             orders_hist = orders_hist[orders_hist.status != 'canceled']
-            orders_hist = orders_hist[orders_hist.status != 'closed']
+            # orders_hist = orders_hist[orders_hist.status != 'closed']
             orders_hist_id_df = pd.DataFrame(orders_hist['id'])
             # st.write(orders_hist)
             id = orders_hist_id_df

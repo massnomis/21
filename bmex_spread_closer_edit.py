@@ -46,23 +46,29 @@ placeholder15 = st.empty()
 while True:
     orders_hist_bids = exchange.fetchOpenOrders()
     orders_hist_asks = exchange.fetchOpenOrders()
+    # st.write(orders_hist_asks)
 
     orders_hist_bids = pd.DataFrame(orders_hist_bids)
     orders_hist_asks = pd.DataFrame(orders_hist_asks)
-
-    with placeholder1:
-        st.write(orders_hist_asks,orders_hist_bids)
+ 
     # with placeholder:
     #     if orders_hist.empty:
     #         st.write('no open orders')
     #     else:
     #         st.write(orders_hist)
-    orders_hist_bids = orders_hist_bids[orders_hist_bids.side == 'buy']
-
-    orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
-
-    orders_hist_asks = orders_hist_asks[orders_hist_asks.side == 'sell']
-    orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
+    with placeholder1:
+        if orders_hist_bids.empty:
+            st.write("nada")
+        else:
+            orders_hist_bids = orders_hist_bids[orders_hist_bids.side == 'buy']
+            orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
+            st.write(orders_hist_bids)
+        if orders_hist_bids.empty:
+            st.write("nada")
+        else:
+            orders_hist_asks = orders_hist_asks[orders_hist_asks.side == 'sell']
+            orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
+            st.write(orders_hist_asks)
 
     #         # st.write(orders_hist)
     #         id = orders_hist_id_df
@@ -143,7 +149,7 @@ while True:
     bid_new = bid_new[bid_new.mm_bid_price > stink_save_bid]
     # st.write(bid_new)
 
-    order_df_bid = pd.DataFrame()
+    #order_df_bid = pd.DataFrame()
     i = 0
 
 
@@ -230,16 +236,9 @@ while True:
 
     mid_ish = ((asks['price_ask'].min() + bids['price_bid'].max())) / 2
     steps = round(mid_ish/precision_price)
+    
     with placeholder5:
         st.write("mid_ish", mid_ish, "steps", steps)
-
-
-
-
-
-
-
-
     ask_new = pd.DataFrame(asks)
     ask_new['mm_ask_price']  = asks['price_ask'].min() - precision_price
     # + 400
@@ -259,8 +258,6 @@ while True:
 
 
     ii = 0
-
-
     with placeholder6:
         st.write(np.random.randint(5))
         if len(orders_hist_asks_id_df) < orders_to_place_a_side/2 or orders_hist_asks_id_df.empty:
