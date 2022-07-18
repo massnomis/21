@@ -4,6 +4,7 @@ import requests
 import streamlit as st
 import math
 import json
+st.set_page_config(layout="wide")
 
 chainID_dict = { "Ethereum": 1, "Binance Smart Chain": 56, "Polygon": 137, "Optimism": 10, "Arbitrum": 42161, "Gnosis Chain": 100, "Avalanche": 43114, "Fantom": 250 }
 # chainId_choice = "Ethereum"
@@ -120,26 +121,29 @@ url = f'https://limit-orders.1inch.io/v2.0/{chainId}/limit-order/all?page={page}
 # url_choice  = st.button("url?")
 # if url_choice:
 st.write(url)
-ping_limit_orders = requests.get(url).json()
+try:
+    ping_limit_orders = requests.get(url).json()
 # st.write(ping_limit_orders)
-ping_limit_orders_to_df = pd.DataFrame(ping_limit_orders)
+    ping_limit_orders_to_df = pd.DataFrame(ping_limit_orders)
 # st.write(ping_limit_orders_to_df)
 
 
 
 
-fixed_df = ping_limit_orders_to_df.copy()
-fixed_df = fixed_df.drop(columns=["signature", "orderHash", "data", "makerAllowance", "isMakerContract"])
-fixed_df['fixed_remaining_maker_amount'] = (fixed_df['remainingMakerAmount']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
-fixed_df['fixed_maker_balance'] = (fixed_df['makerBalance']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
-fixed_df = fixed_df.drop(columns=["remainingMakerAmount", "makerBalance"])
-st.write(fixed_df)
-stink_save_bid_drawdown = 0.8
-stink_save_ask_drawup = 1.2
-stink_save_d = fixed_df['makerRate'].median()*stink_save_bid_drawdown
-stink_save_u = fixed_df['makerRate'].median()*stink_save_ask_drawup
+    fixed_df = ping_limit_orders_to_df.copy()
+    fixed_df = fixed_df.drop(columns=["signature", "orderHash", "data", "makerAllowance", "isMakerContract"])
+    fixed_df['fixed_remaining_maker_amount'] = (fixed_df['remainingMakerAmount']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
+    fixed_df['fixed_maker_balance'] = (fixed_df['makerBalance']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
+    fixed_df = fixed_df.drop(columns=["remainingMakerAmount", "makerBalance"])
+    st.write(fixed_df)
+    stink_save_bid_drawdown = 0.8
+    stink_save_ask_drawup = 1.2
+    stink_save_d = fixed_df['makerRate'].median()*stink_save_bid_drawdown
+    stink_save_u = fixed_df['makerRate'].median()*stink_save_ask_drawup
 
-fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) > stink_save_u]
-fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) < stink_save_d]
+    fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) < stink_save_u]
+    fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) > stink_save_d]
 
-st.plotly_chart(px.bar(fixed_df, x="makerRate", y="fixed_remaining_maker_amount"))
+    st.plotly_chart(px.bar(fixed_df, x="makerRate", y="fixed_remaining_maker_amount"))
+except KeyError:
+    st.write("No data found") 
