@@ -22,7 +22,9 @@ exchange = ccxt.bitmex({
 if 'test' in exchange.urls:
     exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
 # st.write(exchange.fetchOpenOrders())
-
+# Python
+class BaseError (Exception):
+    pass
 placeholder = st.empty()
 placeholder1 = st.empty()
 placeholder2 = st.empty()
@@ -90,9 +92,9 @@ while True:
     # latest_rateAPY_quote = 0.0020
     # alpha = 0
     # apy_to_beat = (((1+latest_rateAPY_quote)*(1+latest_rateAPY_spot)))+alpha-1
-    orders_to_place_a_side = 12
+    orders_to_place_a_side = 80
     stink_save_bid_drawdown = 0.98
-    stink_save_ask_drawup = 1.05
+    stink_save_ask_drawup = 1.02
 
     precision_load = pd.DataFrame(exchange.load_markets())
     precision = (precision_load[symbol]['precision'])
@@ -185,9 +187,7 @@ while True:
                         mm_bid_size = mm_bid_size.iloc[0] 
                         try:
                             order_init_bid = exchange.editOrder(id=id_bids,symbol=symbol,type=type,side=side,price=mm_bid_price,amount=mm_bid_size)
-                        except ccxt.base.errors.BadRequest:
-                            pass
-                        except AttributeError:
+                        except Exception:
                             pass
                         # st.write(order_df_bid)
                         order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
@@ -264,7 +264,7 @@ while True:
     with placeholder6:
         st.write(np.random.randint(5))
         if len(orders_hist_asks_id_df) < orders_to_place_a_side/2 or orders_hist_asks_id_df.empty:
-            st.write("no orders to make")
+            # st.write("no orders to make")
             for col_name, data in ask_new.iterrows():
                 while ii < orders_to_place_a_side:
 
@@ -290,10 +290,9 @@ while True:
                         mm_ask_size = mm_ask_size.iloc[0]
                         try:
                             order_init_ask = exchange.editOrder(id=id_ask,symbol=symbol,type=type,side=side,price=mm_ask_price,amount=mm_ask_size)
-                        except ccxt.base.errors.BadRequest:
+                        except Exception:
                             pass
-                        except AttributeError:
-                            pass
+               
                         order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                         ii += 1
 
@@ -327,32 +326,33 @@ while True:
     fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['fixed_size_bid'], name="bids"),secondary_y=True,)
     fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['fixed_size_ask'], name="asks"),secondary_y=True,)
     fig.update_layout(title_text="orderbook")
-    st.plotly_chart(fig, use_container_width=True)
+    with placeholder10:
+        st.plotly_chart(fig, use_container_width=True)
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
     fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
     fig.update_layout(title_text="cash_equivelant")
     with placeholder9:
         st.plotly_chart(fig, use_container_width=True)
-    with placeholder10:
+    with placeholder11:
         st.write("above is them, below is us")
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(go.Scatter(x=order_df_ask['price'], y=order_df_ask['accumulated'], name="asks"),secondary_y=True,)
     fig.add_trace(go.Scatter(x=order_df_bid['price'], y=order_df_bid['accumulated'], name="bids"),secondary_y=True,)
     fig.update_layout(title_text="orderbook")
-    with placeholder11:
+    with placeholder12:
         st.plotly_chart(fig, use_container_width=True)
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(go.Bar(x=order_df_ask['price'], y=order_df_ask['mm_ask_size'], name="asks"),secondary_y=True,)
     fig.add_trace(go.Bar(x=order_df_bid['price'], y=order_df_bid['mm_bid_size'], name="bids"),secondary_y=True,)
     fig.update_layout(title_text="orderbook")
-    with placeholder12:
+    with placeholder13:
         st.plotly_chart(fig, use_container_width=True)
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(go.Scatter(x=order_df_ask['price'], y=order_df_ask['cash_equivelant'], name="asks"),secondary_y=True,)
     fig.add_trace(go.Scatter(x=order_df_bid['price'], y=order_df_bid['cash_equivelant'], name="bids"),secondary_y=True,)
     fig.update_layout(title_text="orderbook")
-    with placeholder13:
+    with placeholder14:
         st.plotly_chart(fig, use_container_width=True)
 
 
