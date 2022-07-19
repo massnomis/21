@@ -20,3 +20,4 @@ requests
 ccxt
 python-decouple
 werkzeug
+web3
