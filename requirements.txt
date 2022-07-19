@@ -18,3 +18,5 @@ Jinja2
 websocket_client
 requests
 ccxt
+python-decouple
+werkzeug
