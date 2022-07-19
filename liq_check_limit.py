@@ -48,11 +48,12 @@ st.write("HealthCheck RQ",healthcheck)
 
 tokens_list = requests.get(f"https://api.1inch.io/v4.0/{chainId}/tokens")
 tokens_list = json.loads(tokens_list.text)
-tokens_list = [tokens_list["tokens"][x] for x in tokens_list["tokens"]]
-symbol_list = [elem["symbol"] for elem in tokens_list]
-st.write("Tokens List")
+tokens_list = tokens_list["tokens"]
+tokens_list = pd.DataFrame(tokens_list)
+tokens_list = tokens_list.T
+tokens_list = tokens_list.reset_index()
+tokens_list = tokens_list.drop(columns=['index','logoURI', 'tags', 'eip2612', 'isFoT', 'synth', 'displayedSymbol'])
 
-st.dataframe(tokens_list)
 
 # button here for manual input or not....
 agree = st.checkbox("Manual Address Input?")
