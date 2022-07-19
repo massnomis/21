@@ -160,7 +160,7 @@ try:
     fixed_df['try_fixr8_3'] = pd.to_numeric(fixed_df['makerRate'])* fixed_df['make_take_div2']
     fixed_df['try_fixr8_4'] = pd.to_numeric(fixed_df['takerRate']) * fixed_df['make_take_div1']
     # fixed_df['fixed_maker_balance'] = pd.to_numeric(fixed_df['fixed_maker_balance']) * fixed_df['make_dec']
-    fixed_df['fixed_remaining_maker_amount'] =  fixed_df['fixed_remaining_maker_amount'] / fixed_df['make_mult']
+    fixed_df['fixed_remaining_maker_amount_init_eh'] =  fixed_df['fixed_remaining_maker_amount'] / fixed_df['make_mult']
     fixed_df = fixed_df.drop(columns=["remainingMakerAmount", "makerBalance"])
     st.write(fixed_df)
     stink_save_bid_drawdown = .005
@@ -170,7 +170,11 @@ try:
     fixed_df['makerRate'] = pd.to_numeric(fixed_df['makerRate'])
     
     fixed_df['takerRate'] = pd.to_numeric(fixed_df['takerRate'])
-    fixed_df['remaining_liq_cum'] = fixed_df['fixed_remaining_maker_amount'].cumsum()    # fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) < stink_save_u]
+    fixed_df.sort_values(by=['makerRate'], inplace=True)
+
+    fixed_df['remaining_liq_cum'] = fixed_df['fixed_remaining_maker_amount'].cumsum()
+    fixed_df['remaining_liq_cum_init'] = fixed_df['fixed_remaining_maker_amount_init_eh'].cumsum()
+   # fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) < stink_save_u]
     # fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) > stink_save_d]
     # with PlaceHolder:
     st.plotly_chart(px.bar(fixed_df, x="try_fixr8_3", y="fixed_remaining_maker_amount"), use_container_width=True)
@@ -179,6 +183,12 @@ try:
     st.plotly_chart(px.scatter(fixed_df, x="try_fixr8_4", y="fixed_remaining_maker_amount"), use_container_width=True)
     st.plotly_chart(px.line(fixed_df, x="try_fixr8_3", y="remaining_liq_cum"), use_container_width=True)
     st.plotly_chart(px.line(fixed_df, x="try_fixr8_4", y="remaining_liq_cum"), use_container_width=True)
+    st.plotly_chart(px.bar(fixed_df, x="try_fixr8_3", y="fixed_remaining_maker_amount_init_eh"), use_container_width=True)
+    st.plotly_chart(px.bar(fixed_df, x="try_fixr8_4", y="fixed_remaining_maker_amount_init_eh"), use_container_width=True)
+    st.plotly_chart(px.scatter(fixed_df, x="try_fixr8_3", y="fixed_remaining_maker_amount_init_eh"), use_container_width=True)
+    st.plotly_chart(px.scatter(fixed_df, x="try_fixr8_4", y="fixed_remaining_maker_amount_init_eh"), use_container_width=True)
+    st.plotly_chart(px.line(fixed_df, x="try_fixr8_3", y="remaining_liq_cum_init"), use_container_width=True)
+    st.plotly_chart(px.line(fixed_df, x="try_fixr8_4", y="remaining_liq_cum_init"), use_container_width=True)
 
 except KeyError:
     st.write("No data found") 
