@@ -78,14 +78,14 @@ else:
     st.write("Great!")
     tokens_list = pd.DataFrame(tokens_list)
 
-    tokenIN = st.selectbox("tokenIN", tokens_list['symbol'], index=103)
+    tokenIN = st.selectbox("tokenIN", tokens_list['symbol'], index=146)
     address_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["address"]
     st.write(address_of_said_tokenIN)
 
     decimal_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["decimals"]
     st.write("decimals:",decimal_of_said_tokenIN)
 
-    tokenOUT = st.selectbox("tokenOUT", tokens_list['symbol'], index=146)
+    tokenOUT = st.selectbox("tokenOUT", tokens_list['symbol'], index=103)
     address_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["address"]
     st.write(address_of_said_tokenOUT)
 
@@ -132,31 +132,33 @@ url = f'https://limit-orders.1inch.io/v2.0/{chainId}/limit-order/all?page={page}
 # url_choice  = st.button("url?")
 # if url_choice:
 st.write(url)
-try:
-    ping_limit_orders = requests.get(url).json()
+# try:
+ping_limit_orders = requests.get(url).json()
 # st.write(ping_limit_orders)
-    ping_limit_orders_to_df = pd.DataFrame(ping_limit_orders)
+ping_limit_orders_to_df = pd.DataFrame(ping_limit_orders)
 # st.write(ping_limit_orders_to_df)
 
+fixed_df = ping_limit_orders_to_df.copy()
 
+st.write(fixed_df)
 
+fixed_df = fixed_df.drop(columns=["signature", "orderHash", "data", "makerAllowance", "isMakerContract"])
+fixed_df['fixed_remaining_maker_amount'] = (fixed_df['remainingMakerAmount']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
+# fixed_df['fixed_remaining_taker_amount'] = fixed_df['fixed_remaining_taker_amount'].to_numeric()
+fixed_df['fixed_remaining_maker_amount'] = pd.to_numeric(fixed_df['fixed_remaining_maker_amount'])
+fixed_df['fixed_maker_balance'] = (fixed_df['makerBalance']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
+fixed_df = fixed_df.drop(columns=["remainingMakerAmount", "makerBalance"])
+st.write(fixed_df)
+stink_save_bid_drawdown = .005
+stink_save_ask_drawup = 200
+stink_save_d = fixed_df['makerRate'].median()*stink_save_bid_drawdown
+stink_save_u = fixed_df['makerRate'].median()*stink_save_ask_drawup
+fixed_df['makerRate'] = pd.to_numeric(fixed_df['makerRate'])
+fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) < stink_save_u]
+fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) > stink_save_d]
+# with PlaceHolder:
+st.plotly_chart(px.bar(fixed_df, x="makerRate", y="fixed_remaining_maker_amount"), use_container_width=True)
+st.plotly_chart(px.scatter(fixed_df, x="makerRate", y="takerRate", size = "fixed_remaining_maker_amount"), use_container_width=True)
 
-    fixed_df = ping_limit_orders_to_df.copy()
-    fixed_df = fixed_df.drop(columns=["signature", "orderHash", "data", "makerAllowance", "isMakerContract"])
-    fixed_df['fixed_remaining_maker_amount'] = (fixed_df['remainingMakerAmount']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
-    fixed_df['fixed_maker_balance'] = (fixed_df['makerBalance']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
-    fixed_df = fixed_df.drop(columns=["remainingMakerAmount", "makerBalance"])
-    st.write(fixed_df)
-    stink_save_bid_drawdown = .5
-    stink_save_ask_drawup = 2
-    stink_save_d = fixed_df['makerRate'].median()*stink_save_bid_drawdown
-    stink_save_u = fixed_df['makerRate'].median()*stink_save_ask_drawup
-
-    fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) < stink_save_u]
-    fixed_df = fixed_df[fixed_df.makerRate.apply(lambda x: float(x)) > stink_save_d]
-    # with PlaceHolder:
-    st.plotly_chart(px.bar(fixed_df, x="makerRate", y="fixed_remaining_maker_amount"), use_container_width=True)
-    st.plotly_chart(px.scatter(fixed_df, x="makerRate", y="takerRate", size = "fixed_remaining_maker_amount"), use_container_width=True)
-
-except KeyError:
-    st.write("No data found") 
+# except KeyError:
+#     st.write("No data found") 
