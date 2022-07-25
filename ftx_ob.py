@@ -31,7 +31,8 @@ from datetime import datetime, timedelta
 import math
 st.set_page_config(layout="wide")
 exchange = ccxt.ftx({
-
+    'apiKey': '',
+    'secret': '',
 })
 # if 'test' in exchange.urls:
 #     exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
@@ -204,7 +205,7 @@ async def consumer() -> None:
 
 
 
-
+    
                     asks = pd.DataFrame(asks)
                     bids = pd.DataFrame(bids)
                     # st.write(asks_update)
@@ -247,7 +248,7 @@ async def consumer() -> None:
                     # st.write(precision)
                     precision_amount = precision['amount']
                     precision_price = precision['price']
-                 
+                
 
 
 
@@ -308,6 +309,7 @@ async def consumer() -> None:
                                 order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
                                 i += 1
                             i += 1
+                        i += 1
 
                         order_df_bid = order_df_bid[['price','remaining']]
                         # st.write(order_df_bid)
@@ -370,6 +372,7 @@ async def consumer() -> None:
                                 order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                                 ii += 1
                             ii += 1
+                        ii += 1
                         # st.write(order_df_ask)
                         order_df_ask = order_df_ask[['price','remaining']]
                         # st.write(order_df_ask)
@@ -403,22 +406,8 @@ async def consumer() -> None:
 
 
 
-    
+        
 
-                    column = bids["price_bid"]
-                    max_value_spot = column.max()
-                    st.write("now",datetime.now())
-                    st.write("best bid", max_value_spot)
 
-                    column = asks["price_ask"]
-                    min_value_spot = column.min()
-                    st.write("best ask", min_value_spot)
-
-                    spred_spot = min_value_spot - max_value_spot
-                    st.write("spot spread", spred_spot)
-
-                    spred_bps_spot = spred_spot/min_value_spot*1000
-                    st.write("spred_bps", spred_bps_spot , "bps")
-    # await asyncio.sleep(30)
             
 asyncio.run(consumer())
