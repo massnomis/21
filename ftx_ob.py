@@ -79,7 +79,7 @@ b = "fat d8ta"
 dict_dumps = {
   "op": "subscribe",
   "channel": "orderbook",
-  "market": "BTC-PERP"
+  "market": "BTC/USD"
 }
 # market_name = st.text_input('Market name', value='BTC-PERP')
 # name = st.text_input("market name", "BTC/USD")
@@ -224,14 +224,14 @@ async def consumer() -> None:
                     bids['accumulated_price']  = (bids['price_bid']) * bids['size_bid']
                     bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
                     bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']                
-                    for i in range(1, 2):
-                        cols = st.columns(2)
-                        cols[0].subheader("bids")
+                    # for i in range(1, 2):
+                    #     cols = st.columns(2)
+                    #     cols[0].subheader("bids")
 
-                        cols[0].write(bids)
-                        cols[1].subheader("asks")
+                    #     cols[0].write(bids)
+                    #     cols[1].subheader("asks")
 
-                        cols[1].write(asks)
+                    #     cols[1].write(asks)
                     # st.write(asks,bids, use_container_width=True)
                     # st.write(asks_update,bids_update, use_container_width=True)
                     
@@ -249,7 +249,7 @@ async def consumer() -> None:
                     # else :
                     #     symbol = name
 
-                    symbol = "BTC/USD:USD"
+                    symbol = "BTC/USD"
                     precision_load = pd.DataFrame(exchange.load_markets())
                     # st.write(precision_load.astype(str))
                     precision = (precision_load[symbol]['precision'])
@@ -306,15 +306,15 @@ async def consumer() -> None:
                         # st.write(bid_new)
 
                         order_df_bid = pd.DataFrame()
-
+                        params = {'timeInForce' : 'PO'}
                         # with placeholder3:
                         #     st.write(np.random.randint(5))
                         for col_name, data in bid_new.iterrows():
                             while i < orders_to_place_a_side_bid:
 
-                                mm_bid_price = (data['mm_bid_price']) - (precision_price)
+                                mm_bid_price = (data['mm_bid_price']) - (precision_price) * i 
                                 mm_bid_size = (data['mm_bid_size']) 
-                                order_init_bid = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
+                                order_init_bid = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size, params = params)
                                 order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
                                 i += 1
                             i += 1
@@ -371,13 +371,14 @@ async def consumer() -> None:
 
                         ii = 0
 
+                        params = {'timeInForce' : 'PO'}
 
                         for col_name, data in ask_new.iterrows():
                             while ii < orders_to_place_a_side_ask:
 
-                                mm_ask_price = (data['mm_ask_price']) + (precision_price)
+                                mm_ask_price = (data['mm_ask_price']) + (precision_price) * ii 
                                 mm_ask_size = (data['mm_ask_size']) 
-                                order_init_ask = exchange.createLimitSellOrder(symbol=symbol,price=mm_ask_price,amount=mm_ask_size)
+                                order_init_ask = exchange.createLimitSellOrder(symbol=symbol,price=mm_ask_price,amount=mm_ask_size, params = params)
                                 order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
                                 ii += 1
                             ii += 1
