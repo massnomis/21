@@ -52,7 +52,7 @@ tokens_list = tokens_list["tokens"]
 tokens_list = pd.DataFrame(tokens_list)
 tokens_list = tokens_list.T
 tokens_list = tokens_list.reset_index()
-tokens_list = tokens_list.drop(columns=['index','logoURI', 'tags', 'eip2612', 'isFoT', 'synth', 'displayedSymbol'])
+# tokens_list = tokens_list.drop(columns=['index','logoURI', 'tags', 'eip2612', 'isFoT', 'synth', 'displayedSymbol'])
 
 
 # button here for manual input or not....
@@ -135,6 +135,7 @@ st.write(url)
 try:
     ping_limit_orders = requests.get(url).json()
     # st.write(ping_limit_orders)
+    st.json(ping_limit_orders)
     ping_limit_orders_to_df = pd.DataFrame(ping_limit_orders)
     # st.write(ping_limit_orders_to_df)
 
@@ -142,7 +143,7 @@ try:
     st.write(fixed_df)
     # st.write(fixed_df)
 
-    fixed_df = fixed_df.drop(columns=["signature", "orderHash", "data", "makerAllowance", "isMakerContract"])
+    # fixed_df = fixed_df.drop(columns=["signature", "orderHash", "data", "makerAllowance", "isMakerContract"])
     fixed_df['fixed_remaining_maker_amount'] = (fixed_df['remainingMakerAmount']).apply(lambda x: float(x)) * (1 / math.pow(10, decimal_of_said_tokenIN))
     fixed_df['fixed_remaining_maker_amount'] = pd.to_numeric(fixed_df['fixed_remaining_maker_amount'])
     fixed_df['fixed_remaining_maker_amount2'] = 1 / fixed_df['fixed_remaining_maker_amount']     
