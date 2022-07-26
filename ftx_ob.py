@@ -31,8 +31,8 @@ from datetime import datetime, timedelta
 import math
 st.set_page_config(layout="wide")
 exchange = ccxt.ftx({
-    'apiKey': '',
-    'secret': '',
+    'apiKey': '6lPPRFX1r4x_6ENY6GnhgYr3AdPv34x8Bc-MRH_V',
+    'secret': 'OnQqs_nox4NS2OYm5z8ulXJ9rMkbOo5_nNwGe53V',
 })
 # if 'test' in exchange.urls:
 #     exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
@@ -57,9 +57,13 @@ placeholder15 = st.empty()
 # st.write(orders_hist)
 
 
-orders_to_place_a_side = 5
-stink_save_bid_drawdown = 0.95
-stink_save_ask_drawup = 1.05
+orders_to_place_a_side_bid = st.number_input('Orders to place bid',0,10, value= 4)
+orders_to_place_a_side_ask = st.number_input('Orders to place ask',0,10,value= 4)
+
+stink_save_bid_drawdown = st.number_input('Bid drawdown',0.5,1.0,value= 0.8)
+stink_save_ask_drawup = st.number_input('Ask drawup',1.0,2.0,value= 1.2)
+# perp = st.checkbox('Perp', value= False)
+#  1.05
 
 
 
@@ -75,11 +79,11 @@ b = "fat d8ta"
 dict_dumps = {
   "op": "subscribe",
   "channel": "orderbook",
-  "market": "SPY/USD"
+  "market": "BTC-PERP"
 }
-
-name = st.text_input("market name", "BTC/USD")
-dict_dumps["market"] = name
+# market_name = st.text_input('Market name', value='BTC-PERP')
+# name = st.text_input("market name", "BTC/USD")
+# dict_dumps["market"] = market_name
 
 placeholder1 = st.empty()
 
@@ -95,7 +99,8 @@ async def consumer() -> None:
             global a
             global b
             global name
-            global orders_to_place_a_side
+            global orders_to_place_a_side_bid
+            global orders_to_place_a_side_ask
             global stink_save_bid_drawdown
             global stink_save_ask_drawup
 
@@ -219,14 +224,14 @@ async def consumer() -> None:
                     bids['accumulated_price']  = (bids['price_bid']) * bids['size_bid']
                     bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
                     bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']                
-                    # for i in range(1, 2):
-                    #     cols = st.columns(2)
-                    #     cols[0].subheader("bids")
+                    for i in range(1, 2):
+                        cols = st.columns(2)
+                        cols[0].subheader("bids")
 
-                    #     cols[0].write(bids)
-                    #     cols[1].subheader("asks")
+                        cols[0].write(bids)
+                        cols[1].subheader("asks")
 
-                    #     cols[1].write(asks)
+                        cols[1].write(asks)
                     # st.write(asks,bids, use_container_width=True)
                     # st.write(asks_update,bids_update, use_container_width=True)
                     
@@ -239,11 +244,14 @@ async def consumer() -> None:
 
                     # st.write(load_makets_for_data)
 
+                    # if perp:
+                    #     symbol = name + ":USD"
+                    # else :
+                    #     symbol = name
 
-                    symbol = name
-
-
+                    symbol = "BTC/USD:USD"
                     precision_load = pd.DataFrame(exchange.load_markets())
+                    # st.write(precision_load.astype(str))
                     precision = (precision_load[symbol]['precision'])
                     # st.write(precision)
                     precision_amount = precision['amount']
@@ -272,7 +280,8 @@ async def consumer() -> None:
                             else:
                                 orders_hist = orders_hist[orders_hist.status != 'canceled']
                                 orders_hist = orders_hist[orders_hist.status != 'closed']
-                                if len(orders_hist) > orders_to_place_a_side * 3:
+                                # st.write(orders_hist)
+                                if len(orders_hist) > ((orders_to_place_a_side_bid + orders_to_place_a_side_ask)/2) * 3:
                                     cancelAllOrders = exchange.cancelAllOrders()
                                 # st.write(cancelAllOrders)
                                 # for index, row in id.iterrows():
@@ -301,9 +310,9 @@ async def consumer() -> None:
                         # with placeholder3:
                         #     st.write(np.random.randint(5))
                         for col_name, data in bid_new.iterrows():
-                            while i < orders_to_place_a_side:
+                            while i < orders_to_place_a_side_bid:
 
-                                mm_bid_price = (data['mm_bid_price']) - (precision_price * np.random.randint(3) *i)
+                                mm_bid_price = (data['mm_bid_price']) - (precision_price)
                                 mm_bid_size = (data['mm_bid_size']) 
                                 order_init_bid = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
                                 order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
@@ -364,9 +373,9 @@ async def consumer() -> None:
 
 
                         for col_name, data in ask_new.iterrows():
-                            while ii < orders_to_place_a_side:
+                            while ii < orders_to_place_a_side_ask:
 
-                                mm_ask_price = (data['mm_ask_price']) + (precision_price * np.random.randint(3)*ii)
+                                mm_ask_price = (data['mm_ask_price']) + (precision_price)
                                 mm_ask_size = (data['mm_ask_size']) 
                                 order_init_ask = exchange.createLimitSellOrder(symbol=symbol,price=mm_ask_price,amount=mm_ask_size)
                                 order_df_ask = order_df_ask.append(order_init_ask, ignore_index=True)
