@@ -166,7 +166,7 @@ while i < i_max:
         address_of_said_tokenIN, address_of_said_tokenOUT, DecimalFix1
     )
     url_swapToken_p3 = url_swapToken_p1 + url_swapToken_p2
-    # st.write(url_swapToken_p3)
+    st.write(url_swapToken_p3)
     token_return = requests.get(url_swapToken_p3)
     token_return = json.loads(token_return.text)
     amount_toToken = int(token_return["toTokenAmount"])
