@@ -71,13 +71,14 @@ async def get_event():
             # addy1 = lord_jesus["topics"][1][2:]
             # addy2 = lord_jesus["topics"][2][2:]
             number = decode_single('(uint256,uint256,uint256,uint256)',bytearray.fromhex(number))
+            st.write(list(number))
+
             now = datetime.now()
             # 'sold_id', 'tokens_sold','tokens_bought','bought_id','timestamp']
             d = {'sold_id': number[0], 'tokens_sold': number[1], 'bought_id':number[2], 'tokens_bought': number[3], 'timestamp': now}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
-            df['cumsum'] = df['value'].cumsum()
-            st.write(list(number))
+            # df['cumsum'] = df['value'].cumsum()
             with placeholder2:
                 st.write(df)
             # addy1 = decode_single('(address)',bytearray.fromhex(addy1))
