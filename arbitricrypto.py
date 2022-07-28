@@ -23,12 +23,21 @@ df = pd.DataFrame(columns=['sold_id', 'tokens_sold','tokens_bought','bought_id',
 tokens_list = {'USDT':0, 'WBTC':1, "WETH":2 }
 decimal_list = {'USDT':6, 'WBTC':8, "WETH":18 }
 false = False
+
+placeholder1 = st.empty()
+placeholder2 = st.empty()
+placeholder3 = st.empty()
+placeholder4 = st.empty()
+placeholder5 = st.empty()
+placeholder6 = st.empty()
 async def get_event():
+    global df
+
     # global df
 # ?    global df
 #    ?? global fixed_df
     async with connect("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6") as ws:
-        # global df
+        global df
         # global fixed_df
         await ws.send(json.dumps(
         {"id": 1, "method": "eth_subscribe", "params": 
@@ -46,8 +55,8 @@ async def get_event():
         )
         )
         subscription_response = await ws.recv()
-        # with placeholder1:
-        st.write(subscription_response)
+        with placeholder1:
+            st.write(subscription_response)
         while True:
             # global df
             # global fixed_df
@@ -62,8 +71,15 @@ async def get_event():
             # addy1 = lord_jesus["topics"][1][2:]
             # addy2 = lord_jesus["topics"][2][2:]
             number = decode_single('(uint256,uint256,uint256,uint256)',bytearray.fromhex(number))
-            
+            now = datetime.now()
+            # 'sold_id', 'tokens_sold','tokens_bought','bought_id','timestamp']
+            d = {'sold_id': number[0], 'tokens_sold': number[1], 'bought_id':number[2], 'tokens_bought': number[3], 'timestamp': now}
+            fixed_df = pd.DataFrame(d, index=[0])
+            df = df.append(fixed_df, ignore_index=True)
+            df['cumsum'] = df['value'].cumsum()
             st.write(list(number))
+            with placeholder2:
+                st.write(df)
             # addy1 = decode_single('(address)',bytearray.fromhex(addy1))
             # addy2 = decode_single('(address)',bytearray.fromhex(addy2))
             # number = number[0]
