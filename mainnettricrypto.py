@@ -1,5 +1,5 @@
-import asyncio
 import json
+import asyncio
 from unicodedata import decimal
 from numpy import place
 import streamlit as st
@@ -13,7 +13,7 @@ from datetime import datetime
 import pandas as pd
 st.set_page_config(page_title="Arbitricrypto", page_icon="🔐", layout="wide")   
 session = requests.Session()
-w3 = Web3(Web3.WebsocketProvider("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6"))
+w3 = Web3(Web3.WebsocketProvider("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242"))
 df = pd.DataFrame(columns=['sold_id', 'tokens_sold','sold_name','sold_decimal','tokens_bought','bought_name','bought_decimal','bought_id','timestamp'])
 false = False
 placeholder1 = st.empty()
@@ -24,14 +24,14 @@ placeholder5 = st.empty()
 placeholder6 = st.empty()
 async def get_event():
     global df
-    async with connect("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6") as ws:
+    async with connect("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242") as ws:
         global df
         await ws.send(json.dumps(
         {"id": 1, "method": "eth_subscribe", "params": 
         ["logs", 
        
   {
-    "address": "0x960ea3e3C7FB317332d990873d354E18d7645590",
+    "address": "0xD51a44d3FaE010294C616388b506AcdA1bfAAE46",
     "topics": [
       "0xb2e76ae99761dc136e598d4a629bb347eccb9532a5f8bbd72e18467c3c34cc98"
     ]
