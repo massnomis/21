@@ -1,6 +1,7 @@
 # wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6
 import asyncio
 import json
+from unicodedata import decimal
 from numpy import place
 import streamlit as st
 from web3 import Web3
@@ -18,7 +19,9 @@ import pandas as pd
 session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6"))
 # w3.middleware_onion.inject(geth_poa_middleware, layer=0) # only needed for PoA networks like BSC
-# df = pd.DataFrame(columns=['from', 'to', 'value'])
+df = pd.DataFrame(columns=['sold_id', 'tokens_sold','tokens_bought','bought_id','timestamp'])
+tokens_list = {'USDT':0, 'WBTC':1, "WETH":2 }
+decimal_list = {'USDT':6, 'WBTC':8, "WETH":18 }
 false = False
 async def get_event():
     # global df
@@ -30,14 +33,14 @@ async def get_event():
         await ws.send(json.dumps(
         {"id": 1, "method": "eth_subscribe", "params": 
         ["logs", 
-       [
+       
   {
     "address": "0x960ea3e3C7FB317332d990873d354E18d7645590",
     "topics": [
       "0xb2e76ae99761dc136e598d4a629bb347eccb9532a5f8bbd72e18467c3c34cc98"
     ]
   }
-]
+
         ]
         }
         )
@@ -53,11 +56,14 @@ async def get_event():
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
             st.write(lord_jesus)
-            # lord_jesus = lord_jesus["params"]["result"]
-            # number = lord_jesus["data"][2:]
+            lord_jesus = lord_jesus["params"]["result"]
+            number = lord_jesus["data"][2:]
+            st.write(number)
             # addy1 = lord_jesus["topics"][1][2:]
             # addy2 = lord_jesus["topics"][2][2:]
-            # number = decode_single('(uint256)',bytearray.fromhex(number))
+            number = decode_single('(uint256,uint256,uint256,uint256)',bytearray.fromhex(number))
+            
+            st.write(list(number))
             # addy1 = decode_single('(address)',bytearray.fromhex(addy1))
             # addy2 = decode_single('(address)',bytearray.fromhex(addy2))
             # number = number[0]
