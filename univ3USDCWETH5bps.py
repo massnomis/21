@@ -11,10 +11,26 @@ from eth_abi import decode_single, decode_abi
 import math
 from datetime import datetime
 import pandas as pd
-# st.set_page_config(page_title="Arbitricrypto", page_icon="🔐", layout="wide")   
+st.set_page_config(page_title="usdcweth", page_icon="🔐", layout="wide")   
+def bollinger_strat(df, window, no_of_std):
+    rolling_mean = df['USDC'].rolling(window).mean()
+    rolling_std = df['USDC'].rolling(window).std()
+    df['rolling_mean_value'] = rolling_mean
+
+    df['Bollinger High'] = rolling_mean + (rolling_std * no_of_std)
+    df['Bollinger Low'] = rolling_mean - (rolling_std * no_of_std)     
+    return df['Bollinger High'] , df['Bollinger Low'], df['rolling_mean_value'] 
+def bollinger_strat2(df, window, no_of_std):
+    rolling_mean = df['cumsum'].rolling(window).mean()
+    rolling_std = df['cumsum'].rolling(window).std()
+    df['rolling_mean_cumsum'] = rolling_mean
+
+    df['Bollinger High_cumsum'] = rolling_mean + (rolling_std * no_of_std)
+    df['Bollinger Low_cumsum'] = rolling_mean - (rolling_std * no_of_std)     
+    return df['Bollinger High_cumsum'] , df['Bollinger Low_cumsum'], df['rolling_mean_cumsum'] 
 session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242"))
-df = pd.DataFrame(columns=['price', 'timestamp','WETH','USDC'])
+df = pd.DataFrame(columns=['price', 'timestamp','WETH','USDC', 'side'])
 false = False
 placeholder1 = st.empty()
 placeholder2 = st.empty()
@@ -22,6 +38,12 @@ placeholder3 = st.empty()
 placeholder4 = st.empty()
 placeholder5 = st.empty()
 placeholder6 = st.empty()
+placeholder7 = st.empty()
+placeholder8 = st.empty()
+placeholder9 = st.empty()
+placeholder10 = st.empty()
+placeholder11 = st.empty()
+placeholder12 = st.empty()
 async def get_event():
     global df
     async with connect("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242") as ws:
@@ -42,12 +64,12 @@ async def get_event():
         )
         subscription_response = await ws.recv()
         with placeholder1:
-            st.write(subscription_response)
+            st.write(subscription_response, use_container_width=True)
         while True:
             # global df
             # global tokens_list
             # global decimal_list
-            message = await asyncio.wait_for(ws.recv(), timeout=600)
+            message = await asyncio.wait_for(ws.recv(), timeout=60000)
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
@@ -58,19 +80,40 @@ async def get_event():
             # data = '00000000000000000000000000000000000000000000000000000012c7db4048fffffffffffffffffffffffffffffffffffffffffffffffd76fd5f054400e7a40000000000000000000000000000000000005e12c25ea154ac1ed76c593ce26e000000000000000000000000000000000000000000000000b5050eb63d7592380000000000000000000000000000000000000000000000000000000000031443'
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
             print = number[0]/number[1]*math.pow(10,12)*-1
-            usdc = number[0]/math.pow(10,6)
-            weth = number[1]/math.pow(10,18)
-            d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc}
+
+            if number[0] > 0:
+                side = "BUY"
+            else:
+                side = "SELL"
+
+
+
+            usdc = abs(number[0]/math.pow(10,6))
+            weth = abs(number[1]/math.pow(10,18))
+            d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
+            df['cumsum'] = df['USDC'].cumsum()
+            bollinger_strat(df=df,window=10,no_of_std=2)
+            bollinger_strat2(df=df,window=10,no_of_std=2)
             with placeholder2:
-                st.write(df)
+                st.write(df, use_container_width=True)
             with placeholder3:
-                st.plotly_chart(px.line(df, x="timestamp", y="price", title="Price"))
+                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC"), use_container_width=True)
             with placeholder4:
-                st.plotly_chart(px.line(df, x="timestamp", y="WETH", title="WETH"))
+                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
             with placeholder5:
-                st.plotly_chart(px.line(df, x="timestamp", y="USDC", title="USDC"))
+                st.plotly_chart(px.bar(df, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
+            with placeholder6:
+                st.plotly_chart(px.scatter(df, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
+            with placeholder7:
+                st.plotly_chart(px.scatter(df, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+            with placeholder8:
+                st.plotly_chart(px.scatter(df, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'value',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+# if _name_ == "_main_":
+            # wi
+            # st.write(df)
+
             # with placeholder6:
 
             # st.write(df)
