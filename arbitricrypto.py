@@ -88,11 +88,13 @@ async def get_event():
             with placeholder2:
                 st.write(df,use_container_width=True)
             with placeholder3:
-                st.plotly_chart(px.line(df, x='timestamp', y='rate_1_fixed', color='path'))
+                st.plotly_chart(px.line(df, x='timestamp', y='rate_1_fixed', color='path'), use_container_width=True)
             with placeholder4:
-                st.plotly_chart(px.line(df, x='timestamp', y='rate_2_fixed', color='path'))
+                st.plotly_chart(px.line(df, x='timestamp', y='rate_2_fixed', color='path'), use_container_width=True)
             with placeholder5:
-                st.plotly_chart(px.bar(df, x='timestamp', y=['tokens_sold_fixed','tokens_bought_fixed'], color='path'))
+                st.plotly_chart(px.scatter(df, x='timestamp', y='tokens_bought_fixed', color='bought_name', marginal_y = 'violin'), use_container_width=True)
+            with placeholder6:
+                st.plotly_chart(px.scatter(df, x='timestamp', y='tokens_sold_fixed', color='sold_name', marginal_y = 'violin'), use_container_width=True)
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 while True:
