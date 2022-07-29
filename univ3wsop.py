@@ -75,15 +75,15 @@ async def get_event():
             number = lord_jesus["data"][2:]
 
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
-            print = number[0]/number[1]*math.pow(10,12)*-1
+            print = (number[1]*math.pow(10,8)* -1)/number[0]
 
             if number[0] > 0:
                 side = "BUY"
             else:
                 side = "SELL"
-            usdc = abs(number[0]/math.pow(10,6))
-            usdc_net = (number[0]/math.pow(10,6))
-            weth = abs(number[1]/math.pow(10,18))
+            usdc = abs(number[0]/math.pow(10,18))
+            usdc_net = (number[0]/math.pow(10,18))
+            weth = abs(number[1]/math.pow(10,12))
             d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
