@@ -101,7 +101,7 @@ async def get_event():
             with placeholder2:
                 st.write(df, use_container_width=True)
             with placeholder3:
-                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC"), use_container_width=True)
+                st.plotly_chart(px.line(df, x="timestamp", y="price"), use_container_width=True)
             with placeholder4:
                 st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
             with placeholder5:
