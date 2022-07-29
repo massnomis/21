@@ -82,20 +82,22 @@ async def get_event():
             print = number[0]/number[1]*math.pow(10,12)*-1
 
             if number[0] > 0:
-                side = "BUY"
-            else:
                 side = "SELL"
+            else:
+                side = "BUY"
 
 
 
             usdc = abs(number[0]/math.pow(10,6))
+            usdc_net = (number[0]/math.pow(10,6))
             weth = abs(number[1]/math.pow(10,18))
-            d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side}
+            d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
-            df['cumsum'] = df['USDC'].cumsum()
-            bollinger_strat(df=df,window=10,no_of_std=2)
-            bollinger_strat2(df=df,window=10,no_of_std=2)
+            df['cumsum'] = df['USDC_net'].cumsum()
+
+            bollinger_strat(df=df,window=5,no_of_std=1)
+            bollinger_strat2(df=df,window=5,no_of_std=1)
             with placeholder2:
                 st.write(df, use_container_width=True)
             with placeholder3:
@@ -109,7 +111,7 @@ async def get_event():
             with placeholder7:
                 st.plotly_chart(px.scatter(df, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
             with placeholder8:
-                st.plotly_chart(px.scatter(df, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'value',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+                st.plotly_chart(px.scatter(df, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
 # if _name_ == "_main_":
             # wi
             # st.write(df)
