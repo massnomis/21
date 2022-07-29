@@ -81,9 +81,9 @@ async def get_event():
                 side = "BUY"
             else:
                 side = "SELL"
-            usdc = abs(number[0]/math.pow(10,12))
-            usdc_net = (number[0]/math.pow(10,12))
-            weth = abs(number[1]/math.pow(10,8))
+            usdc = abs(number[1]/math.pow(10,6))
+            usdc_net = (number[1]/math.pow(10,6))
+            weth = abs(number[0]/math.pow(10,18))
             d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
