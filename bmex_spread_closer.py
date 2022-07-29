@@ -66,7 +66,7 @@ while True:
     # st.write(load_makets_for_data)
 
 
-    symbol = "LINK_USDT"
+    symbol = "BTC/USDT:USDT"
     # st.write(load_makets_for_data.columns)
 
     # pct_expiry_dated = 0.25
