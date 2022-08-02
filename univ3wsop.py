@@ -92,19 +92,19 @@ async def get_event():
             bollinger_strat2(df=df,window=5,no_of_std=1)
             with placeholder2:
                 st.write(df, use_container_width=True)
-            with placeholder3:
-                st.plotly_chart(px.line(df, x="timestamp", y="price", color="side"), use_container_width=True)
+            # with placeholder3:
+            #     st.plotly_chart(px.line(df, x="timestamp", y="price", color="side"), use_container_width=True)
 
             with placeholder4:
                 st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
             with placeholder5:
                 st.plotly_chart(px.bar(df, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
-            with placeholder6:
-                st.plotly_chart(px.scatter(df, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
-            with placeholder7:
-                st.plotly_chart(px.scatter(df, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder8:
-                st.plotly_chart(px.scatter(df, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+            # with placeholder6:
+            #     st.plotly_chart(px.scatter(df, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
+            # with placeholder7:
+            #     st.plotly_chart(px.scatter(df, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+            # with placeholder8:
+            #     st.plotly_chart(px.scatter(df, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
             with placeholder9:
                 st.plotly_chart(px.bar(df, x="timestamp", y="price"), use_container_width=True)
 loop = asyncio.new_event_loop()
