@@ -418,7 +418,7 @@ st.write(gas_cost_usd,gas_cost_usd2)
 # og input, last leg output, gas, gas
 # print(gas_cost_native)
 st.write('buy')
-st.write(tokenIN + tokenOUT)
+st.write("from", tokenIN + "to", tokenOUT)
 st.write("from",swap_tofromTokenAmount_decimal_adjusted)
 st.write("to",swap_toTokenAmount_decimal_adjusted)
 
@@ -426,7 +426,8 @@ st.write("inv_rate",inv_rate)
 st.write("rate",rate)
 # st.write(bepositive_to_swap)
 st.write("sell")
-st.write(tokenOUT + tokenIN)
+st.write("from",tokenOUT, "to",
+ tokenIN)
 st.write("from",swap_tofromTokenAmount_decimal_adjusted2)
 st.write("to",swap_toTokenAmount_decimal_adjusted2)
 st.write("inv_rate2",inv_rate2)
@@ -534,7 +535,7 @@ class Web3Extension:
         except TransactionNotFound:
             return {"transactionHash": HexBytes(tx_hash), "blockNumber": -1, 'status': -1}
 
-bepositive_to_swap11 = st.button("swap")
+bepositive_to_swap11 = st.button("swap1")
 if bepositive_to_swap11:
     W3 = Web3Extension(config)
     tx = W3.build_transaction(to=tx_data_to, value=tx_data_value, gas=tx_data_gas, gas_price=tx_data_gasPrice, data=tx_data_data)
@@ -543,7 +544,7 @@ if bepositive_to_swap11:
     st.write('https://optimistic.etherscan.io/tx/'+ resp1)
 
 
-bepositive_to_swap22 = st.button("swap")
+bepositive_to_swap22 = st.button("swap2")
 if bepositive_to_swap22:
 
     W32 = Web3Extension(config = config2)
