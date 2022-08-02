@@ -11,7 +11,7 @@ from eth_abi import decode_single, decode_abi
 import math
 from datetime import datetime
 import pandas as pd
-st.set_page_config(page_title="Arbitricrypto", page_icon="🔐", layout="wide")   
+st.set_page_config(page_title="maintricrypto", page_icon="🔐", layout="wide")   
 session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242"))
 df = pd.DataFrame(columns=['sold_id', 'tokens_sold','sold_name','sold_decimal','tokens_bought','bought_name','bought_decimal','bought_id','timestamp'])
