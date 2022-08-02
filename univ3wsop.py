@@ -88,6 +88,8 @@ async def get_event():
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
             df['cumsum'] = df['USDC_net'].cumsum()
+            df['price_impact'] = df['price'].diff(periods=1)
+            df['price_impact_w_size'] = df['price_impact']/df['USDC_net']
             bollinger_strat(df=df,window=5,no_of_std=1)
             bollinger_strat2(df=df,window=5,no_of_std=1)
             with placeholder2:
@@ -105,8 +107,8 @@ async def get_event():
             #     st.plotly_chart(px.scatter(df, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
             # with placeholder8:
             #     st.plotly_chart(px.scatter(df, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder9:
-                st.plotly_chart(px.bar(df, x="timestamp", y="price"), use_container_width=True)
+            # with placeholder9:
+            #     st.plotly_chart(px.bar(df, x="timestamp", y="price"), use_container_width=True)
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 while True:
