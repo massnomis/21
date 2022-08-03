@@ -100,39 +100,42 @@ async def get_event_mainnet_tricrpto():
             if d['sold_id'] == 0:
                 fixed_df['sold_name'] = 'USDT'
                 fixed_df['sold_decimal'] = 6
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**6
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**6
             elif d['sold_id'] == 1:
                 fixed_df['sold_name'] = 'WBTC'
                 fixed_df['sold_decimal'] = 8
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**8
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**8
             elif d['sold_id'] == 2:
                 fixed_df['sold_name'] = 'WETH'
                 fixed_df['sold_decimal'] = 18
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**18
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**18
             if d['bought_id'] == 0:
                 fixed_df['bought_name'] = 'USDT'
                 fixed_df['bought_decimal'] = 6
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**6
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**6
             elif d['bought_id'] == 1:
                 fixed_df['bought_name'] = 'WBTC'
                 fixed_df['bought_decimal'] = 8
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**8
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**8
             elif d['bought_id'] == 2:
                 fixed_df['bought_name'] = 'WETH'
                 fixed_df['bought_decimal'] = 18
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**18
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**18
             df_main_tri = df_main_tri.append(fixed_df, ignore_index=True)
-            df_main_tri['rate_1_fixed'] = df_main_tri['tokens_bought_fixed'] / df_main_tri['tokens_sold_fixed']
-            df_main_tri['rate_2_fixed'] = df_main_tri['tokens_sold_fixed'] / df_main_tri['tokens_bought_fixed']
+            df_main_tri['rate_1_fixed'] = df_main_tri['tokens_bought'] / df_main_tri['tokens_sold']
+            df_main_tri['rate_2_fixed'] = df_main_tri['tokens_sold'] / df_main_tri['tokens_bought']
             df_main_tri['path'] = df_main_tri['sold_name'] + ' to ' + df_main_tri['bought_name']
+            # df_main_tri = json.loads(df_main_tri)
+            # df_main_tri = json.dumps(df_main_tri)
+            # df_main_tri = pd.DataFrame(df_main_tri)
             with placeholder2:
-                st.write(df_main_tri,use_container_width=True)
+                st.write(df_main_tri)
             with placeholder3:
                 st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_1_fixed', color='path'))
             with placeholder4:
                 st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_2_fixed', color='path'))
-            with placeholder5:
-                st.plotly_chart(px.bar(df_main_tri, x='timestamp', y=['tokens_sold_fixed','tokens_bought_fixed'], color='path'))
+            # with placeholder5:
+            #     st.plotly_chart(px.bar(df_main_tri, x='timestamp', y=['tokens_sold','tokens_bought'], color='path'))
 
 
 
@@ -229,10 +232,10 @@ async def get_event_mainnet_uni():
                 st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
             # with placeholder06:
             #     st.plotly_chart(px.scatter(df_main_uni, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
-            with placeholder07:
-                st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder08:
-                st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+            # with placeholder07:
+                # st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+            # with placeholder08:
+            #     st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
             with placeholder09:
                 st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="price"), use_container_width=True)
 
@@ -387,30 +390,30 @@ async def get_event_arbi_tricryp():
             if d['sold_id'] == 0:
                 fixed_df['sold_name'] = 'USDT'
                 fixed_df['sold_decimal'] = 6
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**6
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**6
             elif d['sold_id'] == 1:
                 fixed_df['sold_name'] = 'WBTC'
                 fixed_df['sold_decimal'] = 8
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**8
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**8
             elif d['sold_id'] == 2:
                 fixed_df['sold_name'] = 'WETH'
                 fixed_df['sold_decimal'] = 18
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**18
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**18
             if d['bought_id'] == 0:
                 fixed_df['bought_name'] = 'USDT'
                 fixed_df['bought_decimal'] = 6
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**6
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**6
             elif d['bought_id'] == 1:
                 fixed_df['bought_name'] = 'WBTC'
                 fixed_df['bought_decimal'] = 8
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**8
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**8
             elif d['bought_id'] == 2:
                 fixed_df['bought_name'] = 'WETH'
                 fixed_df['bought_decimal'] = 18
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**18
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**18
             df_arbi = df_arbi.append(fixed_df, ignore_index=True)
-            df_arbi['rate_1_fixed'] = df_arbi['tokens_bought_fixed'] / df_arbi['tokens_sold_fixed']
-            df_arbi['rate_2_fixed'] = df_arbi['tokens_sold_fixed'] / df_arbi['tokens_bought_fixed']
+            df_arbi['rate_1_fixed'] = df_arbi['tokens_bought'] / df_arbi['tokens_sold']
+            df_arbi['rate_2_fixed'] = df_arbi['tokens_sold'] / df_arbi['tokens_bought']
             df_arbi['path'] = df_arbi['sold_name'] + ' to ' + df_arbi['bought_name']
             with laceholder2:
                 st.write(df_arbi,use_container_width=True)
@@ -418,10 +421,10 @@ async def get_event_arbi_tricryp():
                 st.plotly_chart(px.line(df_arbi, x='timestamp', y='rate_1_fixed', color='path'), use_container_width=True)
             with laceholder4:
                 st.plotly_chart(px.line(df_arbi, x='timestamp', y='rate_2_fixed', color='path'), use_container_width=True)
-            with laceholder5:
-                st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_bought_fixed', color='bought_name', marginal_y = 'violin'), use_container_width=True)
-            with laceholder6:
-                st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_sold_fixed', color='sold_name', marginal_y = 'violin'), use_container_width=True)
+            # with laceholder5:
+            #     st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_bought', color='bought_name', marginal_y = 'violin'), use_container_width=True)
+            # with laceholder6:
+            #     st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_sold', color='sold_name', marginal_y = 'violin'), use_container_width=True)
 
 async def main():
     # Schedule three calls *concurrently*:
