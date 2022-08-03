@@ -191,8 +191,8 @@ async def get_event_mainnet_uni():
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
-            with placeholder01:
-                st.write(lord_jesus, use_container_width=True)
+            # with placeholder01:
+            #     st.write(lord_jesus, use_container_width=True)
             # st.write(lord_jesus)
             now = datetime.now()
             lord_jesus = lord_jesus["params"]["result"]
@@ -224,7 +224,7 @@ async def get_event_mainnet_uni():
                 st.plotly_chart(px.line(df_main_uni, x="timestamp", y="price", color="side"), use_container_width=True)
 
             with placeholder04:
-                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
+                st.plotly_chart(px.scatter(df_main_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
             with placeholder05:
                 st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
             with placeholder06:
@@ -423,19 +423,29 @@ async def get_event_arbi_tricryp():
             with laceholder6:
                 st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_sold_fixed', color='sold_name', marginal_y = 'violin'), use_container_width=True)
 
-          
+async def main():
+    # Schedule three calls *concurrently*:
+        await asyncio.gather(
+        get_event_mainnet_tricrpto(),
+        get_event_op_uni(),
+        get_event_arbi_tricryp(),
+        get_event_mainnet_uni(),
+
+    )
+
+asyncio.run(main())          
 
 # asyncio.set_event_loop(loop)
 
-# if __name__ == "__main__":
-executor = ProcessPoolExecutor(4)
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
-# while True:    
-if __name__ == '__main__':
+# # if __name__ == "__main__":
+# executor = ProcessPoolExecutor(4)
+# loop = asyncio.new_event_loop()
+# asyncio.set_event_loop(loop)
+# # while True:    
+# if __name__ == '__main__':
     
-    op_uni = loop.run_in_executor(executor, get_event_op_uni)
-    main_tri = loop.run_in_executor(executor, get_event_mainnet_tricrpto)
-    main_uni = loop.run_in_executor(executor, get_event_mainnet_uni)
-    arbi_tri = loop.run_in_executor(executor, get_event_arbi_tricryp)
-    loop.run_until_complete(future=asyncio.gather(op_uni, main_tri, main_uni, arbi_tri))
+#     op_uni = loop.run_in_executor(executor, get_event_op_uni)
+#     main_tri = loop.run_in_executor(executor, get_event_mainnet_tricrpto)
+#     main_uni = loop.run_in_executor(executor, get_event_mainnet_uni)
+#     arbi_tri = loop.run_in_executor(executor, get_event_arbi_tricryp)
+#     loop.run_until_complete(asyncio.gather(op_uni, main_tri, main_uni, arbi_tri))
