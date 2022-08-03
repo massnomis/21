@@ -60,7 +60,19 @@ laceholder3 = st.empty()
 laceholder4 = st.empty()
 laceholder5 = st.empty()
 laceholder6 = st.empty()
-
+laceholder7 = st.empty()
+laceholder8 = st.empty()
+laceholder9 = st.empty()
+laceholder10 = st.empty()
+laceholder11 = st.empty()
+laceholder12 = st.empty()
+laceholder13 = st.empty()
+laceholder14 = st.empty()
+laceholder15 = st.empty()
+laceholder16 = st.empty()
+laceholder17 = st.empty()
+laceholder18 = st.empty()
+laceholder19 = st.empty()
 
 
 async def get_event_mainnet_tricrpto():
@@ -415,12 +427,47 @@ async def get_event_arbi_tricryp():
             df_arbi['rate_1_fixed'] = df_arbi['tokens_bought'] / df_arbi['tokens_sold']
             df_arbi['rate_2_fixed'] = df_arbi['tokens_sold'] / df_arbi['tokens_bought']
             df_arbi['path'] = df_arbi['sold_name'] + ' to ' + df_arbi['bought_name']
+            df_usdt_weth = df_arbi[(df_arbi['sold_name'] == 'USDT') & (df_arbi['bought_name'] == 'WETH')]
+            df_weth_wbtc = df_arbi[(df_arbi['sold_name'] == 'WETH') & (df_arbi['bought_name'] == 'WBTC')]
+            df_weth_usdt = df_arbi[(df_arbi['sold_name'] == 'WETH') & (df_arbi['bought_name'] == 'USDT')]
+            df_wbtc_usdt = df_arbi[(df_arbi['sold_name'] == 'WBTC') & (df_arbi['bought_name'] == 'USDT')]
+            df_usdt_wbtc = df_arbi[(df_arbi['sold_name'] == 'USDT') & (df_arbi['bought_name'] == 'WBTC')]
+            df_wbtc_weth = df_arbi[(df_arbi['sold_name'] == 'WBTC') & (df_arbi['bought_name'] == 'WETH')]
+
             with laceholder2:
                 st.write(df_arbi,use_container_width=True)
             with laceholder3:
                 st.plotly_chart(px.line(df_arbi, x='timestamp', y='rate_1_fixed', color='path'), use_container_width=True)
             with laceholder4:
                 st.plotly_chart(px.line(df_arbi, x='timestamp', y='rate_2_fixed', color='path'), use_container_width=True)
+            # with laceholder5:
+            #     st.plotly_chart(px.scatter(df_usdt_weth, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold' ), use_container_width=True)
+            with laceholder6:
+                st.plotly_chart(px.scatter(df_weth_wbtc, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder7:
+                st.plotly_chart(px.scatter(df_weth_usdt, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder8:
+                st.plotly_chart(px.scatter(df_wbtc_usdt, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder9:
+            #     st.plotly_chart(px.scatter(df_usdt_wbtc, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder10:
+                st.plotly_chart(px.scatter(df_wbtc_weth, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder11:
+                st.plotly_chart(px.scatter(df_weth_wbtc, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder12:
+                st.plotly_chart(px.scatter(df_usdt_weth, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder13:
+            #     st.plotly_chart(px.scatter(df_wbtc_usdt, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder14:
+            #     st.plotly_chart(px.scatter(df_weth_usdt, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder15:
+                st.plotly_chart(px.scatter(df_weth_wbtc, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder16:
+                st.plotly_chart(px.scatter(df_usdt_wbtc, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder17:
+            #     st.plotly_chart(px.scatter(df_wbtc_weth, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder18:
+
             # with laceholder5:
             #     st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_bought', color='bought_name', marginal_y = 'violin'), use_container_width=True)
             # with laceholder6:
