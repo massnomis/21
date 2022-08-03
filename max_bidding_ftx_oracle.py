@@ -75,10 +75,10 @@ def ordering_bids(bids, symbol, orders_to_place_a_side_bid, stink_save_bid_drawd
         # i = i + 1
     # st.write(i)
 
-    # yes = requests.get("https://api.1inch.io/v4.0/1/quote?fromTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&toTokenAddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&amount=10000000000000000").json()    
-    # a = int(yes['toTokenAmount'])/int(yes['fromTokenAmount']) * 1000000000000
-    # # st.write(a)
-    # bid_new = bid_new[bid_new.mm_bid_price < a]
+    yes = requests.get("https://api.1inch.io/v4.0/1/quote?fromTokenAddress=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&toTokenAddress=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48&amount=10000000000000000").json()    
+    a = int(yes['toTokenAmount'])/int(yes['fromTokenAmount']) * 1000000000000
+    st.write(a)
+    bid_new = bid_new[bid_new.mm_bid_price < a]
     bid_new = bid_new.reset_index(drop=True)
     bid_new = bid_new.sort_values(by=['mm_bid_price'], inplace=False)
     bid_new = bid_new.reset_index(drop=True)

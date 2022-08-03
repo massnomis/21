@@ -75,21 +75,28 @@ async def get_event():
             number = lord_jesus["data"][2:]
 
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
-            print = (number[1]*math.pow(10,12)* -1)/number[0]
+            prinnt = (number[1]*math.pow(10,12)* -1)/number[0]
 
             if number[0] > 0:
-                side = "BUY"
+                side = "Sell"
             else:
-                side = "SELL"
+                side = "Buy"
             usdc = abs(number[1]/math.pow(10,6))
             usdc_net = (number[1]/math.pow(10,6))
             weth = abs(number[0]/math.pow(10,18))
-            d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
+            liq = number[3]
+            tick = number[4]
+            d = {'price': prinnt, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'tick': tick, 'liq': liq}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
             df['cumsum'] = df['USDC_net'].cumsum()
             df['price_impact'] = df['price'].diff(periods=1)
-            df['price_impact_w_size'] = df['price_impact']/df['USDC_net']
+            df['price_impact_w_size'] = df['price_impact']/df['USDC']
+            df['taken_liquidity'] = df['liq'].diff(periods=1)
+            df['current_price'] = 1/(1/(((1.0001) ** (df['tick'])))/math.pow(10,12))
+            df['price_deviation'] = abs(df['current_price'] - df['price'])
+            df['price_deviation_w_size'] = df['price_deviation']/df['USDC']
+            df['tick_change'] = df['tick'].diff(periods=1)
             bollinger_strat(df=df,window=5,no_of_std=1)
             bollinger_strat2(df=df,window=5,no_of_std=1)
             with placeholder2:
