@@ -87,7 +87,7 @@ async def get_event_mainnet_tricrpto():
         while True:
             global df_main_tri
 
-            message = await asyncio.wait_for(ws.recv(), timeout=600)
+            message = await asyncio.wait_for(ws.recv(), timeout=60000)
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
@@ -129,11 +129,11 @@ async def get_event_mainnet_tricrpto():
             # df_main_tri = json.dumps(df_main_tri)
             # df_main_tri = pd.DataFrame(df_main_tri)
             with placeholder2:
-                st.write(df_main_tri)
+                st.write(df_main_tri, use_container_width=True)
             with placeholder3:
-                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_1_fixed', color='path'))
+                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_1_fixed', color='path'), use_container_width=True)
             with placeholder4:
-                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_2_fixed', color='path'))
+                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_2_fixed', color='path'), use_container_width=True)
             # with placeholder5:
             #     st.plotly_chart(px.bar(df_main_tri, x='timestamp', y=['tokens_sold','tokens_bought'], color='path'))
 
@@ -228,16 +228,16 @@ async def get_event_mainnet_uni():
 
             with placeholder04:
                 st.plotly_chart(px.scatter(df_main_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
-            with placeholder05:
-                st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
+            # with placeholder05:
+            #     st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
             # with placeholder06:
             #     st.plotly_chart(px.scatter(df_main_uni, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
             # with placeholder07:
                 # st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
             # with placeholder08:
             #     st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder09:
-                st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="price"), use_container_width=True)
+            # with placeholder09:
+            #     st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="price"), use_container_width=True)
 
 # loop = asyncio.new_event_loop()
 # asyncio.set_event_loop(loop)
@@ -305,10 +305,10 @@ async def get_event_op_uni():
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
             price_swap = (number[1]*math.pow(10,12)* -1)/number[0]
 
-            if number[0] < 0:
-                side = "BUY"
+            if number[0] > 0:
+                side = "sell"
             else:
-                side = "Buy"
+                side = "buy"
             usdc = abs(number[1]/math.pow(10,6))
             usdc_net = (number[1]/math.pow(10,6))
             weth = abs(number[0]/math.pow(10,18))
@@ -326,7 +326,7 @@ async def get_event_op_uni():
             bollinger_strat(df=df_op_uni,window=5,no_of_std=1)
             bollinger_strat2(df=df_op_uni,window=5,no_of_std=1)
 
-            with placeholder600:
+            with placeholder400:
          
                 st.write(df_op_uni, use_container_width=True)
             # df_op_uni = df_op_uni.astype(str)
@@ -346,8 +346,8 @@ async def get_event_op_uni():
             # with placeholder200:
             #     st.write(df_op_uni, use_container_width=True)
 
-            # with placeholder400:
-            #     st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
+            with placeholder600:
+                st.plotly_chart(px.scatter(df_op_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
 
 # session = requests.Session()
 # w3 = Web3(Web3.WebsocketProvider("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6"))
@@ -377,7 +377,7 @@ async def get_event_arbi_tricryp():
             global df_arbi
             # global tokens_list
             # global decimal_list
-            message = await asyncio.wait_for(ws.recv(), timeout=600)
+            message = await asyncio.wait_for(ws.recv(), timeout=60000)
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
