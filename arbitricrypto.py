@@ -11,21 +11,22 @@ from eth_abi import decode_single, decode_abi
 import math
 from datetime import datetime
 import pandas as pd
-st.set_page_config(page_title="Arbitricrypto", page_icon="🔐", layout="wide")   
+st.set_page_config(page_title="Arbitricrypto", page_icon="🔐", layout="wide")
+
 session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6"))
-df = pd.DataFrame(columns=['sold_id', 'tokens_sold','sold_name','sold_decimal','tokens_bought','bought_name','bought_decimal','bought_id','timestamp'])
+df_arbi = pd.DataFrame(columns=['sold_id', 'tokens_sold','sold_name','sold_decimal','tokens_bought','bought_name','bought_decimal','bought_id','timestamp'])
 false = False
-placeholder1 = st.empty()
-placeholder2 = st.empty()
-placeholder3 = st.empty()
-placeholder4 = st.empty()
-placeholder5 = st.empty()
-placeholder6 = st.empty()
-async def get_event():
-    global df
+laceholder1 = st.empty()
+laceholder2 = st.empty()
+laceholder3 = st.empty()
+laceholder4 = st.empty()
+laceholder5 = st.empty()
+laceholder6 = st.empty()
+async def get_event_arbi_tricryp():
+    global df_arbi
     async with connect("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6") as ws:
-        global df
+        global df_arbi
         await ws.send(json.dumps(
         {"id": 1, "method": "eth_subscribe", "params": 
         ["logs", 
@@ -41,12 +42,12 @@ async def get_event():
         )
         )
         subscription_response = await ws.recv()
-        with placeholder1:
+        with laceholder1:
             st.write(subscription_response)
         while True:
-            global df
-            global tokens_list
-            global decimal_list
+            global df_arbi
+            # global tokens_list
+            # global decimal_list
             message = await asyncio.wait_for(ws.recv(), timeout=600)
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
@@ -85,19 +86,19 @@ async def get_event():
             df['rate_1_fixed'] = df['tokens_bought_fixed'] / df['tokens_sold_fixed']
             df['rate_2_fixed'] = df['tokens_sold_fixed'] / df['tokens_bought_fixed']
             df['path'] = df['sold_name'] + ' to ' + df['bought_name']
-            with placeholder2:
+            with laceholder2:
                 st.write(df,use_container_width=True)
-            with placeholder3:
+            with laceholder3:
                 st.plotly_chart(px.line(df, x='timestamp', y='rate_1_fixed', color='path'), use_container_width=True)
-            with placeholder4:
+            with laceholder4:
                 st.plotly_chart(px.line(df, x='timestamp', y='rate_2_fixed', color='path'), use_container_width=True)
-            with placeholder5:
+            with laceholder5:
                 st.plotly_chart(px.scatter(df, x='timestamp', y='tokens_bought_fixed', color='bought_name', marginal_y = 'violin'), use_container_width=True)
-            with placeholder6:
+            with laceholder6:
                 st.plotly_chart(px.scatter(df, x='timestamp', y='tokens_sold_fixed', color='sold_name', marginal_y = 'violin'), use_container_width=True)
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 while True:
-    loop.run_until_complete(get_event())
+    loop.run_until_complete(get_event_arbi_tricryp())
 
 
