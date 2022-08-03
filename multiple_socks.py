@@ -428,13 +428,14 @@ async def get_event_arbi_tricryp():
 # asyncio.set_event_loop(loop)
 
 # if __name__ == "__main__":
-
-if __name__ == '__main__':    
-    executor = ProcessPoolExecutor(4)
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    get_event_op_uni = loop.run_in_executor(executor, get_event_op_uni)
-    get_event_mainnet_tricrpto = loop.run_in_executor(executor, get_event_mainnet_tricrpto)
-    get_event_mainnet_uni = loop.run_in_executor(executor, get_event_mainnet_uni)
-    get_event_arbi_tricryp = loop.run_in_executor(executor, get_event_arbi_tricryp)
-    loop.run_forever()
+executor = ProcessPoolExecutor(4)
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+# while True:    
+if __name__ == '__main__':
+    
+    op_uni = loop.run_in_executor(executor, get_event_op_uni)
+    main_tri = loop.run_in_executor(executor, get_event_mainnet_tricrpto)
+    main_uni = loop.run_in_executor(executor, get_event_mainnet_uni)
+    arbi_tri = loop.run_in_executor(executor, get_event_arbi_tricryp)
+    loop.run_until_complete(future=asyncio.gather(op_uni, main_tri, main_uni, arbi_tri))
