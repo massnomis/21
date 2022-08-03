@@ -227,8 +227,8 @@ async def get_event_mainnet_uni():
                 st.plotly_chart(px.scatter(df_main_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
             with placeholder05:
                 st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
-            with placeholder06:
-                st.plotly_chart(px.scatter(df_main_uni, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
+            # with placeholder06:
+            #     st.plotly_chart(px.scatter(df_main_uni, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
             with placeholder07:
                 st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
             with placeholder08:
