@@ -2,9 +2,9 @@ import asyncio
 import websockets
 
 connections = set()
-connections.add('wss://api.foo.com:8765')
-connections.add('wss://api.bar.com:8765')
-connections.add('wss://api.foobar.com:8765')
+connections.add('wss://stream.binance.com:9443/ws/btcbusd@trade')
+connections.add('wss://stream.binance.com:9443/ws/btcusdt@trade')
+connections.add('wss://stream.binance.com:9443/ws/btctusd@trade')
 
 async def handle_socket(uri, ):
     async with websockets.connect(uri) as websocket:
