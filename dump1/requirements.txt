@@ -1,0 +1,10 @@
+streamlit
+plotly
+statsmodels
+pandas
+Pillow
+math
+requests
+json
+io
+base64

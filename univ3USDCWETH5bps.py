@@ -32,6 +32,7 @@ session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242"))
 df = pd.DataFrame(columns=['price', 'timestamp','WETH','USDC', 'side'])
 false = False
+placeholder0 = st.empty()
 placeholder1 = st.empty()
 placeholder2 = st.empty()
 placeholder3 = st.empty()
@@ -63,7 +64,7 @@ async def get_event():
         )
         )
         subscription_response = await ws.recv()
-        with placeholder1:
+        with placeholder0:
             st.write(subscription_response, use_container_width=True)
         while True:
             # global df
@@ -73,6 +74,8 @@ async def get_event():
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
+            with placeholder1:
+                st.write(lord_jesus, use_container_width=True)
             # st.write(lord_jesus)
             now = datetime.now()
             lord_jesus = lord_jesus["params"]["result"]

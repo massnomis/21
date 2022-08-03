@@ -11,7 +11,7 @@ from eth_abi import decode_single, decode_abi
 import math
 from datetime import datetime
 import pandas as pd
-st.set_page_config(page_title="usdcweth", page_icon="🔐", layout="wide")   
+st.set_page_config(page_title="usdcwethop", page_icon="🔐", layout="wide")   
 def bollinger_strat(df, window, no_of_std):
     rolling_mean = df['USDC'].rolling(window).mean()
     rolling_std = df['USDC'].rolling(window).std()
@@ -32,6 +32,8 @@ session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242"))
 df = pd.DataFrame(columns=['price', 'timestamp','WETH','USDC', 'side'])
 false = False
+placeholder0 = st.empty()
+
 placeholder1 = st.empty()
 placeholder2 = st.empty()
 placeholder3 = st.empty()
@@ -63,30 +65,37 @@ async def get_event():
         )
         )
         subscription_response = await ws.recv()
-        with placeholder1:
+        with placeholder0:
             st.write(subscription_response, use_container_width=True)
         while True:
             message = await asyncio.wait_for(ws.recv(), timeout=60000)
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
+            # with placeholder1:
+            #     st.write(lord_jesus, use_container_width=True)
             now = datetime.now()
             lord_jesus = lord_jesus["params"]["result"]
+            fromm = lord_jesus["topics"][1]
+            fromm = decode_single('address', bytes.fromhex(fromm[2:]))
+            fromm = str(fromm)
+            too = lord_jesus["topics"][2]
+            too = decode_single('address', bytes.fromhex(too[2:]))
+            too = str(too)
+
             number = lord_jesus["data"][2:]
 
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
             prinnt = (number[1]*math.pow(10,12)* -1)/number[0]
 
-            if number[0] > 0:
-                side = "Sell"
+            if number[0] < 0:
+                side = "BUY"
             else:
                 side = "Buy"
             usdc = abs(number[1]/math.pow(10,6))
             usdc_net = (number[1]/math.pow(10,6))
             weth = abs(number[0]/math.pow(10,18))
-            liq = number[3]
-            tick = number[4]
-            d = {'price': prinnt, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'tick': tick, 'liq': liq}
+            d = {'too': too, 'fromm':fromm, 'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
             df['cumsum'] = df['USDC_net'].cumsum()
