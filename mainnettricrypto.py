@@ -60,39 +60,40 @@ async def get_event():
             if d['sold_id'] == 0:
                 fixed_df['sold_name'] = 'USDT'
                 fixed_df['sold_decimal'] = 6
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**6
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**6
             elif d['sold_id'] == 1:
                 fixed_df['sold_name'] = 'WBTC'
                 fixed_df['sold_decimal'] = 8
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**8
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**8
             elif d['sold_id'] == 2:
                 fixed_df['sold_name'] = 'WETH'
                 fixed_df['sold_decimal'] = 18
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**18
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**18
             if d['bought_id'] == 0:
                 fixed_df['bought_name'] = 'USDT'
                 fixed_df['bought_decimal'] = 6
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**6
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**6
             elif d['bought_id'] == 1:
                 fixed_df['bought_name'] = 'WBTC'
                 fixed_df['bought_decimal'] = 8
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**8
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**8
             elif d['bought_id'] == 2:
                 fixed_df['bought_name'] = 'WETH'
                 fixed_df['bought_decimal'] = 18
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**18
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**18
             df = df.append(fixed_df, ignore_index=True)
-            df['rate_1_fixed'] = df['tokens_bought_fixed'] / df['tokens_sold_fixed']
-            df['rate_2_fixed'] = df['tokens_sold_fixed'] / df['tokens_bought_fixed']
+            df['rate_1_fixed'] = df['tokens_bought'] / df['tokens_sold']
+            df['rate_2_fixed'] = df['tokens_sold'] / df['tokens_bought']
             df['path'] = df['sold_name'] + ' to ' + df['bought_name']
+            # print(df)
             with placeholder2:
-                st.write(df,use_container_width=True)
+                st.write(df)
             with placeholder3:
                 st.plotly_chart(px.line(df, x='timestamp', y='rate_1_fixed', color='path'))
             with placeholder4:
                 st.plotly_chart(px.line(df, x='timestamp', y='rate_2_fixed', color='path'))
-            with placeholder5:
-                st.plotly_chart(px.bar(df, x='timestamp', y=['tokens_sold_fixed','tokens_bought_fixed'], color='path'))
+            # with placeholder5:
+            #     st.plotly_chart(px.bar(df, x='timestamp', y=['tokens_sold','tokens_bought'], color='path'))
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
 while True:

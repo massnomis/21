@@ -434,7 +434,6 @@ async def get_event_arbi_tricryp():
             df_arbi = df_arbi.append(fixed_df, ignore_index=True)
             df_arbi['rate_1_fixed'] = df_arbi['tokens_bought'] / df_arbi['tokens_sold']
             df_arbi['rate_2_fixed'] = df_arbi['tokens_sold'] / df_arbi['tokens_bought']
-            # df_arbi['max_rate'] = max(df_arbi['rate_1_fixed'], df_arbi['rate_2_fixed'])
             df_arbi['path'] = df_arbi['sold_name'] + ' to ' + df_arbi['bought_name']
             df_usdt_weth = df_arbi[(df_arbi['sold_name'] == 'USDT') & (df_arbi['bought_name'] == 'WETH')]
             df_weth_wbtc = df_arbi[(df_arbi['sold_name'] == 'WETH') & (df_arbi['bought_name'] == 'WBTC')]
