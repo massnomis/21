@@ -66,7 +66,7 @@ async def get_event():
         )
         subscription_response = await ws.recv()
         with placeholder0:
-            st.write(subscription_response, use_container_width=True)
+            st.json(subscription_response)
         while True:
             message = await asyncio.wait_for(ws.recv(), timeout=60000)
             lord_jesus = json.loads(message)
@@ -86,6 +86,12 @@ async def get_event():
             number = lord_jesus["data"][2:]
 
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
+            # with placeholder2:
+            #     st.write(number, use_container_width=True)
+            liq = number[3]
+            # liq = str(liq)
+            tick = number[4]
+            # tick = str(tick)
             prinnt = (number[1]*math.pow(10,12)* -1)/number[0]
 
             if number[0] < 0:
@@ -95,20 +101,20 @@ async def get_event():
             usdc = abs(number[1]/math.pow(10,6))
             usdc_net = (number[1]/math.pow(10,6))
             weth = abs(number[0]/math.pow(10,18))
-            d = {'too': too, 'fromm':fromm, 'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
+            d = {'too': too, 'fromm':fromm, 'price': prinnt, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'Tick': tick, 'Liq': liq}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
             df['cumsum'] = df['USDC_net'].cumsum()
             df['price_impact'] = df['price'].diff(periods=1)
             df['price_impact_w_size'] = df['price_impact']/df['USDC']
-            df['taken_liquidity'] = df['liq'].diff(periods=1)
-            df['current_price'] = 1/(1/(((1.0001) ** (df['tick'])))/math.pow(10,12))
+            df['taken_liquidity'] = df['Liq'].diff(periods=1)
+            df['current_price'] = 1/(1/(((1.0001) ** (df['Tick'])))/math.pow(10,12))
             df['price_deviation'] = abs(df['current_price'] - df['price'])
             df['price_deviation_w_size'] = df['price_deviation']/df['USDC']
-            df['tick_change'] = df['tick'].diff(periods=1)
+            df['tick_change'] = df['Tick'].diff(periods=1)
             bollinger_strat(df=df,window=5,no_of_std=1)
             bollinger_strat2(df=df,window=5,no_of_std=1)
-            with placeholder2:
+            with placeholder3:
                 st.write(df, use_container_width=True)
             # with placeholder3:
             #     st.plotly_chart(px.line(df, x="timestamp", y="price", color="side"), use_container_width=True)
@@ -116,7 +122,7 @@ async def get_event():
             with placeholder4:
                 st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
             with placeholder5:
-                st.plotly_chart(px.bar(df, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
+                st.plotly_chart(px.scatter(df, x="timestamp", y="current_price", size = 'price_deviation') , use_container_width=True)
             # with placeholder6:
             #     st.plotly_chart(px.scatter(df, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
             # with placeholder7:

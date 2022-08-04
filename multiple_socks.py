@@ -211,10 +211,17 @@ async def get_event_mainnet_uni():
             # st.write(lord_jesus)
             now = datetime.now()
             lord_jesus = lord_jesus["params"]["result"]
+            fromm = lord_jesus["topics"][1]
+            fromm = decode_single('address', bytes.fromhex(fromm[2:]))
+            fromm = str(fromm)
+            too = lord_jesus["topics"][2]
+            too = decode_single('address', bytes.fromhex(too[2:]))
+            too = str(too)
             number = lord_jesus["data"][2:]
+            
             # data = '00000000000000000000000000000000000000000000000000000012c7db4048fffffffffffffffffffffffffffffffffffffffffffffffd76fd5f054400e7a40000000000000000000000000000000000005e12c25ea154ac1ed76c593ce26e000000000000000000000000000000000000000000000000b5050eb63d7592380000000000000000000000000000000000000000000000000000000000031443'
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
-            print = number[0]/number[1]*math.pow(10,12)*-1
+            price_swap = number[0]/number[1]*math.pow(10,12)*-1
 
             if number[0] > 0:
                 side = "BUY"
@@ -226,11 +233,12 @@ async def get_event_mainnet_uni():
             usdc = abs(number[0]/math.pow(10,6))
             usdc_net = (number[0]/math.pow(10,6))
             weth = abs(number[1]/math.pow(10,18))
-            d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
+            d = {'too': too, 'fromm':fromm, 'price': price_swap, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
             fixed_df = pd.DataFrame(d, index=[0])
             df_main_uni = df_main_uni.append(fixed_df, ignore_index=True)
             df_main_uni['cumsum'] = df_main_uni['USDC_net'].cumsum()
-
+            df_main_uni['price_impact'] = df_main_uni['price'].diff(periods=1)
+            df_main_uni['price_impact_w_size'] = df_main_uni['price_impact']/df_main_uni['USDC']
             bollinger_strat(df=df_main_uni,window=5,no_of_std=1)
             bollinger_strat2(df=df_main_uni,window=5,no_of_std=1)
             with placeholder02:
@@ -239,7 +247,7 @@ async def get_event_mainnet_uni():
             #     st.plotly_chart(px.line(df_main_uni, x="timestamp", y="price", color="side"), use_container_width=True)
 
             with placeholder04:
-                st.plotly_chart(px.scatter(df_main_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
+                st.plotly_chart(px.scatter(df_main_uni, x="timestamp", y="price", size="USDC", color='side',color_discrete_sequence=["green", "red"],), use_container_width=True)
             # with placeholder05:
             #     st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
             # with placeholder06:
@@ -330,11 +338,11 @@ async def get_event_op_uni():
             df_op_uni['cumsum'] = df_op_uni['USDC_net'].cumsum()
             df_op_uni['price_impact'] = df_op_uni['price'].diff(periods=1)
             df_op_uni['price_impact_w_size'] = df_op_uni['price_impact']/df_op_uni['USDC']
-            # df['taken_liquidity'] = df['liq'].diff(periods=1)
-            # df['current_price'] = 1/(1/(((1.0001) ** (df['tick'])))/math.pow(10,12))
-            # df['price_deviation'] = abs(df['current_price'] - df['price'])
-            # df['price_deviation_w_size'] = df['price_deviation']/df['USDC']
-            # df['tick_change'] = df['tick'].diff(periods=1)
+            # df_op_uni['taken_liquidity'] = df_op_uni['liq'].diff(periods=1)
+            # df_op_uni['current_price'] = 1/(1/(((1.0001) ** (df_op_uni['tick'])))/math.pow(10,12))
+            # df_op_uni['price_deviation'] = abs(df_op_uni['current_price'] - df_op_uni['price'])
+            # df_op_uni['price_deviation_w_size'] = df_op_uni['price_deviation']/df_op_uni['USDC']
+            # df_op_uni['tick_change'] = df_op_uni['tick'].diff(periods=1)
             bollinger_strat(df=df_op_uni,window=5,no_of_std=1)
             bollinger_strat2(df=df_op_uni,window=5,no_of_std=1)
 
@@ -359,7 +367,7 @@ async def get_event_op_uni():
             #     st.write(df_op_uni, use_container_width=True)
 
             with placeholder600:
-                st.plotly_chart(px.scatter(df_op_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
+                st.plotly_chart(px.scatter(df_op_uni, x="timestamp", y="price", size="USDC", color='side',color_discrete_sequence=["green", "red"],), use_container_width=True)
 
 # session = requests.Session()
 # w3 = Web3(Web3.WebsocketProvider("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6"))
@@ -426,7 +434,7 @@ async def get_event_arbi_tricryp():
             df_arbi = df_arbi.append(fixed_df, ignore_index=True)
             df_arbi['rate_1_fixed'] = df_arbi['tokens_bought'] / df_arbi['tokens_sold']
             df_arbi['rate_2_fixed'] = df_arbi['tokens_sold'] / df_arbi['tokens_bought']
-            df_arbi['max_rate'] = np.maximum(df_arbi['rate_1_fixed'], df_arbi['rate_2_fixed'])
+            # df_arbi['max_rate'] = max(df_arbi['rate_1_fixed'], df_arbi['rate_2_fixed'])
             df_arbi['path'] = df_arbi['sold_name'] + ' to ' + df_arbi['bought_name']
             df_usdt_weth = df_arbi[(df_arbi['sold_name'] == 'USDT') & (df_arbi['bought_name'] == 'WETH')]
             df_weth_wbtc = df_arbi[(df_arbi['sold_name'] == 'WETH') & (df_arbi['bought_name'] == 'WBTC')]
@@ -477,6 +485,7 @@ async def get_event_arbi_tricryp():
 async def main():
     # Schedule three calls *concurrently*:
         await asyncio.gather(
+
         get_event_mainnet_tricrpto(),
         get_event_op_uni(),
         get_event_arbi_tricryp(),

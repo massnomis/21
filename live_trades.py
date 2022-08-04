@@ -70,7 +70,7 @@ async def consumer() -> None:
                     # df['size_new'] = size
                     df['sum'] = df['size_new'].cumsum()
 
-                    st.plotly_chart(px.scatter(df, x="time", y="price", color="side", size='size_new',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+                    st.plotly_chart(px.scatter(df, x="time", y="price", color="side", size='size_new',marginal_y="violin", marginal_x="rug",color_discrete_sequence=["green", "red"],),use_container_width=True)
                     st.plotly_chart(px.line(df, x="time", y="sum"),use_container_width=True)
 
                     # st.write(size)

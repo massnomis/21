@@ -5,7 +5,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+
 w3 = Web3(Web3.HTTPProvider("https://cloudflare-eth.com"))  
+
 wallet_key = ""
 chainId = 137
 # lets build the predicate
