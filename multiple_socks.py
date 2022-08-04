@@ -60,7 +60,19 @@ laceholder3 = st.empty()
 laceholder4 = st.empty()
 laceholder5 = st.empty()
 laceholder6 = st.empty()
-
+laceholder7 = st.empty()
+laceholder8 = st.empty()
+laceholder9 = st.empty()
+laceholder10 = st.empty()
+laceholder11 = st.empty()
+laceholder12 = st.empty()
+laceholder13 = st.empty()
+laceholder14 = st.empty()
+laceholder15 = st.empty()
+laceholder16 = st.empty()
+laceholder17 = st.empty()
+laceholder18 = st.empty()
+laceholder19 = st.empty()
 
 
 async def get_event_mainnet_tricrpto():
@@ -87,7 +99,7 @@ async def get_event_mainnet_tricrpto():
         while True:
             global df_main_tri
 
-            message = await asyncio.wait_for(ws.recv(), timeout=600)
+            message = await asyncio.wait_for(ws.recv(), timeout=60000)
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
@@ -100,39 +112,42 @@ async def get_event_mainnet_tricrpto():
             if d['sold_id'] == 0:
                 fixed_df['sold_name'] = 'USDT'
                 fixed_df['sold_decimal'] = 6
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**6
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**6
             elif d['sold_id'] == 1:
                 fixed_df['sold_name'] = 'WBTC'
                 fixed_df['sold_decimal'] = 8
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**8
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**8
             elif d['sold_id'] == 2:
                 fixed_df['sold_name'] = 'WETH'
                 fixed_df['sold_decimal'] = 18
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**18
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**18
             if d['bought_id'] == 0:
                 fixed_df['bought_name'] = 'USDT'
                 fixed_df['bought_decimal'] = 6
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**6
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**6
             elif d['bought_id'] == 1:
                 fixed_df['bought_name'] = 'WBTC'
                 fixed_df['bought_decimal'] = 8
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**8
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**8
             elif d['bought_id'] == 2:
                 fixed_df['bought_name'] = 'WETH'
                 fixed_df['bought_decimal'] = 18
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**18
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**18
             df_main_tri = df_main_tri.append(fixed_df, ignore_index=True)
-            df_main_tri['rate_1_fixed'] = df_main_tri['tokens_bought_fixed'] / df_main_tri['tokens_sold_fixed']
-            df_main_tri['rate_2_fixed'] = df_main_tri['tokens_sold_fixed'] / df_main_tri['tokens_bought_fixed']
+            df_main_tri['rate_1_fixed'] = df_main_tri['tokens_bought'] / df_main_tri['tokens_sold']
+            df_main_tri['rate_2_fixed'] = df_main_tri['tokens_sold'] / df_main_tri['tokens_bought']
             df_main_tri['path'] = df_main_tri['sold_name'] + ' to ' + df_main_tri['bought_name']
+            # df_main_tri = json.loads(df_main_tri)
+            # df_main_tri = json.dumps(df_main_tri)
+            # df_main_tri = pd.DataFrame(df_main_tri)
             with placeholder2:
-                st.write(df_main_tri,use_container_width=True)
+                st.write(df_main_tri, use_container_width=True)
             with placeholder3:
-                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_1_fixed', color='path'))
+                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_1_fixed', color='path'), use_container_width=True)
             with placeholder4:
-                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_2_fixed', color='path'))
-            with placeholder5:
-                st.plotly_chart(px.bar(df_main_tri, x='timestamp', y=['tokens_sold_fixed','tokens_bought_fixed'], color='path'))
+                st.plotly_chart(px.line(df_main_tri, x='timestamp', y='rate_2_fixed', color='path'), use_container_width=True)
+            # with placeholder5:
+            #     st.plotly_chart(px.bar(df_main_tri, x='timestamp', y=['tokens_sold','tokens_bought'], color='path'))
 
 
 
@@ -220,21 +235,21 @@ async def get_event_mainnet_uni():
             bollinger_strat2(df=df_main_uni,window=5,no_of_std=1)
             with placeholder02:
                 st.write(df_main_uni, use_container_width=True)
-            with placeholder03:
-                st.plotly_chart(px.line(df_main_uni, x="timestamp", y="price", color="side"), use_container_width=True)
+            # with placeholder03:
+            #     st.plotly_chart(px.line(df_main_uni, x="timestamp", y="price", color="side"), use_container_width=True)
 
             with placeholder04:
                 st.plotly_chart(px.scatter(df_main_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
-            with placeholder05:
-                st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
+            # with placeholder05:
+            #     st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
             # with placeholder06:
             #     st.plotly_chart(px.scatter(df_main_uni, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
-            with placeholder07:
-                st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder08:
-                st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder09:
-                st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="price"), use_container_width=True)
+            # with placeholder07:
+                # st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+            # with placeholder08:
+            #     st.plotly_chart(px.scatter(df_main_uni, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
+            # with placeholder09:
+            #     st.plotly_chart(px.bar(df_main_uni, x="timestamp", y="price"), use_container_width=True)
 
 # loop = asyncio.new_event_loop()
 # asyncio.set_event_loop(loop)
@@ -302,10 +317,10 @@ async def get_event_op_uni():
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
             price_swap = (number[1]*math.pow(10,12)* -1)/number[0]
 
-            if number[0] < 0:
-                side = "BUY"
+            if number[0] > 0:
+                side = "sell"
             else:
-                side = "Buy"
+                side = "buy"
             usdc = abs(number[1]/math.pow(10,6))
             usdc_net = (number[1]/math.pow(10,6))
             weth = abs(number[0]/math.pow(10,18))
@@ -323,7 +338,7 @@ async def get_event_op_uni():
             bollinger_strat(df=df_op_uni,window=5,no_of_std=1)
             bollinger_strat2(df=df_op_uni,window=5,no_of_std=1)
 
-            with placeholder600:
+            with placeholder400:
          
                 st.write(df_op_uni, use_container_width=True)
             # df_op_uni = df_op_uni.astype(str)
@@ -343,8 +358,8 @@ async def get_event_op_uni():
             # with placeholder200:
             #     st.write(df_op_uni, use_container_width=True)
 
-            # with placeholder400:
-            #     st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
+            with placeholder600:
+                st.plotly_chart(px.scatter(df_op_uni, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
 
 # session = requests.Session()
 # w3 = Web3(Web3.WebsocketProvider("wss://arb-mainnet.g.alchemy.com/v2/0Yoq6lRIOyxmtUc399eoo3__isBlLIt6"))
@@ -374,7 +389,7 @@ async def get_event_arbi_tricryp():
             global df_arbi
             # global tokens_list
             # global decimal_list
-            message = await asyncio.wait_for(ws.recv(), timeout=600)
+            message = await asyncio.wait_for(ws.recv(), timeout=60000)
             lord_jesus = json.loads(message)
             lord_jesus = json.dumps(lord_jesus)
             lord_jesus = json.loads(lord_jesus)
@@ -387,41 +402,77 @@ async def get_event_arbi_tricryp():
             if d['sold_id'] == 0:
                 fixed_df['sold_name'] = 'USDT'
                 fixed_df['sold_decimal'] = 6
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**6
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**6
             elif d['sold_id'] == 1:
                 fixed_df['sold_name'] = 'WBTC'
                 fixed_df['sold_decimal'] = 8
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**8
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**8
             elif d['sold_id'] == 2:
                 fixed_df['sold_name'] = 'WETH'
                 fixed_df['sold_decimal'] = 18
-                fixed_df['tokens_sold_fixed'] = fixed_df['tokens_sold'] / 10**18
+                fixed_df['tokens_sold'] = fixed_df['tokens_sold'] / 10**18
             if d['bought_id'] == 0:
                 fixed_df['bought_name'] = 'USDT'
                 fixed_df['bought_decimal'] = 6
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**6
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**6
             elif d['bought_id'] == 1:
                 fixed_df['bought_name'] = 'WBTC'
                 fixed_df['bought_decimal'] = 8
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**8
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**8
             elif d['bought_id'] == 2:
                 fixed_df['bought_name'] = 'WETH'
                 fixed_df['bought_decimal'] = 18
-                fixed_df['tokens_bought_fixed'] = fixed_df['tokens_bought'] / 10**18
+                fixed_df['tokens_bought'] = fixed_df['tokens_bought'] / 10**18
             df_arbi = df_arbi.append(fixed_df, ignore_index=True)
-            df_arbi['rate_1_fixed'] = df_arbi['tokens_bought_fixed'] / df_arbi['tokens_sold_fixed']
-            df_arbi['rate_2_fixed'] = df_arbi['tokens_sold_fixed'] / df_arbi['tokens_bought_fixed']
+            df_arbi['rate_1_fixed'] = df_arbi['tokens_bought'] / df_arbi['tokens_sold']
+            df_arbi['rate_2_fixed'] = df_arbi['tokens_sold'] / df_arbi['tokens_bought']
+            df_arbi['max_rate'] = np.maximum(df_arbi['rate_1_fixed'], df_arbi['rate_2_fixed'])
             df_arbi['path'] = df_arbi['sold_name'] + ' to ' + df_arbi['bought_name']
+            df_usdt_weth = df_arbi[(df_arbi['sold_name'] == 'USDT') & (df_arbi['bought_name'] == 'WETH')]
+            df_weth_wbtc = df_arbi[(df_arbi['sold_name'] == 'WETH') & (df_arbi['bought_name'] == 'WBTC')]
+            df_weth_usdt = df_arbi[(df_arbi['sold_name'] == 'WETH') & (df_arbi['bought_name'] == 'USDT')]
+            df_wbtc_usdt = df_arbi[(df_arbi['sold_name'] == 'WBTC') & (df_arbi['bought_name'] == 'USDT')]
+            df_usdt_wbtc = df_arbi[(df_arbi['sold_name'] == 'USDT') & (df_arbi['bought_name'] == 'WBTC')]
+            df_wbtc_weth = df_arbi[(df_arbi['sold_name'] == 'WBTC') & (df_arbi['bought_name'] == 'WETH')]
+
             with laceholder2:
                 st.write(df_arbi,use_container_width=True)
             with laceholder3:
                 st.plotly_chart(px.line(df_arbi, x='timestamp', y='rate_1_fixed', color='path'), use_container_width=True)
             with laceholder4:
                 st.plotly_chart(px.line(df_arbi, x='timestamp', y='rate_2_fixed', color='path'), use_container_width=True)
-            with laceholder5:
-                st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_bought_fixed', color='bought_name', marginal_y = 'violin'), use_container_width=True)
+            # with laceholder5:
+            #     st.plotly_chart(px.scatter(df_usdt_weth, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold' ), use_container_width=True)
             with laceholder6:
-                st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_sold_fixed', color='sold_name', marginal_y = 'violin'), use_container_width=True)
+                st.plotly_chart(px.scatter(df_weth_wbtc, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder7:
+                st.plotly_chart(px.scatter(df_weth_usdt, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder8:
+                st.plotly_chart(px.scatter(df_wbtc_usdt, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder9:
+            #     st.plotly_chart(px.scatter(df_usdt_wbtc, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder10:
+                st.plotly_chart(px.scatter(df_wbtc_weth, x='timestamp', y='rate_1_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder11:
+                st.plotly_chart(px.scatter(df_weth_wbtc, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder12:
+                st.plotly_chart(px.scatter(df_usdt_weth, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder13:
+            #     st.plotly_chart(px.scatter(df_wbtc_usdt, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder14:
+            #     st.plotly_chart(px.scatter(df_weth_usdt, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder15:
+                st.plotly_chart(px.scatter(df_weth_wbtc, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            with laceholder16:
+                st.plotly_chart(px.scatter(df_usdt_wbtc, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder17:
+            #     st.plotly_chart(px.scatter(df_wbtc_weth, x='timestamp', y='rate_2_fixed', color='path', size= 'tokens_sold'), use_container_width=True)
+            # with laceholder18:
+
+            # with laceholder5:
+            #     st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_bought', color='bought_name', marginal_y = 'violin'), use_container_width=True)
+            # with laceholder6:
+            #     st.plotly_chart(px.scatter(df_arbi, x='timestamp', y='tokens_sold', color='sold_name', marginal_y = 'violin'), use_container_width=True)
 
 async def main():
     # Schedule three calls *concurrently*:
