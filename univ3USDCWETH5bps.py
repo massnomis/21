@@ -79,45 +79,52 @@ async def get_event():
             # st.write(lord_jesus)
             now = datetime.now()
             lord_jesus = lord_jesus["params"]["result"]
-            number = lord_jesus["data"][2:]
+            fromm = lord_jesus["topics"][1]
+            fromm = decode_single('address', bytes.fromhex(fromm[2:]))
+            fromm = str(fromm)
+            too = lord_jesus["topics"][2]
+            too = decode_single('address', bytes.fromhex(too[2:]))
+            too = str(too)
+
             # data = '00000000000000000000000000000000000000000000000000000012c7db4048fffffffffffffffffffffffffffffffffffffffffffffffd76fd5f054400e7a40000000000000000000000000000000000005e12c25ea154ac1ed76c593ce26e000000000000000000000000000000000000000000000000b5050eb63d7592380000000000000000000000000000000000000000000000000000000000031443'
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
-            print = number[0]/number[1]*math.pow(10,12)*-1
-
+            prinnt = number[0]/number[1]*math.pow(10,12)*-1
+            liq = number[3]
+            # liq = str(liq)
+            tick = number[4]
+            # tick = str(tick)
+            prinnt = (number[0]*math.pow(10,12)* -1)/number[1]
             if number[0] > 0:
                 side = "BUY"
             else:
                 side = "SELL"
 
 
-
             usdc = abs(number[0]/math.pow(10,6))
             usdc_net = (number[0]/math.pow(10,6))
             weth = abs(number[1]/math.pow(10,18))
-            d = {'price': print, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net}
+            d = {'too': too, 'fromm':fromm, 'price': prinnt, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'Tick': tick, 'Liq': liq}
             fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
             df['cumsum'] = df['USDC_net'].cumsum()
+            df['price_impact'] = df['price'].diff(periods=1)
+            df['price_impact_w_size'] = df['price_impact']/df['USDC']
+            df['taken_liquidity'] = df['Liq'].diff(periods=1)
+            df['current_price'] = 1/(((((1.0001) ** (df['Tick'])))/math.pow(10,12)))
+            df['price_deviation'] = (df['current_price'] - df['price'])
+            df['price_deviation_w_size'] = df['price_deviation']/df['USDC']
+            df['tick_change'] = df['Tick'].diff(periods=1)
 
-            bollinger_strat(df=df,window=5,no_of_std=1)
-            bollinger_strat2(df=df,window=5,no_of_std=1)
-            with placeholder2:
-                st.write(df, use_container_width=True)
+
             with placeholder3:
-                st.plotly_chart(px.line(df, x="timestamp", y="price", color="side"), use_container_width=True)
+                st.write(df, use_container_width=True)
+            # with placeholder3:
+            #     st.plotly_chart(px.line(df, x="timestamp", y="price", color="side"), use_container_width=True)
 
             with placeholder4:
-                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side'), use_container_width=True)
+                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side',color_discrete_sequence=["red", "green"],), use_container_width=True)
             with placeholder5:
-                st.plotly_chart(px.bar(df, x="timestamp", y="USDC", title="USDC") , use_container_width=True)
-            with placeholder6:
-                st.plotly_chart(px.scatter(df, x="WETH", y="price", size="USDC", color='WETH') , use_container_width=True)
-            with placeholder7:
-                st.plotly_chart(px.scatter(df, x='timestamp', y='cumsum', size='USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder8:
-                st.plotly_chart(px.scatter(df, x='timestamp', y=['Bollinger High_cumsum','Bollinger Low_cumsum','rolling_mean_cumsum','cumsum'], size = 'USDC',marginal_y="violin", marginal_x="rug"),use_container_width=True)
-            with placeholder9:
-                st.plotly_chart(px.bar(df, x="timestamp", y="price"), use_container_width=True)
+                st.plotly_chart(px.scatter(df, x="timestamp", y="current_price", color = 'price_deviation') , use_container_width=True)
 # if _name_ == "_main_":
             # wi
             # st.write(df)
