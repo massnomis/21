@@ -10,3 +10,4 @@ var equityPartners = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'
 for (var i = 0; i < equityPartners.length; i++) {
     console.log(equityPartners[i]);
 }
+
