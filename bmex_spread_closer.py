@@ -1,4 +1,4 @@
-import ccxt
+import ccxtpro
 import streamlit as st
 import pandas as pd
 from itertools import accumulate
@@ -10,7 +10,7 @@ import plotly.express as px
 from datetime import datetime, timedelta
 import math
 st.set_page_config(layout="wide")
-exchange = ccxt.bitmex({
+exchange = ccxtpro.bitmex({
     'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
     'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
 })
