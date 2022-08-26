@@ -1,3 +1,4 @@
+from unittest import result
 import ccxtpro
 import streamlit as st
 import pandas as pd
@@ -37,6 +38,7 @@ placeholder15 = st.empty()
 # st.write(orders_hist)
 while True:
     orders_hist = exchange.fetchOpenOrders()
+    # st.write(orders_hist(result))
     orders_hist = pd.DataFrame(orders_hist)
     with placeholder:
         if orders_hist.empty:
