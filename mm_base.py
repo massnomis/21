@@ -1,4 +1,5 @@
 from operator import index
+from turtle import title
 import ccxtpro
 import asyncio
 from numpy import place
@@ -8,6 +9,8 @@ import pandas as pd
 from itertools import accumulate
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import datetime
+
 import ccxt
 import plotly.express as px
 
@@ -16,9 +19,8 @@ st.set_page_config(layout="wide")
 
 
 
-placeh = st.empty()
-placeg = st.empty()
-placeholder = st.empty()
+
+placeholder0 = st.empty()
 placeholder1 = st.empty()
 placeholder2 = st.empty()
 placeholder3 = st.empty()
@@ -35,33 +37,44 @@ placeholder13 = st.empty()
 placeholder14 = st.empty()
 placeholder15 = st.empty()
 
+
 exchange = ccxtpro.binanceus({'enableRateLimit': True})
 ccxtbus = ccxt.binanceus()
 markets = ccxtbus.load_markets()
-# markets = json.loads(markets)
 markets = pd.DataFrame.from_dict(markets)
-# markets = markets['0']
 df1 = pd.DataFrame.from_dict(markets)
 df1 = df1.astype(str)
-# df1 = pd.DataFrame.from_dict(markets)
 df1 = df1.columns
-# st.write(df1)
-with placeh.container():
+with placeholder0.container():
     market = st.selectbox("Select Market", df1)
 
+
+async def OLHC():
+    while True:
+        ohlc = await exchange.watch_ohlcv(market)
+        ohlc = pd.DataFrame(ohlc)
+        ohlc.reset_index(drop=True, inplace=False)
+        ohlc = ohlc.rename(columns={0: "time", 1: "open", 2: "high", 3: "low", 4: "close", 5: "volume"})
+        ohlc['time'] = pd.to_datetime(ohlc['time'], unit='ms')
+        with placeholder1:
+            fig = go.Figure()
+            fig = make_subplots(rows=2, cols=1, shared_xaxes=True, 
+            vertical_spacing=0.03, subplot_titles=('OHLC', 'Volume'), 
+            row_width=[0.2, 0.7])
+            fig.add_trace(go.Candlestick(x=ohlc['time'], open=ohlc['open'], high=ohlc['high'], low=ohlc['low'], close=ohlc['close'], name = "OHLC"), row=1, col=1)
+            fig.add_trace(go.Bar(x=ohlc['time'], y=ohlc['volume'],showlegend=False, name = 'volume'), row=2, col=1)
+            fig.update(layout_xaxis_rangeslider_visible=False)
+            fig.update_layout(title_text="OHLC")
+            st.plotly_chart(fig, use_container_width=True)
 
 async def trades():
     while True:
         trades = await exchange.watch_trades(market)
         tradez = pd.DataFrame.from_dict(trades)
-        with placeg.container():
-            st.plotly_chart(px.scatter(tradez, x="datetime", y="price", color="side", size='amount',color_discrete_sequence=["green", "red"],), use_container_width=True)
-        # st.plotly_chart(px.line(tradez, x="datetime", y="sum", color="Is_the_buyer_the_market_maker"),use_container_width=True)
-
-        # with placeholder.container():
-        #     st.dataframe(tradez)
-
+        with placeholder2.container():
+            st.plotly_chart(px.scatter(tradez, x="datetime", y="price", color="side", size='amount',color_discrete_sequence=["red", "green"],), use_container_width=True)
 async def books():
+    spread_bps_df_2 = pd.DataFrame()
     while True:
         orderbook = await exchange.watch_order_book(market)
         bids = orderbook["bids"]
@@ -80,21 +93,22 @@ async def books():
         bids['accumulated_price']  = (bids['price_bid']) * bids['size_bid']
         bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
         bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']       
-         
-
-        with placeholder1:
+        spread_bps_df_add = pd.DataFrame({'time': [datetime.datetime.now()], 'spread_bps': [(((asks['price_ask'][0] - bids['price_bid'][0])/asks['price_ask'][0]) * 10000)]})
+        spread_bps_df_2 = spread_bps_df_2.append(spread_bps_df_add)
+        with placeholder3:
             fig = make_subplots(specs=[[{"secondary_y": True}]])
             fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
             fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
             fig.update_layout(title_text="orderbook")
             st.plotly_chart(fig, use_container_width=True)
+        with placeholder4:
+            st.plotly_chart(px.scatter(spread_bps_df_2, x="time", y="spread_bps"), use_container_width=True)
 async def main():
     # Schedule three calls *concurrently*:
         await asyncio.gather(
-
         trades(),
-        books()
-
+        books(),
+        OLHC(),
     )
 
 asyncio.run(main())   
