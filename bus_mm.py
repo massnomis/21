@@ -47,10 +47,9 @@ with placeh.container():
 async def main():
     # exchange = ccxtpro.binanceus({'enableRateLimit': True})
     while True:
+       
+
         orderbook = await exchange.watch_order_book(market)
-        # trades = await exchange.watch_trades(market)
-        # with placeg():
-        #     st.write(trades)
         bids = orderbook["bids"]
         bids = pd.DataFrame(bids)
         bids = bids.rename(columns={0: "price_bid", 1: "size_bid"})
@@ -61,15 +60,6 @@ async def main():
         asks = asks.rename(columns={0: "price_ask", 1: "size_ask"})
 
 
-
-
-
-
-
-
-
-
-      
         asks['accumulated']  = (list(accumulate(asks['size_ask'])))
         asks['accumulated_price']  = (asks['price_ask']) * asks['size_ask']
         asks['accumulated_avg_price'] = (list(accumulate(asks['accumulated_price'])))  / asks['accumulated']

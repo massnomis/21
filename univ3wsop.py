@@ -97,7 +97,7 @@ async def get_event():
             if number[0] < 0:
                 side = "BUY"
             else:
-                side = "Buy"
+                side = "SELL"
             usdc = abs(number[1]/math.pow(10,6))
             usdc_net = (number[1]/math.pow(10,6))
             weth = abs(number[0]/math.pow(10,18))
