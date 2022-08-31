@@ -68,21 +68,10 @@ with palceholder_market_info.container():
     quote = (precision_load[market]['quote'])
     st.write(f"Precision: {base} {precision_base} {quote} {precision_quote}")
     st.write(f"Min Size: {min_size}")
-with placeholder_open_orders.container():
-    marketz = st.multiselect("Select Markets", df1)
-    st.write(marketz)
-    # st.write(markets)
-    # st.write(len(markets))
-    # st.write(markets[0])
-    # for i in markets:
-
-    # open_orders = exchange_ccxt.fetchOpenOrders(symbol=markets[i])
-    # #     empty = []
-    # #     if not empty:
-    # #         pass
-    # # #         # st.write("No open orders")
-    # #     else:
-    # st.write(open_orders)
+# with placeholder_open_orders.container():
+#     marketz = st.multiselect("Select Markets", df1)
+#     st.write(marketz)
+    
 # async def OLHC():
     # while True:
     #     ohlc = await exchange.watch_ohlcv(market)
@@ -166,26 +155,16 @@ async def books():
 
 async def mm():
     # while True:
-    i = 0
-    market_oo = marketz[i]
-    open_orders = exchange.fetch_open_orders(market_oo)
+    open_orders = exchange_ccxt.fetch_open_orders(market)
     with placeholder8:
         st.write(open_orders)
-        # st.write(open_orders)
-        # i += 1
-        # market_maker = exchange_ccxt.fetchOpenOrders(symbol=market)
-        # market_maker = pd.DataFrame.from_dict(market_maker)
-        # market_maker = market_maker.rename(columns={0: "datetime", 1: "side", 2: "price", 3: "amount"})
-        # market_maker['datetime'] = pd.to_datetime(market_maker['datetime'], unit='ms')
        
-        # await exchange.close()
-            # st.plotly_chart(px.scatter(market_maker, x="datetime", y="price", color="side", size='amount',color_discrete_sequence=["red", "green"]), use_container_width=True)
 async def main():
     # Schedule three calls *concurrently*:
         await asyncio.gather(
-        trades(),
+        # trades(),
         books(),
-        mm(),
+        # mm(),
 
 
 
