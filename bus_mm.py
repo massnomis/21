@@ -40,15 +40,36 @@ placeholder14 = st.empty()
 placeholder15 = st.empty()
 
 
-exchange = ccxtpro.binanceus({
-    # 'enableRateLimit': True,
-    'apiKey': 'iaibitzwWrG7etIm9PFyBdfJe7JsB84UZuQIYpM5YyfIsGAEM6QD4AddJ3y584Ic',
-    'secret': 'U83fuUStTZ41JU10BXlHBWiqmMTaM4dAQVyL7jwMrSEQevLChJmJtEx3b7QxjM50',
-    })
-exchange_ccxt = ccxt.binanceus({
-    'apiKey': 'iaibitzwWrG7etIm9PFyBdfJe7JsB84UZuQIYpM5YyfIsGAEM6QD4AddJ3y584Ic',
-    'secret': 'U83fuUStTZ41JU10BXlHBWiqmMTaM4dAQVyL7jwMrSEQevLChJmJtEx3b7QxjM50',
+# exchange = ccxtpro.binanceus({
+#     'apiKey': "RsNqghLfN0ZG1iP0mNyngzSTYSzdmzTMgWEObBgjhi2GkEUoMYJSUsRJvN9xGrgR",
+#     'secret': "G5453sx9t46JRWVNdIDvaSA1EKIqbBmSds8QXQGkaNCiPEqoJ3jkPQ6MLghQXTJl",
+# })
+
+
+# secret = str("G5453sx9t46JRWVNdIDvaSA1EKIqbBmSds8QXQGkaNCiPEqoJ3jkPQ6MLghQXTJl")
+
+# exchange_ccxt = ccxt.binanceus({
+#     'apiKey': "RsNqghLfN0ZG1iP0mNyngzSTYSzdmzTMgWEObBgjhi2GkEUoMYJSUsRJvN9xGrgR",
+#     'secret': secret,
+# })
+
+
+
+exchange = ccxt.bitmex({
+    'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
+    'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
 })
+if 'test' in exchange.urls:
+    exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
+# st.write(exchange.fetchOpenOrders())
+
+
+exchange_ccxt = ccxtpro.bitmex({
+    'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
+    'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
+})
+if 'test' in exchange_ccxt.urls:
+    exchange_ccxt.urls['api'] = exchange_ccxt.urls['test'] # ←----- switch the base URL to testnet
 markets = exchange_ccxt.load_markets()
 markets = pd.DataFrame.from_dict(markets)
 df1 = pd.DataFrame.from_dict(markets)
@@ -68,6 +89,31 @@ with palceholder_market_info.container():
     quote = (precision_load[market]['quote'])
     st.write(f"Precision: {base} {precision_base} {quote} {precision_quote}")
     st.write(f"Min Size: {min_size}")
+
+
+orders_hist = exchange_ccxt.fetchOpenOrders(symbol=market)
+orders_hist = pd.DataFrame(orders_hist)
+
+if orders_hist.empty:
+    st.write('no open orders')
+else:
+    st.write(orders_hist)
+    orders_hist = orders_hist[orders_hist.status != 'canceled']
+    orders_hist = orders_hist[orders_hist.status != 'closed']
+    orders_hist_id_df = pd.DataFrame(orders_hist['id'])
+    # st.write(orders_hist)
+    id = orders_hist_id_df
+    order_cancel_df = pd.DataFrame()
+    cancel_df = pd.DataFrame()
+
+    for index, row in id.iterrows():
+        order_cancel = exchange_ccxt.cancelOrder(symbol=market,id=row['id'])
+        order_cancel_df = order_cancel_df.append(order_cancel, ignore_index=True).astype(str)
+    st.write("canceled, yalla")
+# with placeholder_open_orders.container():
+#         balance = exchange.watch_balance()
+#         st.json(balance)
+
 # with placeholder_open_orders.container():
 #     marketz = st.multiselect("Select Markets", df1)
 #     st.write(marketz)
@@ -151,14 +197,27 @@ async def books():
         with placeholder7:
             predicted_spread = (((asks_start - bids_start)/asks_start) * 10000)
             st.write(predicted_spread)
+        
+
+        i = 0
+        ii = 0
+        while i < 1:
+            order_init_b = exchange_ccxt.createLimitBuyOrder(symbol=market,price=bids_start,amount=0.01)
+            i += 1
+        while ii < 1:
+            order_init_a = exchange_ccxt.createLimitSellOrder(symbol=market,price=asks_start,amount=0.01)
+            ii += 1
+        with placeholder8:
+            st.write(order_init_b)
+        with placeholder9:
+            st.write(order_init_a)
         # await exchange.close()
 
-async def mm():
-    # while True:
-    open_orders = exchange_ccxt.fetch_open_orders(market)
-    with placeholder8:
-        st.write(open_orders)
+
        
+
+
+
 async def main():
     # Schedule three calls *concurrently*:
         await asyncio.gather(

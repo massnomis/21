@@ -24,6 +24,8 @@ placeholder0 = st.empty()
 placeholder1 = st.empty()
 placeholder2 = st.empty()
 placeholder3 = st.empty()
+placeholder_bids = st.empty()
+placeholder_asks = st.empty()
 placeholder4 = st.empty()
 placeholder5 = st.empty()
 placeholder6 = st.empty()
@@ -38,8 +40,21 @@ placeholder14 = st.empty()
 placeholder15 = st.empty()
 
 
-exchange = ccxtpro.binanceus({'enableRateLimit': True})
-ccxtbus = ccxt.binanceus()
+exchange = ccxtpro.bitmex({
+    'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
+    'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
+})
+if 'test' in exchange.urls:
+    exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
+# st.write(exchange.fetchOpenOrders())
+
+
+ccxtbus = ccxt.bitmex({
+    'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
+    'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
+})
+if 'test' in ccxtbus.urls:
+    ccxtbus.urls['api'] = ccxtbus.urls['test'] # ←----- switch the base URL to testnet
 markets = ccxtbus.load_markets()
 markets = pd.DataFrame.from_dict(markets)
 df1 = pd.DataFrame.from_dict(markets)
@@ -66,7 +81,6 @@ async def OLHC():
             fig.update(layout_xaxis_rangeslider_visible=False)
             fig.update_layout(title_text="OHLC")
             st.plotly_chart(fig, use_container_width=True)
-
 async def trades():
     while True:
         trades = await exchange.watch_trades(market)
@@ -101,14 +115,26 @@ async def books():
             fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
             fig.update_layout(title_text="orderbook")
             st.plotly_chart(fig, use_container_width=True)
+        with placeholder_bids:
+            st.write(bids)
+        with placeholder_asks:
+            st.write(asks)
+            
         with placeholder4:
             st.plotly_chart(px.scatter(spread_bps_df_2, x="time", y="spread_bps"), use_container_width=True)
+async def trades_history():
+    while True:
+        trades = await exchange.fetch_trades(market)
+        tradez = pd.DataFrame.from_dict(trades)
+        with placeholder5:
+            st.write(tradez)
 async def main():
     # Schedule three calls *concurrently*:
         await asyncio.gather(
-        trades(),
+        # trades(),
         books(),
-        OLHC(),
+        # OLHC(),
+        # trades_ history(),
     )
 
 asyncio.run(main())   
