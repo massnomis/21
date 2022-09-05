@@ -23,7 +23,7 @@ if 'test' in exchange.urls:
 
 
 exchange_ccxtpro = ccxtpro.bitmex({
-    'rateLimit': 100,
+    'enableRateLimit': True,
     'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
     'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
 })
@@ -93,7 +93,8 @@ async def books():
         with placeholder:
             if orders_hist.empty:
                 # with palceholder_no_open_orders:
-                    st.write("at one point of time: No Open Orders")
+                pass    
+                    # st.write("at one point of time: No Open Orders")
             else:
                 with placeholder_open_orders:
                     st.write(orders_hist)
