@@ -57,11 +57,14 @@ if 'test' in ccxtbus.urls:
     ccxtbus.urls['api'] = ccxtbus.urls['test'] # ←----- switch the base URL to testnet
 markets = ccxtbus.load_markets()
 markets = pd.DataFrame.from_dict(markets)
+
 df1 = pd.DataFrame.from_dict(markets)
 df1 = df1.astype(str)
 df1 = df1.columns
+# st.write(df1)
 with placeholder0.container():
-    market = st.selectbox("Select Market", df1)
+    # market="BTC/USDT:USDT"
+    market = st.selectbox("Select Market", df1, index=626)
 
 
 async def OLHC():

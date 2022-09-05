@@ -23,6 +23,7 @@ if 'test' in exchange.urls:
 
 
 exchange_ccxtpro = ccxtpro.bitmex({
+    'rateLimit': 100,
     'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
     'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
 })
@@ -34,6 +35,10 @@ placeholder = st.empty()
 palceholder_no_open_orders = st.empty()
 placeholder_open_orders = st.empty()
 placeholder_cancelling = st.empty()
+placeholder_ask_symbol = st.empty()
+placeholder_ask_orders_to_place_a_side = st.empty()
+placeholder_ask_stink_save_bid_drawdown = st.empty()
+placeholder_ask_stink_save_ask_drawup = st.empty()
 placeholder2 = st.empty()
 placeholder3 = st.empty()
 placeholder4 = st.empty()
@@ -50,6 +55,28 @@ placeholder14 = st.empty()
 placeholder15 = st.empty()
 # orders_hist = exchange.fetchOpenOrders()
 # st.write(orders_hist)
+precision_load = pd.DataFrame(exchange.load_markets())
+
+symbol = "BTC/USDT:USDT"
+with placeholder_ask_symbol:
+    symbol = st.selectbox('Select a symbol', precision_load.columns, index=626)
+orders_to_place_a_side = 12
+with placeholder_ask_orders_to_place_a_side:
+    orders_to_place_a_side = st.number_input("orders_to_place_a_side", value=12, min_value=1, max_value=100, step=1)
+stink_save_bid_drawdown = 0.98
+with placeholder_ask_stink_save_bid_drawdown:   
+    stink_save_bid_drawdown = st.number_input("stink_save_bid_drawdown", value=0.98, min_value=0.01, max_value=1.00, step=0.01)
+stink_save_ask_drawup = 1.05
+with placeholder_ask_stink_save_ask_drawup:
+    stink_save_ask_drawup = st.number_input("stink_save_ask_drawup", value=1.05, min_value=1.00, max_value=2.00, step=0.01)
+
+precision = (precision_load[symbol]['precision'])
+# st.write(precision)
+precision_amount = precision['amount']
+precision_price = precision['price']
+with placeholder2:
+    st.write("precision_amount",precision_amount, "precision_price",precision_price)
+
 
 async def books():
     while True:
@@ -78,6 +105,7 @@ async def books():
                     order_cancel_df = pd.DataFrame()
                     cancel_df = pd.DataFrame()
                     cancelAllOrders = exchange.cancelAllOrders()
+                    # git push origin-main
                     # st.write(cancelAllOrders)
                     # for index, row in id.iterrows():
                     #     order_cancel = exchange.cancelOrder(id=row['id'])
@@ -95,7 +123,7 @@ async def books():
         # st.write(load_makets_for_data)
 
 
-        symbol = "BTC/USDT:USDT"
+
         # st.write(load_makets_for_data.columns)
 
         # pct_expiry_dated = 0.25
@@ -103,18 +131,6 @@ async def books():
         # latest_rateAPY_quote = 0.0020
         # alpha = 0
         # apy_to_beat = (((1+latest_rateAPY_quote)*(1+latest_rateAPY_spot)))+alpha-1
-        orders_to_place_a_side = 12
-        stink_save_bid_drawdown = 0.98
-        stink_save_ask_drawup = 1.05
-
-        precision_load = pd.DataFrame(exchange.load_markets())
-        precision = (precision_load[symbol]['precision'])
-        # st.write(precision)
-        precision_amount = precision['amount']
-        precision_price = precision['price']
-        with placeholder2:
-            st.write("precision_amount",precision_amount, "precision_price",precision_price)
-
 
 
         data = await exchange_ccxtpro.watch_order_book(symbol) 
