@@ -212,8 +212,8 @@ async def books():
         # st.plotly_chart(px.bar(bid_new,y=bid_new['mm_bid_size'], x=bid_new['mm_bid_price']))
         # st.plotly_chart(px.line(bid_new,y=bid_new['accumulated'], x=bid_new['mm_bid_price']))
         # st.plotly_chart(px.line(bid_new,y=bid_new['cash_equivelant'], x=bid_new['mm_bid_price']))
-        with placeholder4:
-            st.write(order_df_bid)
+        # with placeholder4:
+        #     st.write(order_df_bid)
 
 
 
@@ -277,8 +277,8 @@ async def books():
         order_df_ask['accumulated_price']  = (order_df_ask['price']) * order_df_ask['mm_ask_size']
         order_df_ask['accumulated_avg_price'] = (list(accumulate(order_df_ask['accumulated_price'])))  / order_df_ask['accumulated']
         order_df_ask['cash_equivelant'] = order_df_ask['accumulated'] * order_df_ask['accumulated_avg_price'] 
-        with placeholder6:     
-            st.write(order_df_ask)
+        # with placeholder6:     
+        #     st.write(order_df_ask)
 
 
 
