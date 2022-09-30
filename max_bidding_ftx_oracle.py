@@ -13,11 +13,16 @@ import numpy as np
 import requests
 from datetime import datetime, timedelta
 import math
+import os
+from dotenv import load_dotenv
 st.set_page_config(layout="wide")
-exchange = ccxt.ftx({
-    'apiKey': '6lPPRFX1r4x_6ENY6GnhgYr3AdPv34x8Bc-MRH_V',
-    'secret': 'OnQqs_nox4NS2OYm5z8ulXJ9rMkbOo5_nNwGe53V',
-})
+
+load_dotenv()
+FTX_apiKey = (os.getenv('FTX_apiKey'))
+FTX_secret = (os.getenv('FTX_secret'))
+# st.code(FTX_apiKey)
+# st.code(FTX_secret)
+exchange = ccxt.ftx({ 'apiKey': FTX_apiKey, 'secret': FTX_secret})
 
 placeholder = st.empty()
 placeholder2 = st.empty()
