@@ -9,19 +9,17 @@ import json
 import requests
 import pandas as pd
 extrarpsc = requests.get('https://raw.githubusercontent.com/DefiLlama/chainlist/main/constants/extraRpcs.json').json()
-st.write(extrarpsc)
+# st.write(extrarpsc)
+# st.code(extrarpsc)
+st.write("Select a chain")
+chain = st.selectbox('Chain', list(extrarpsc.keys()))
 
-chainids = requests.get('https://raw.githubusercontent.com/DefiLlama/chainlist/main/constants/chainIds.js')
-chainids = chainids.text
-# chainids = json.loads(chainids)
+df_chain_rpcs = pd.DataFrame(extrarpsc[chain]['rpcs'])
+st.write(df_chain_rpcs)
 
-chainids = chainids[chainids.find('{'):chainids.find(';')]
-# take this str and make it a dict
+st.write("which one")
+rpc_choice = st.selectbox('rpc', df_chain_rpcs.index)
+rpc_url = extrarpsc[chain]['rpcs'][rpc_choice]
+st.code(rpc_url)
 
-# take this dict and make it a df
-chainids = pd.DataFrame(chainids, index=[0])
-st.dataframe(chainids)
 
-# import json
-# import requests
-# df = requests.get('https://node-api.flipsidecrypto.com/api/v2/queries/a5898a28-b950-40b4-8677-1af86297f228/data/latest').json()
