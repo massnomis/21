@@ -66,8 +66,8 @@ async def handler():
 
 # st.write(sum_data)
 
-API = os.environ["API"] = '6lPPRFX1r4x_6ENY6GnhgYr3AdPv34x8Bc-MRH_V'
-SECRET = os.environ["SECRET"] = 'OnQqs_nox4NS2OYm5z8ulXJ9rMkbOo5_nNwGe53V' 
+API = os.environ["API"] =
+SECRET = os.environ["SECRET"] =
 
 wsm = ThreadedWebsocketManager(API, SECRET)
 wsm.start()

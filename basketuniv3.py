@@ -205,6 +205,12 @@ async def get_event_mainnet_uni():
                 st.write(df_main_uni, use_container_width=True)
             with placeholder04:
                 st.plotly_chart(px.scatter(df_main_uni, x="timestamp", y="price", size="USDC", color='side',color_discrete_sequence=["green", "red"],title='main'), use_container_width=True)
+            df1 = df_main_uni.copy()
+            return df1
+    #         return df_main_uni
+    #     return df_main_uni
+    # return df_main_uni
+
 session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242"))
 df_op_uni = pd.DataFrame(columns=['price', 'timestamp','WETH','USDC', 'side'])
@@ -264,11 +270,11 @@ async def get_event_op_uni():
             try:
                 labelz_fromm = labels.loc[fromm]["label"]
             except:
-                labelz_fromm = fromm
+                labelz_fromm = 'n/a'
             try:
                 labelz_too = labels.loc[too]["label"]
             except:
-                labelz_too = too
+                labelz_too = 'n/a'
             d = {'too': too, 'fromm':fromm, 'price': price_swap, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'labelz_fromm': labelz_fromm, 'labelz_too': labelz_too}
             fixed_df = pd.DataFrame(d, index=[0])
             df_op_uni = df_op_uni.append(fixed_df, ignore_index=True)
@@ -307,7 +313,8 @@ async def get_event_op_uni():
 
             with placeholder600:
                 st.plotly_chart(px.scatter(df_op_uni, x="timestamp", y="price", size="USDC", color='side',color_discrete_sequence=["green", "red"],title='op'), use_container_width=True)
-
+            df2 = df_op_uni.copy()
+            return df2
 # wss://polygon-mainnet.g.alchemy.com/v2/uKtRRMD3RVeY5JrQXLzUbyUF05VeHzcP
 session = requests.Session()
 w3 = Web3(Web3.WebsocketProvider("wss://polygon-mainnet.g.alchemy.com/v2/uKtRRMD3RVeY5JrQXLzUbyUF05VeHzcP"))
@@ -372,7 +379,7 @@ async def polyuni():
             number = decode_single('(int256,int256,uint160,uint128,int24)',bytearray.fromhex(number))
             # with placeholder2:
             #     st.write(number, use_container_width=True)
-            liq = number[3]
+            Liq = number[3]
             # liq = str(liq)
             tick = number[4]
             # tick = str(tick)
@@ -388,43 +395,46 @@ async def polyuni():
             try:
                 labelz_fromm = labels.loc[fromm]["label"]
             except:
-                labelz_fromm = fromm
+                labelz_fromm = 'n/a'
             try:
                 labelz_too = labels.loc[too]["label"]
             except:
-                labelz_too = too
-            d = {'too': too, 'fromm':fromm, 'price': prinnt, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'labelz_fromm': labelz_fromm, 'labelz_too': labelz_too}             fixed_df = pd.DataFrame(d, index=[0])
+                labelz_too = 'n/a'
+            d = {'too': too, 'fromm':fromm, 'price': prinnt, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'labelz_fromm': labelz_fromm, 'labelz_too': labelz_too}
+            fixed_df = pd.DataFrame(d, index=[0])
             df = df.append(fixed_df, ignore_index=True)
             df['cumsum'] = df['USDC_net'].cumsum()
             df['price_impact'] = df['price'].diff(periods=1)
             df['price_impact_w_size'] = df['price_impact']/df['USDC']
-            df['taken_liquidity'] = df['Liq'].diff(periods=1)
-            df['current_price'] = 1/(((((1.0001) ** (df['Tick'])))/math.pow(10,12)))
-            df['price_deviation'] = (df['current_price'] - df['price'])
-            df['price_deviation_w_size'] = df['price_deviation']/df['USDC']
-            df['tick_change'] = df['Tick'].diff(periods=1)
+            # df['taken_liquidity'] = df['Liq'].diff(periods=1)
+            # df['current_price'] = 1/(((((1.0001) ** (df['Tick'])))/math.pow(10,12)))
+            # df['price_deviation'] = (df['current_price'] - df['price'])
+            # df['price_deviation_w_size'] = df['price_deviation']/df['USDC']
+            # df['tick_change'] = df['Tick'].diff(periods=1)
             with placeholder3:
                 st.write(df, use_container_width=True)
             # with placeholder3:
             #     st.plotly_chart(px.line(df, x="timestamp", y="price", color="side"), use_container_width=True)
 
             with placeholder4:
-                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side',color_discrete_sequence=["red", "green"],title='poly'), use_container_width=True)
+                st.plotly_chart(px.scatter(df, x="timestamp", y="price", size="USDC", color='side',color_discrete_sequence=["green", "red"],title='poly'), use_container_width=True)
             # with placeholder5:
             #     st.plotly_chart(px.scatter(df, x="timestamp", y="current_price", color = 'price_deviation') , use_container_width=True)
-
-
-
+            df3 = df.copy()
+            return df3
+    #     return df3
+    # return df3
 
 
 
 async def main():
     # Schedule three calls *concurrently*:
         await asyncio.gather(
-
+        
         get_event_op_uni(),
         get_event_mainnet_uni(),
         polyuni(),
+    
     )
 
 asyncio.run(main())          
