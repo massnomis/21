@@ -13,6 +13,8 @@ import numpy as np
 import requests
 from datetime import datetime, timedelta
 import math
+import os
+from dotenv import load_dotenv
 st.set_page_config(layout="wide")
 exchange = ccxt.ftx({
 
