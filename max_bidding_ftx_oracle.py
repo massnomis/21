@@ -15,8 +15,7 @@ from datetime import datetime, timedelta
 import math
 st.set_page_config(layout="wide")
 exchange = ccxt.ftx({
-    'apiKey': '6lPPRFX1r4x_6ENY6GnhgYr3AdPv34x8Bc-MRH_V',
-    'secret': 'OnQqs_nox4NS2OYm5z8ulXJ9rMkbOo5_nNwGe53V',
+
 })
 
 placeholder = st.empty()

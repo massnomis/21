@@ -16,8 +16,7 @@ from werkzeug.exceptions import BadRequest
 import requests.exceptions
 st.set_page_config(layout="wide")
 exchange = ccxt.bitmex({
-    'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
-    'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
+
 })
 if 'test' in exchange.urls:
     exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet

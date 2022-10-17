@@ -445,18 +445,14 @@ st.write("profit",prof)
 #     }
 
 leg1 = {
-    "user_address": "0xdF2D2F76E8E8827f92814E49e7D95Fc1e33E4148",
-    "private_key": "8be0c0f4ee5a83c99dc3dc8fcf12626511df62e1c443bb4aeef9bd46a64d7560",
-    "endpoint": "https://optimism-mainnet.public.blastapi.io",
+
 }
 
 
 config = leg1
 # st.write(leg1)
 leg2 = {
-    "user_address": "0x8fC1151dD92aB093EF0EB7cb144D573592510cAA",
-    "private_key": "6855f8f0dbe4e0269c8a7b04e509116902be6200854fd60f75adde32363dd64f",
-    "endpoint": "https://optimism-mainnet.public.blastapi.io",
+
 }
 
 

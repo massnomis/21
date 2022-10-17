@@ -26,7 +26,7 @@ copy_this_ex = """select * from aave.liquidations limit 543"""
 
 st.code(copy_this_ex)
 # content = """ """ 
-API_KEY = "48bd4a71-3872-4b90-a0a0-a8a879cfb113"
+API_KEY = 
 API_KEY = st.text_input("Enter your API key", API_KEY )
 def ace():
     poly = "https://node-api.flipsidecrypto.com/api/v2/queries/b6937d3a-152f-4261-ac26-64bf84a31744/data/latest"

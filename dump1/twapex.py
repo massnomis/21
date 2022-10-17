@@ -328,9 +328,7 @@ gas_cost_usd = gas_cost_native_fixed * rate
 
 
 config = {
-    "user_address": "0xdF2D2F76E8E8827f92814E49e7D95Fc1e33E4148",
-    "private_key": "8be0c0f4ee5a83c99dc3dc8fcf12626511df62e1c443bb4aeef9bd46a64d7560",
-    "endpoint": "https://xdai-rpc.gateway.pokt.network",
+
 }
 
 
