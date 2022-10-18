@@ -2,8 +2,7 @@
 # import streamlit as st
 # import pandas as pd
 # exchange = ccxt.bitmex({
-#     'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
-#     'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
+
 # })
 
 
@@ -86,8 +85,7 @@ import json
 import pandas as pd
 import streamlit as st
 exchange = ccxt.bitmex({
-    'apiKey': 'NOAb2TuyuLgWkYbXOQGH-x9b',
-    'secret': '_fAxf57mItdpX-A5KTxXRzJZY3zkeSKdCGlStwa95FAH81Gd',
+
 })
 
 if 'test' in exchange.urls:
