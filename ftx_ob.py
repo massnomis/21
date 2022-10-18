@@ -79,7 +79,7 @@ b = "fat d8ta"
 dict_dumps = {
   "op": "subscribe",
   "channel": "orderbook",
-  "market": "BTC/USD"
+  "market": "ETH-PERP"
 }
 # market_name = st.text_input('Market name', value='BTC-PERP')
 # name = st.text_input("market name", "BTC/USD")
