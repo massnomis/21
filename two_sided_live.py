@@ -135,7 +135,7 @@ async def Perp():
                         asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
                         asks.dropna(inplace=True)
 
-                        asks = asks.append(asks_update, ignore_index=True)
+                        asks = pd.concat([asks, asks_update], ignore_index=True)
                         asks = asks.drop_duplicates(subset=['price_ask'], keep='first')
                         asks.sort_values(by=['price_ask'], inplace=True)
                         asks.reset_index(drop = True, inplace=False)
@@ -153,7 +153,7 @@ async def Perp():
                         # bids.append(bids_update.loc[i])
                         bids.loc[bids["price_bid"] == bids_update.loc[i]["price_bid"], "size_bid"] = bids_update.loc[i]["size_bid"]
                         bids.dropna(inplace=True)
-                        bids = bids.append(bids_update, ignore_index=True)
+                        bids = pd.concat([bids, bids_update], ignore_index=True)
                         bids = bids.drop_duplicates(subset=['price_bid'], keep='first')
                         bids.sort_values(by=['price_bid'], inplace=True, ascending=False)
                         bids.reset_index(drop=True, inplace=False)
@@ -183,38 +183,38 @@ async def Perp():
                     # st.write(asks,bids, use_container_width=True)
                     # st.write(asks_update,bids_update, use_container_width=True)
                     
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="orderbook")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="orderbook")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="cash_equivelant")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="cash_equivelant")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # column = bids["price_bid"]
-                    # max_value_spot = column.max()
-                    # st.write("now",datetime.now())
-                    # st.write("best bid", max_value_spot)
+                    column = bids["price_bid"]
+                    max_value_spot = column.max()
+                    st.write("now",datetime.now())
+                    st.write("best bid", max_value_spot)
 
-                    # column = asks["price_ask"]
-                    # min_value_spot = column.min()
-                    # st.write("best ask", min_value_spot)
+                    column = asks["price_ask"]
+                    min_value_spot = column.min()
+                    st.write("best ask", min_value_spot)
 
-                    # spred_spot = min_value_spot - max_value_spot
-                    # st.write("spread", spred_spot)
+                    spred_spot = min_value_spot - max_value_spot
+                    st.write("spread", spred_spot)
 
-                    # spred_bps_spot = spred_spot/min_value_spot*1000
-                    # st.write("spred_bps", spred_bps_spot , "bps")
+                    spred_bps_spot = spred_spot/min_value_spot*1000
+                    st.write("spred_bps", spred_bps_spot , "bps")
 async def Dated():
  async with websockets.connect("wss://ftx.com/ws/", ping_interval=20, ping_timeout=2000) as websocket:
         await websocket.send(
@@ -222,7 +222,7 @@ async def Dated():
                 {
                     "op": "subscribe",
                     "channel": "orderbook",
-                    "market": "BTC-0930"
+                    "market": "BTC-1230"
                     }
             )
         )
@@ -305,7 +305,7 @@ async def Dated():
                         asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
                         asks.dropna(inplace=True)
 
-                        asks = asks.append(asks_update, ignore_index=True)
+                        asks = pd.concat([asks, asks_update], ignore_index=True)
                         asks = asks.drop_duplicates(subset=['price_ask'], keep='first')
                         asks.sort_values(by=['price_ask'], inplace=True)
                         asks.reset_index(drop = True, inplace=False)
@@ -323,7 +323,7 @@ async def Dated():
                         # bids.append(bids_update.loc[i])
                         bids.loc[bids["price_bid"] == bids_update.loc[i]["price_bid"], "size_bid"] = bids_update.loc[i]["size_bid"]
                         bids.dropna(inplace=True)
-                        bids = bids.append(bids_update, ignore_index=True)
+                        bids = pd.concat([bids, bids_update], ignore_index=True)
                         bids = bids.drop_duplicates(subset=['price_bid'], keep='first')
                         bids.sort_values(by=['price_bid'], inplace=True, ascending=False)
                         bids.reset_index(drop=True, inplace=False)
@@ -350,42 +350,41 @@ async def Dated():
                         cols[1].subheader("asks")
 
                         cols[1].write(asks)
-                    # st.write(asks,bids, use_container_width=True)
-                    # st.write(asks_update,bids_update, use_container_width=True)
+                    st.write(asks,bids, use_container_width=True)
+                    st.write(asks_update,bids_update, use_container_width=True)
                     
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="orderbook")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="orderbook")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="cash_equivelant")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="cash_equivelant")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # column = bids["price_bid"]
-                    # max_value_spot = column.max()
-                    # st.write("now",datetime.now())
-                    # st.write("best bid", max_value_spot)
+                    column = bids["price_bid"]
+                    max_value_spot = column.max()
+                    st.write("now",datetime.now())
+                    st.write("best bid", max_value_spot)
 
-                    # column = asks["price_ask"]
-                    # min_value_spot = column.min()
-                    # st.write("best ask", min_value_spot)
+                    column = asks["price_ask"]
+                    min_value_spot = column.min()
+                    st.write("best ask", min_value_spot)
 
-                    # spred_spot = min_value_spot - max_value_spot
-                    # st.write(" spread", spred_spot)
+                    spred_spot = min_value_spot - max_value_spot
+                    st.write(" spread", spred_spot)
 
-                    # spred_bps_spot = spred_spot/min_value_spot*1000
-                    # st.write("spred_bps", spred_bps_spot , "bps")
-
+                    spred_bps_spot = spred_spot/min_value_spot*1000
+                    st.write("spred_bps", spred_bps_spot , "bps")
 async def Spot():
  async with websockets.connect("wss://ftx.com/ws/", ping_interval=20, ping_timeout=2000) as websocket:
         await websocket.send(
@@ -474,7 +473,7 @@ async def Spot():
                         asks.loc[asks["price_ask"] == asks_update.loc[i]["price_ask"], "size_ask"] = asks_update.loc[i]["size_ask"]
                         asks.dropna(inplace=True)
 
-                        asks = asks.append(asks_update, ignore_index=True)
+                        asks = pd.concat([asks, asks_update], ignore_index=True)
                         asks = asks.drop_duplicates(subset=['price_ask'], keep='first')
                         asks.sort_values(by=['price_ask'], inplace=True)
                         asks.reset_index(drop = True, inplace=False)
@@ -492,7 +491,7 @@ async def Spot():
                         # bids.append(bids_update.loc[i])
                         bids.loc[bids["price_bid"] == bids_update.loc[i]["price_bid"], "size_bid"] = bids_update.loc[i]["size_bid"]
                         bids.dropna(inplace=True)
-                        bids = bids.append(bids_update, ignore_index=True)
+                        bids = pd.concat([bids, bids_update], ignore_index=True)
                         bids = bids.drop_duplicates(subset=['price_bid'], keep='first')
                         bids.sort_values(by=['price_bid'], inplace=True, ascending=False)
                         bids.reset_index(drop=True, inplace=False)
@@ -519,48 +518,48 @@ async def Spot():
                         cols[1].subheader("asks")
 
                         cols[1].write(asks)
-                    # st.write(asks,bids, use_container_width=True)
-                    # st.write(asks_update,bids_update, use_container_width=True)
+                    st.write(asks,bids, use_container_width=True)
+                    st.write(asks_update,bids_update, use_container_width=True)
                     
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="orderbook")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['price_ask'], y=asks['accumulated'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['price_bid'], y=bids['accumulated'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="orderbook")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Bar(x=asks['price_ask'], y=asks['size_ask'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Bar(x=bids['price_bid'], y=bids['size_bid'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="orderbook")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # fig = make_subplots(specs=[[{"secondary_y": True}]])
-                    # fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
-                    # fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
-                    # fig.update_layout(title_text="cash_equivelant")
-                    # st.plotly_chart(fig, use_container_width=True)
+                    fig = make_subplots(specs=[[{"secondary_y": True}]])
+                    fig.add_trace(go.Scatter(x=asks['accumulated_avg_price'], y=asks['cash_equivelant'], name="asks"),secondary_y=True,)
+                    fig.add_trace(go.Scatter(x=bids['accumulated_avg_price'], y=bids['cash_equivelant'], name="bids"),secondary_y=True,)
+                    fig.update_layout(title_text="cash_equivelant")
+                    st.plotly_chart(fig, use_container_width=True)
 
-                    # column = bids["price_bid"]
-                    # max_value_spot = column.max()
-                    # st.write("now",datetime.now())
-                    # st.write("best bid", max_value_spot)
+                    column = bids["price_bid"]
+                    max_value_spot = column.max()
+                    st.write("now",datetime.now())
+                    st.write("best bid", max_value_spot)
 
-                    # column = asks["price_ask"]
-                    # min_value_spot = column.min()
-                    # st.write("best ask", min_value_spot)
+                    column = asks["price_ask"]
+                    min_value_spot = column.min()
+                    st.write("best ask", min_value_spot)
 
-                    # spred_spot = min_value_spot - max_value_spot
-                    # st.write("spread", spred_spot)
+                    spred_spot = min_value_spot - max_value_spot
+                    st.write("spread", spred_spot)
 
-                    # spred_bps_spot = spred_spot/min_value_spot*1000
-                    # st.write("spred_bps", spred_bps_spot , "bps")
+                    spred_bps_spot = spred_spot/min_value_spot*1000
+                    st.write("spred_bps", spred_bps_spot , "bps")
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)   
     coros = []
     coros.append(Perp())
     # coros.append(Dated())
-    coros.append(Spot())
+    # coros.append(Spot())
     # coros.append(info())
 
     loop.run_until_complete(asyncio.gather(*coros))

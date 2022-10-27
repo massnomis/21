@@ -29,7 +29,7 @@ def bollinger_strat2(df, window, no_of_std):
     df['Bollinger Low_cumsum'] = rolling_mean - (rolling_std * no_of_std)     
     return df['Bollinger High_cumsum'] , df['Bollinger Low_cumsum'], df['rolling_mean_cumsum'] 
 session = requests.Session()
-w3 = Web3(Web3.WebsocketProvider("wss://mainnet.infura.io/ws/v3/43b2d6f15d164cb4bbe4d4789831f242"))
+w3 = Web3(Web3.WebsocketProvider("wss://opt-mainnet.g.alchemy.com/v2/r7rVLgcc79AyvNX8gQAdV5rRbju98_2j"))
 df = pd.DataFrame(columns=['price', 'timestamp','WETH','USDC', 'side'])
 false = False
 placeholder0 = st.empty()
@@ -48,7 +48,7 @@ placeholder11 = st.empty()
 placeholder12 = st.empty()
 async def get_event():
     global df
-    async with connect("wss://ws-mainnet.optimism.io") as ws:
+    async with connect("wss://opt-mainnet.g.alchemy.com/v2/r7rVLgcc79AyvNX8gQAdV5rRbju98_2j") as ws:
         global df
         await ws.send(json.dumps(
         {"id": 1, "method": "eth_subscribe", "params": 
@@ -103,7 +103,7 @@ async def get_event():
             weth = abs(number[0]/math.pow(10,18))
             d = {'too': too, 'fromm':fromm, 'price': prinnt, 'timestamp': now, 'WETH': weth, 'USDC': usdc, 'side': side, 'USDC_net': usdc_net, 'Tick': tick, 'Liq': liq}
             fixed_df = pd.DataFrame(d, index=[0])
-            df = df.append(fixed_df, ignore_index=True)
+            df = pd.concat([df, fixed_df], ignore_index=True)
             df['cumsum'] = df['USDC_net'].cumsum()
             df['price_impact'] = df['price'].diff(periods=1)
             df['price_impact_w_size'] = df['price_impact']/df['USDC']
