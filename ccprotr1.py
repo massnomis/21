@@ -1,4 +1,5 @@
-import ccxtpro
+import ccxt
+import ccxt.pro
 import asyncio
 from numpy import place
 import streamlit as st
@@ -30,8 +31,8 @@ placeholder15 = st.empty()
 
 
 async def main():
-    exchange = ccxtpro.ftx({'enableRateLimit': True})
-    exchange2 = ccxtpro.binance({'enableRateLimit': True})
+    exchange = ccxt.pro.ftx({'enableRateLimit': True})
+    exchange2 = ccxt.pro.binance({'enableRateLimit': True})
     while True:
         orderbook = await exchange.watch_order_book('ETH/USDT')
         orderbook2 = await exchange2.watch_order_book('ETH/USDT')

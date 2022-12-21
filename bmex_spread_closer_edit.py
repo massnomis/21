@@ -15,12 +15,38 @@ import ccxt.base.errors
 from werkzeug.exceptions import BadRequest
 import requests.exceptions
 st.set_page_config(layout="wide")
+
+# st.write(exchange.fetchOpenOrders())
+# Python
+
+
+
+
+# YA4m6zHsg5oIDLf6Nt3RsLZV
+# Q1WgI4sQCSL7onK_N-cZlybEbguToFpP-cSq-TljMYo4taLX
+
+
+
+# add api key and secret
+
+# YA4m6zHsg5oIDLf6Nt3RsLZV
+# Q1WgI4sQCSL7onK_N-cZlybEbguToFpP-cSq-TljMYo4taLX
 exchange = ccxt.bitmex({
+    'apiKey' : 'h2r2C5YcbUfVHCIBCyKLyk0h ',
+    'secret'  : '5mlXZrL3IQD5NtcttOsApZUOQUmuobjx9I6EZwNS1jRfMjjQ'
+
+
+
+
+
 })
 if 'test' in exchange.urls:
     exchange.urls['api'] = exchange.urls['test'] # ←----- switch the base URL to testnet
 # st.write(exchange.fetchOpenOrders())
-# Python
+
+
+
+
 class BaseError (Exception):
     pass
 placeholder = st.empty()
@@ -42,25 +68,31 @@ placeholder15 = st.empty()
 # orders_hist = exchange.fetchOpenOrders()
 # st.write(orders_hist)
 while True:
-    orders_hist_bids = exchange.fetchOpenOrders()
-    orders_hist_asks = exchange.fetchOpenOrders()
 
-    orders_hist_bids = pd.DataFrame(orders_hist_bids)
-    orders_hist_asks = pd.DataFrame(orders_hist_asks)
 
-    with placeholder1:
-        st.write(orders_hist_asks,orders_hist_bids)
-    # with placeholder:
-    #     if orders_hist.empty:
-    #         st.write('no open orders')
-    #     else:
-    #         st.write(orders_hist)
-    orders_hist_bids = orders_hist_bids[orders_hist_bids.side == 'buy']
 
-    orders_hist_bids_id_df = pd.DataFrame(orders_hist_bids['id'])
 
-    orders_hist_asks = orders_hist_asks[orders_hist_asks.side == 'sell']
-    orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
+
+    # orders_hist_bids = exchange.fetchOpenOrders()
+    # orders_hist_asks = exchange.fetchOpenOrders()
+
+    # orders_hist_bids = pd.DataFrame(orders_hist_bids)
+    # orders_hist_asks = pd.DataFrame(orders_hist_asks)
+
+    # with placeholder1:
+    #     st.write(orders_hist_asks,orders_hist_bids)
+    # # with placeholder:
+    # #     if orders_hist.empty:
+    # #         st.write('no open orders')
+    # #     else:
+    # #         st.write(orders_hist)
+    # orders_hist_bids = orders_hist_bids[orders_hist_bids.side == 'buy']
+
+    orders_hist_bids_id_df = pd.DataFrame()
+    # (orders_hist_bids['id'])
+
+    # orders_hist_asks = orders_hist_asks[orders_hist_asks.side == 'sell']
+    # orders_hist_asks_id_df = pd.DataFrame(orders_hist_asks['id'])
 
     #         # st.write(orders_hist)
     #         id = orders_hist_id_df
@@ -69,7 +101,7 @@ while True:
     #         cancelAllOrders = exchange.cancelAllOrders()
     #         # st.write(cancelAllOrders)
     #         # for index, row in id.iterrows():
-    #         #     order_cancel = exchange.cancelOrder(id=row['id'])
+    #         #     order_cancel = exchange.cSancelOrder(id=row['id'])
     #         #     order_cancel_df = order_cancel_df.append(order_cancel, ignore_index=True).astype(str)
     #         st.write("canceled, yalla")
     #         # st.write(order_cancel_df)
@@ -82,7 +114,9 @@ while True:
     # st.write(load_makets_for_data)
 
 
-    symbol = "LINK_USDT"
+    # symbol = st.selectbox('select symbol', 'XBT_USDT')
+    symbol = 'XBTUSDT:USDT'
+    # load_makets_for_datSa.columns)
     # st.write(load_makets_for_data.columns)
 
     # pct_expiry_dated = 0.25
@@ -96,7 +130,9 @@ while True:
 
     precision_load = pd.DataFrame(exchange.load_markets())
     precision = (precision_load[symbol]['precision'])
-    # st.write(precision)
+
+    st.write(precision)
+    # symbol = st.selectbox('select symbol', load_makets_for_data.columns)
     precision_amount = precision['amount']
     precision_price = precision['price']
     with placeholder2:
@@ -130,18 +166,17 @@ while True:
     bids['accumulated_price']  = (bids['price_bid']) * bids['fixed_size_bid']
     bids['accumulated_avg_price'] = (list(accumulate(bids['accumulated_price'])))  / bids['accumulated']
     bids['cash_equivelant'] = bids['accumulated'] * bids['accumulated_avg_price']     
-    # st.write(bids, asks)
+    st.write(bids, asks)
 
     bid_new = pd.DataFrame(bids)
     bid_new['mm_bid_price']  = bids['price_bid'].max() + precision_price
     bid_new['mm_bid_size'] = precision_amount
     bid_new = bid_new.drop(columns=['accumulated', 'accumulated_price', 'accumulated_avg_price','cash_equivelant','price_bid','fixed_size_bid'])
-    # st.write(bid_new)
+    st.write(bid_new)
     stink_save_bid = bid_new['mm_bid_price'].max()*stink_save_bid_drawdown
     bid_new = bid_new[bid_new.mm_bid_price > stink_save_bid]
-    # st.write(bid_new)
+    st.write(bid_new)
 
-    order_df_bid = pd.DataFrame()
     i = 0
 
 
@@ -165,7 +200,10 @@ while True:
                     mm_bid_price = (data['mm_bid_price']) - (precision_price * np.random.randint(3) *i)
                     mm_bid_size = (data['mm_bid_size']) 
                     order_init_bid = exchange.createLimitBuyOrder(symbol=symbol,price=mm_bid_price,amount=mm_bid_size)
-                    order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
+                    # add the logs to the dataframe
+                    order_df_bid =  order_df_bid.append(order_init_bid, ignore_index=True)
+ 
+                    #  order_df_bid.append(order_init_bid, ignore_index=True)
                     i += 1
         else:
             for col_name, data in orders_hist_bids_id_df.iterrows():
@@ -188,7 +226,9 @@ while True:
                         except Exception:
                             pass
                         # st.write(order_df_bid)
-                        order_df_bid = order_df_bid.append(order_init_bid, ignore_index=True)
+                        order_df_bid = pd.concat([order_df_bid, pd.DataFrame(order_init_bid)], axis=0)
+                        # order_df_bid
+                        # .append(order_init_bid, ignore_index=True)
                         i += 1
 
 

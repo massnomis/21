@@ -1,12 +1,14 @@
 import json
 import math
 from itertools import chain
+from turtle import color
+import plotly.graph_objects as go
 
 import pandas as pd
 import plotly.express as px
 import requests
 import streamlit as st
-
+st.set_page_config(layout="wide")
 
 
 # def app():
@@ -63,10 +65,10 @@ page.dataframe(tokens_list)
 
 # button here for manual input or not....
 agree = page.checkbox("Manual Address Input?")
-address_of_said_tokenIN = "null"
-address_of_said_tokenOUT = "null"
-decimal_of_said_tokenIN = 0
-decimal_of_said_tokenOUT = 0
+address_of_said_tokenIN = "0xeb4c2781e4eba804ce9a9803c67d0893436bb27d"
+address_of_said_tokenOUT = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+decimal_of_said_tokenIN = 8
+decimal_of_said_tokenOUT = 8
 
 
 if agree:
@@ -89,7 +91,7 @@ else:
 
     tokenIN = "MATIC"
 
-    tokenIN = page.selectbox("tokenIN", tokens_list['symbol'])
+    tokenIN = page.selectbox("tokenIN", tokens_list['symbol'], index=138)
     address_of_said_tokenIN = tokens_list.set_index("symbol").loc[tokenIN]["address"]
     page.write(address_of_said_tokenIN)
 
@@ -97,7 +99,7 @@ else:
     page.write(decimal_of_said_tokenIN)
     tokenOUT = "USDC"
 
-    tokenOUT = page.selectbox("tokenOUT", tokens_list['symbol'])
+    tokenOUT = page.selectbox("tokenOUT", tokens_list['symbol'], index=1)
     address_of_said_tokenOUT = tokens_list.set_index("symbol").loc[tokenOUT]["address"]
     page.write(address_of_said_tokenOUT)
 
@@ -225,11 +227,31 @@ while i < i_max:
         + second_last["name_y"]
     )
 
-    Final_Path = second_last[["hop_num", "part", "path"]]
+    Final_Path = second_last[["hop_num", "part", "path", "symbol_f", "symbol_t", "name_y"]]
 
     Final_namez = {"name_y": "Liquidity_Source"}
     Final_Path = Final_Path.rename(columns=Final_namez)
+    # Final_Path[]
 
+
+
+Final_Path["pair"] = Final_Path["symbol_f"] + "-" + Final_Path["symbol_t"]
+page.json(l2)
+# page.json(l2["protocols"])
+
+page.write(Final_Path)
+
+
+
+# page.write(Final_Path)  
+
+    
+import plotly.graph_objects as go
+
+fig = px.scatter_3d(Final_Path, x='hop_num', y='part', z='symbol_f', color='symbol_t', size='part', hover_name='Liquidity_Source', hover_data=['path'])
+page.plotly_chart(fig)
+
+page.plotly_chart(px.bar)
 
 
 page.write(df2)
@@ -239,11 +261,11 @@ Final_Path = px.line(
     x="number_unformat",
     y="rate2"
 )
-page.plotly_chart(Final_Path)
+page.plotly_chart(Final_Path, use_container_width=True)
 Final_Path = px.bar(
     df2,  # this is the dataframe you are trying to plot
     x="number_unformat",
     y="rate2"
 )
-page.plotly_chart(Final_Path)
+page.plotly_chart(Final_Path, use_container_width=True)
 

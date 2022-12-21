@@ -109,9 +109,12 @@ st.write(url_swapToken_p3)
 
 token_return = requests.get(url_swapToken_p3)
 token_return = json.loads(token_return.text)
-amount_toToken = int(token_return['toTokenAmount'])
-
-amount_toToken_correct = ((amount_toToken) / (10 ** decimal_of_said_tokenOUT))
+st.code(token_return)
+st.json(token_return)
+amount_toToken = token_return
+amount_toToken_correct = amount_toToken / decimal_of_said_tokenOUT
+# amount_toToken_correct = ((amount_toToken) / (10 ** decimal_of_said_tokenOUT))
+# print(amount_toToken_correct)
 
 st.write("token output")
 st.write(amount_toToken_correct)
